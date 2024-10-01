@@ -1,0 +1,2759 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" controller="AssignPanalistToStudentsCtrl">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,800;1,100;1,200;1,300;1,400;1,500;1,800&display=swap" rel="stylesheet"/>
+        <title>Novigo | Assign Panalists</title>
+        <style>
+            :root {
+                --blue-color: #150958;
+                --blue-color-hover: #200e89;
+                --blue-color-hover-alt: #312a5a;
+                --blue-color-select: #534798;
+                --text-color: black;
+                --background-color: white;
+                --red-color: #EF233C;
+                --yellow-color: #ffb01d;
+
+                --green-color: #008000;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+            input{
+                width: 15vw;
+                height: 3vh;
+                border: 1.5px solid var(--blue-color);
+                padding: 2px;
+                font-size: 1.25vw;
+            }
+            textarea{
+                width: 15vw;
+                height: 10vh;
+                border: 1.5px solid var(--blue-color);
+                padding: 2px;
+                font-size: 1.25vw;
+                resize: none;
+            }
+            .phone-text{
+                padding-right: 2px;
+                font-size: 1.2vw;
+            
+                border-right: 1px dashed var(--blue-color);
+            }
+            input:focus{
+                outline: none;
+            }
+            option{
+                color: solid var(--blue-color)!important;
+                width: 15vw;
+                border: 1.5px solid var(--blue-color);
+                background-color: none;
+
+            }
+
+            .phone-container{
+                border: 1.5px solid var(--blue-color);
+                display: flex;
+            }
+            .phone-container-error{
+                border: 1.5px solid var(--red-color);
+            }
+
+
+            .select-style{
+                width: 15.5vw ;
+                height: 4vh !important;
+                border: 1.5px solid var(--blue-color);
+                /* padding-left:2px; */
+                padding-right: 2px; 
+                background-color: none;
+                font-size:1.25vw;
+
+            }
+            .input-error{
+                border: 1.5px solid var(--red-color);
+            }
+            .input-warning{
+                border: 1.5px solid var(--yellow-color);
+            }
+
+
+            .main {
+                height: 100vh;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header {
+                height: 10vh;
+                width: 100%;
+                background: var(--blue-color);
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .novigo-icon {
+                height: 6vh;
+                margin-left: 8px;
+            }
+            .novigo-icon-big{
+                opacity: 0.05;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: -1; 
+                filter: grayscale(50%);
+            }
+            .title {
+                /* margin-top: 4vh; */
+                margin-right:4vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                /* background-color: white; */
+                z-index: 1;
+            }
+   
+
+            .title-text {
+                font-size: 2vw;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+                color: var(--background-color);
+            }
+            .section-body-alt{
+                margin-top:4vh;
+                background-color: var(--background-color);
+                border: 1px solid var(--blue-color);
+                border-radius: 8px;
+                box-shadow: 0px 1px 10px #150958;
+                height: 60%;
+            }
+            .section-body-green-shadow-alt{
+                box-shadow: 0px 1px 10px var(--green-color);
+            }
+            .section-body-red-shadow-alt{
+                box-shadow: 0px 1px 10px var(--red-color);
+            }
+
+            .section-wrapper-alt{
+                padding: 1.5vh;
+                /* margin-top: 2vh; */
+                margin-bottom: 2vh;
+                
+
+            }
+            .section-alt {
+                
+                padding: 1.5vh;
+                /* cursor: pointer; */
+                transition: border 0.2s, transform 0.2s;
+                width: 40vw;
+                max-height: 50vh;
+
+            }
+
+            /* .section:hover {
+                border: 2px solid var(--blue-color);
+                transform: translateY(-2px);
+            } */
+
+            .section-text-container-alt{
+                display:flex;
+                flex-direction: column;
+            }
+
+            .section-text-alt {
+                font-weight: 500;
+                font-size: 1.5vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+
+            }
+            .section-text-small-alt{
+                font-weight: 300;
+                font-size: 0.8vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+                color: var(--red-color);
+            }
+
+            .section-items-alt {
+                padding: 2vh;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5vh;
+            }
+
+            .section-item-alt {
+                display: flex;
+                justify-content: space-between;
+                padding: 1;
+                margin: 2vh;
+            }
+
+            .section-item-text-alt {
+                margin-right: 1vw;
+                font-size: 1.2vw;
+            }
+            .section-buttons-alt{
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+            }
+            /* .prev-button, .next-button, .go-back-button {
+                width: 15rem;
+                height: 4rem;
+                border-radius: 1rem;
+                box-shadow: $shadow;
+                justify-self: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: .3s ease;
+                } */
+
+             .go-back-button {
+                background-color: var(--blue-color);
+                color: var(--background-color);
+                width: 10vw;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border: 2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: .3s ease;
+                }
+
+            .prev-button:hover, .next-button:hover {
+                background-color: var(--blue-color-hover);
+                }
+
+            .submit-button-alt{
+                background-color: var(--green-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border:2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            /* .prev-button:hover,.next-button:hover {
+                background-color: var(--blue-color-hover);
+            } */
+
+
+            .progress-bar {
+                width: 100%;
+                height: 35px;
+                background-color: white;
+                position: sticky;
+                border-radius: 7px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+                top: 0;
+                z-index: 1;
+            }
+
+            .progress {
+                height: 100%;
+                border-top: 1px solid var(--blue-color);
+                display: flex;
+                justify-content: flex-start;
+                /* border-radius: 7px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px; */
+                /* background-image: linear-gradient(45deg, var(--blue-color-hover), var(--blue-color-hover-alt)); */
+                background-color: var(--blue-color);
+                width: 25%;
+                clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+                transition: width 0.5s;
+                align-items: flex-end;
+            }
+            .progress-green {
+                background-image: linear-gradient(45deg, var(--green-color), #026d02);
+            }
+            .progress-red {
+                background-image: linear-gradient(45deg, var(--red-color), red);
+            }
+            .progress-text{
+                margin-left: 1vw;
+                color: white;
+                font-size: 22px;
+                font-weight: 400;
+            }
+            .custom-checkbox{
+                width: 20px;
+                height: 3vh;
+            }
+            #successfulSection, #failSection{
+                display: none;
+            }
+            
+            .success-section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #successfulSection, #failSection{
+                display: none;
+            }
+            
+            .success-section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .error-image{
+                height:18px; 
+                width:18px; 
+                margin-left:0.5vw;
+                margin-right: 1vw;
+            }
+            .error-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--red-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .sucess-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color:  var(--green-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .alert-animation {
+                animation-name: fade;
+                animation-duration: 0.5s; /* Adjust the duration as needed */
+            }
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .error-warning {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--yellow-color);
+                color: black;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .closebtn {
+            margin-left: 15px;
+            color: white;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            }
+
+            .closebtn:hover {
+            color: black;
+            }
+            .closebtn-black-color{
+                color: black;
+            }
+            .closebtn-black-color:hover{
+                color: white;
+            }
+            ::selection{
+                color: white;
+                background: var(--blue-color-hover);
+            }
+
+            .hide {display: none;}
+            .loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+            /* .loader-inner {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                width: 100px;
+                height: 100px;
+                animation: spin 0.5s linear infinite;
+            } */
+            .loader-logo{
+                position: absolute;
+                top: 50;
+                left: 50;
+            }
+
+            .loader-logo .logo-section-one {
+                animation: moveOne 1.25s infinite alternate;
+            }
+
+            .loader-logo .logo-section-two {
+                animation: moveTwo 1.25s infinite alternate;
+            }
+
+            @keyframes moveOne {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(-15px, -25px);
+                    opacity: 0;
+                    
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes moveTwo {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(10px, 10px);
+                    opacity: 0;
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+            .hidden {
+                display: none;
+            }
+
+            ::-webkit-scrollbar {
+                    width: 12px;
+                }
+
+            ::-webkit-scrollbar-track {
+                    background-color: rgb(244, 244, 244);
+                    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 25, 88, 0.3);  */
+                    border-radius: 10px;
+                }
+
+            ::-webkit-scrollbar-thumb {
+                    border-radius: 10px;
+                    background-color: var(--blue-color);
+                    transition: 0.3s;
+                }
+            ::-webkit-scrollbar-thumb:hover {
+                    background-color: var(--blue-color-hover);
+                }
+
+
+
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                /* input[type=checkbox]{
+                    height: 0;
+                    width: 0;
+                    visibility: hidden;
+                } */
+
+                label {
+                    cursor: pointer;
+                    text-indent: -9999px;
+                    width: 4vw;
+                    height: 4vh;
+                    background: white;
+                    display: block;
+                    border-radius: 100px;
+                    position: relative;
+                    border: 2px solid var(--blue-color);
+                }
+
+                label:after {
+                    content: '';
+                    position: absolute;
+                    top: 5px;
+                    left: 8px;
+                    width: 1vw;
+                    height: 2vh;
+                    background: var(--blue-color);
+                    border-radius: 90px;
+                    transition: 0.3s;
+                }
+
+                input:checked + label {
+                    background: var(--blue-color);
+                }
+
+                input:checked + label:after {
+                    left: calc(100% - 5px);
+                    transform: translateX(-100%);
+                    background: white;
+                }
+
+                label:active:after {
+                    background: white;
+                    width: 40px;
+                }
+
+                .preview-section{
+                    display: flex;
+                    justify-content: space-between;
+                    /* align-items: center; */
+                    margin: 1vh;
+                    margin-left: 5vw;
+                    margin-right: 5vw;
+                }
+                .previewTitle{
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    margin-left: 2vw;
+
+                }
+                .previewValue{
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    font-weight: 500;
+                    margin-left: 1vw;
+                    margin-right: 2vw;
+                }
+            
+                .details-summary{
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: scroll;
+                    max-height: 60vh;
+                }
+                
+                        
+                .login-nav{
+                    display:grid;
+                    place-items:center;
+                    text-decoration: underline;
+                    color: var(--blue-color);
+                    font-size: 12px;
+                    margin-top: 10px;
+                    cursor: pointer
+                }
+
+
+
+                .content-containeralt {  
+                  /* height: 100%;
+                  width: 100vw; */
+                }
+
+                .section-item-text {
+                margin-right: 1vw;
+                font-size: 1.2vw;
+                }
+                .select-style{
+                    width: auto;
+                    height: 4vh !important;
+                    border: 1.5px solid var(--blue-color);
+                    /* padding-left:2px; */
+                    padding-right: 2px; 
+                    background-color: none;
+                    font-size:1.25vw;
+                    border-radius: 5px;
+                    cursor: pointer;
+
+                }
+
+                .section-item-1{ 
+                    margin-top: -5vh;
+                    display: grid;
+                    align-items: center;
+                    justify-content: left; 
+                }
+                .section-item-2{   
+                    height: 8vh; 
+                    display: flex;
+                    place-items: center;
+                    justify-content: space-between;
+                    /* grid-template-columns: 1fr 1fr 10vw 11vw 10vw; */
+
+                    margin-right: 7vw;
+                    width: 100%;
+                                    
+                }
+                .section-item-2-1{
+                    display: grid;
+                    place-items:center;
+                    grid-template-columns: 18.4vw 16vw ;
+                }
+                .section-item-2-2{
+                    display: grid;
+                    place-items:center; 
+                }
+
+                .section-item-3{
+                    display: grid;
+                    place-items:center; 
+                }
+
+                .section-item-3-table{
+                    width: 92vw;
+                    box-shadow: 0px 1px 10px #150958;
+                    height: 72vh;
+                    border-radius: 5px;
+                    
+                }
+        
+                .section-item-4{
+                    display: flex;
+                    justify-content: right;
+                    align-items: center;
+                    margin-right: 4vw;
+                    height: 15vh;
+                }
+                .section-item-3-table-item-heder{
+                    background: var(--blue-color);
+                    border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                    height: 8vh;
+                    display: flex;
+                    width: 100%;
+                    color: white;
+                    display: grid;
+                    place-items: center;
+                    grid-template-columns: 1fr 1fr 1fr 8.2vw 8vw 9.6vw 6.2vw 5.2vw;
+                }
+
+                .section-item-3-table-item-heder-row{
+                    display: grid;
+                    place-items:center; 
+                    /* grid-template-columns: 1fr 3vw; */
+                }
+
+                .section-item-3-table-item-body{
+                    overflow: scroll;
+                    height: 64vh;
+                    overflow-x: hidden;
+                }
+                .section-item-3-table-item-body-row{
+                    border-bottom: 1px solid rgb(194, 194, 194);
+                    display: grid;
+                    place-items: center;
+                    grid-template-columns: 1fr 1fr 1fr 8.2vw 8.2vw 8.2vw 8.2vw 3.2vw;
+                    /* min-height: 6vh; */
+                }
+                .section-item-3-table-item-body-row-item-1,
+                .section-item-3-table-item-body-row-item-2,
+                .section-item-3-table-item-body-row-item-3,
+                .section-item-3-table-item-body-row-item-4,
+                .section-item-3-table-item-body-row-item-5,
+                .section-item-3-table-item-body-row-item-5{
+                            display: grid;
+                            place-items:center;
+                }
+                .section-item-3-table-item-body-row-item-1,
+                .section-item-3-table-item-body-row-item-2,
+                .section-item-3-table-item-body-row-item-3{
+                  padding: 8px;
+                }
+                .go-back-button:hover{
+                    box-shadow: 0px 0px 10px #150958;
+                }
+    
+                .go-back-button:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+                .slect-students-checkbox-class{
+                    height: 3vh;
+                    width: 2vw; 
+                }
+
+                .section-item-3-table-item-body-init{
+                    height: 100%;
+                    display: grid;
+                    place-items:center;
+                }
+
+
+                .btn-round-view{
+                    color: black;
+                    font-weight: 500;
+                    width: 7vw;
+                    height: 4vh;
+                    padding: 0px 4px;
+                    outline: none;
+                    border: 1px solid black;
+                    margin: 0.5vw;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: .3s ease;
+                    display: grid;
+                    place-items: center;
+                    box-shadow: 0 0 4px black;
+                }
+
+                .btn-round-view:hover{
+                    box-shadow: 0px 0px 15px #150958;
+                }
+
+                .btn-round-view:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+                .section-item-3-table-item-heder-row-search-inp{
+                    border-radius: 5px;
+                    height: 3.5vh;
+                    margin-right: 1vw; 
+                    padding-left: 1vw;
+                }
+
+                .search-inp-button{
+                    width: 9vw;
+                    height: 5.5vh;
+                    background-color: #200e894d;
+                    color: black; 
+                    padding: 2px;
+                    outline: none;
+                    border: 3px solid black;
+                    margin: 0.5vw;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: .3s ease;
+                    box-shadow: 0 0 3px black;
+                }
+
+               .search-inp-button:hover{
+                    box-shadow: 0px 0px 10px #150958;
+                }
+
+               .search-inp-button:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+                body{
+                    position: relative;
+                }
+
+
+                .student-info-popup{ 
+                    position: absolute;
+                    z-index: 10;
+                    height: 100vh;
+                    width: 100vw;
+                    background: #000000ed;
+                    display: grid;
+                    place-items:center;
+                    
+                }
+                .student-info-popup-body{
+                    min-height: 40vh;
+                    width: 54vw;
+                    background: white;
+                    border-radius: 20px;
+                    max-height: 80vh;
+                    overflow: scroll;
+                    overflow-x: hidden; 
+                }
+
+                .student-info-popup-body::-webkit-scrollbar {
+                    display: none;
+                }
+
+
+
+
+                .student-info-popup-body-header{
+                    display: grid;
+                    justify-content: right;
+                    align-items: center;
+                    height: 8vh;
+                    padding-right: 1vw;
+                }
+
+
+                .div-btn-red{
+                    background: var(--red-color);
+                    color: white; 
+                    text-align: center;
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    padding: 0.3vh 0.8vw;
+                }
+
+                .div-btn-blue{
+                    background: var(--blue-color);
+                    color: white; 
+                    text-align: center;
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    padding: 0.3vh 0.8vw;
+                }
+
+
+                .div-btn-red:hover{
+                    box-shadow: 0px 0px 10px #c90606;
+                }
+
+                .div-btn-red:active{
+                    box-shadow: 0px 0px 30px #c90606;
+                }
+
+                .student-info-popup-body-cnt-pan{
+                    display: flex;
+                    width: 50vw;
+                    margin: auto auto;
+                    display: grid;
+                    height: 10vh;
+                    grid-template-columns: 1fr 1fr 1fr;
+                }
+                .student-info-popup-body-cnt-pan-txt{
+                    display: grid;
+                    place-items:center;
+                }
+
+                .student-info-popup-body-cnt-pan-dropdown{
+                    display: grid;
+                    place-items:center; 
+                }
+
+                .student-info-popup-body-cnt-pan-assign{
+                    display: grid;
+                    place-items: center;
+                    grid-template-columns: 6vw 8vw;
+                    margin: auto;
+                }
+
+                .student-info-popup-body-cnt-pan-addmore{
+                    width: 14vw;
+                    margin: auto;
+                }
+
+                .div-btn-blue:hover{
+                    box-shadow: 0px 0px 10px #150958;
+                }
+
+               .div-btn-blue:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+                .student-info-popup-body-cnt-pan-addmore-cnt{
+                    display: grid;
+                    height: 6vh;
+                    grid-template-columns: 11vw 1fr; 
+                }
+
+                .student-info-popup-body-cnt-pan-addmore-cnt-txt{
+                    display: grid;
+                    place-items:center;
+                }
+
+
+                .student-info-popup-body-cnt-pan-addmore-cnt-icon{
+                    display: grid;
+                    place-items: center;
+                    height: 5vh;
+                    width: 5vh;
+                    background: grey;
+                    border-radius: 50%;
+                    margin: auto; 
+                    font-weight: 500;
+                    cursor: pointer;
+                }
+
+
+                .student-info-popup-body-cnt-pan-addmore-cnt-icon:hover{
+                    box-shadow: 0px 0px 10px #150958;
+                }
+
+               .student-info-popup-body-cnt-pan-addmore-cnt-icon:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+
+                .student-info-popup-body-cnt-pan-assign-btn{
+                    display: grid;
+                    place-items: center;
+                    grid-template-columns: 1fr 1fr;
+                    width: 30vw;
+                    margin: auto;
+                    margin-top: 7vh;
+                    margin-bottom: 3vh;
+                }
+
+                .div-btn-blue-btn{
+                         width: 10vw;
+                }
+                
+
+
+
+
+                .student-info-popup-hide{
+                   display: none;
+                }
+
+                .section-item-2-search{
+                    height: 9vh;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .section-item-2-search-btns{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .print-all-btns{
+                    background-color: var(--blue-color);
+                    color: var(--background-color); 
+                    height: 5vh;
+                    padding: 2px 8px;
+                    outline: none;
+                    border: 2px transparent;
+                    margin: 0.5vw;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: .3s ease;
+                }
+
+
+                .student-info-popup-body-stud-info{
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    place-items: center;
+                    min-height: 5vh;
+                    border: 2px solid rgb(165, 164, 164);
+                    margin: 0 1vw;
+                    border-radius: 5px;
+                }
+
+                @page {
+                margin: 0;
+                }
+                @media print {
+                footer {
+                    display: none;
+                    position: fixed;
+                    bottom: 0;
+                }
+                header {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                }
+                }
+
+
+
+
+
+           .sort-icon{
+            height: 2vh;
+            
+           }
+
+           .hide-name-down-icon{
+            display: none;
+           }
+
+           .div-btn-x-btn{
+            background: #595858;
+            height: 5vh;
+            width: 2.5vw;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+           }
+
+           .div-btn-x-btn:hover{
+            box-shadow: 0 0 20px gray;
+           }
+           .div-btn-x-btn:active{
+            box-shadow: 0 0 30px gray;
+           }
+
+          
+
+
+    </style>
+   
+
+    
+    </head>
+    <body>
+        <div class="loader hidden">
+            <div class="loader-logo loader-logo-animation">
+                <svg width="120" height="120" viewBox="0 0 61 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30.8919 50.5334C33.472 46.3136 35.8983 42.4107 38.2198 38.4516C38.447 38.062 38.1813 37.2563 37.8911 36.7808C30.6681 24.8707 23.4241 12.9705 16.1242 1.10328C15.7781 0.541945 14.9355 0.0697652 14.2502 0.0565574C9.65982 -0.0325952 5.0659 0.0103303 0 0.0103303C10.3486 16.9361 20.5293 33.5845 30.8919 50.5334Z" fill="white"/>
+                    <path class="logo-section-one" d="M21.9257 0.0785001C28.4739 10.7867 34.8054 21.135 41.3047 31.7607C43.8779 27.5738 46.3182 23.6643 48.6536 19.7053C48.8844 19.3123 48.6641 18.5133 48.3844 18.0444C44.9897 12.4146 41.567 6.80127 38.0743 1.22428C37.7422 0.692662 36.8996 0.137935 36.2843 0.124727C31.6869 0.0322727 27.0825 0.0751975 21.9257 0.0751975V0.0785001Z" fill="#EF233C"/>
+                    <path class="logo-section-two" d="M60.6489 0.124756H45.0002C47.6293 4.4404 50.1395 8.56784 52.7965 12.9264C55.4326 8.62727 57.9394 4.54276 60.6489 0.124756Z" fill="#EF233C"/>
+                </svg>
+            </div>
+            <div class="loader-inner"></div>
+        </div>
+        <div class="error-warning" id="warningCustom">
+            <img id="warnImg" src="{!URLFOR($Resource.iconAlertBlack)}" class="error-image"/>
+            <span id="warnText" class="closebtn closebtn-black-color"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="error-alert" id="errorCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="sucess-alert" id="sucessCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+            
+          
+        <div class="student-info-popup student-info-popup-hide">
+            <div class="student-info-popup-body">
+                <div class="student-info-popup-body-header">
+                      <div onclick="popupClose()" class="div-btn-x-btn">❌</div>
+                </div>
+                <div class="student-info-popup-body-stud-info">
+                        <div id="student-info-popup-body-stud-info-name-id" >name</div>
+                        <div id="student-info-popup-body-stud-info-email-id">email</div>
+                        <div id="student-info-popup-body-stud-info-phone-id">phone</div>
+                </div>
+                <div class="student-info-popup-body-cnt">
+        
+                </div>
+                    <div class="student-info-popup-body-cnt-pan-addmore" >
+                             <div class="student-info-popup-body-cnt-pan-addmore-cnt"> 
+                                        <div class="student-info-popup-body-cnt-pan-addmore-cnt-txt">Add more Panelist</div>
+                                        <div  class="student-info-popup-body-cnt-pan-addmore-cnt-icon" onclick="addMorePan(88,1,'','')">➕</div>
+                             </div>
+                    </div>
+
+                    <div class="student-info-popup-body-cnt-pan-assign-btn" id = 'student-info-popup-cont-id'>
+                        <div id = 'student-info-popup-demote-id'  class="div-btn-red div-btn-blue-btn" onclick="DemoteClick()"> 
+                            Demote
+                        </div>
+                        <div id='student-info-popup-promote-id'   class="div-btn-blue div-btn-blue-btn" onclick="PromoteClick()"> 
+                             Promote
+                        </div>
+                   </div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="header">
+                <div>
+                    <img  class="novigo-icon" src="{!URLFOR($Resource.novigo_logo)}" alt="Novigo Icon"/>
+                </div>
+                <div class="title" id='downloadPdfButton'>
+                    <svg style="margin-right: 1vw;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="white" d="M11 9c0 1.66-1.34 3-3 3s-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3m3 11H2v-2c0-2.21 2.69-4 6-4s6 1.79 6 4m8-6v2h-9v-2m9-4v2h-9V8m9-4v2h-9V4Z"/></svg>
+                    <span class="title-text">Assign Panelist To Students</span>
+                </div>
+            </div> 
+            <div class="content-containeralt"> 
+                <div class="main-dropdown-cont">
+                    <!-- <div class="section-item-1">
+                        <span class="section-item-text">Select An Round To Assign:</span>
+                        <select class="select-style" style="width:16vw" id="RoundDropDown" >
+                            <option  value="invalid" disabled="disabled" selected="selected">Select Round Name</option>
+                        </select>
+                    </div> -->
+                    <div class="section-item-2"> 
+                        <div class="section-item-2-1" >
+                            <div class="section-item">
+                                <input placeholder="Enter Student Count" type="text" class="section-item-3-table-item-heder-row-search-inp"  id="StudentCountDropdown" oninput="studnetCountFilter()"  /> 
+                            </div> 
+                            <div class="section-item"> 
+                                <select  class="select-style" id="FilterStudentDropdown" onchange="GetStudentsData()">
+                                    <option value="invalid"   disabled="disabled" selected="selected">Filter Student By</option> 
+                                </select>
+                            </div>
+                        </div>  
+                        <div class="section-item-2-2"> 
+                            <div class="section-item"> 
+                                <div class="section-buttons" >
+                                    <button class="go-back-button"  onclick="GetAllStudnts()">Refresh Students</button>
+                                </div>
+                            </div> 
+                        </div>
+                        
+                    </div>
+                    <div class="section-item-2-search">
+                        <div class="section-item-2-search-btns">
+                            <div class="section-buttons" >
+                                <button class="print-all-btns" onclick="DownloadAllStudentsPdf(1)">Print All Student Record Forms</button>
+                            </div> 
+                            
+                            <div class="section-buttons" >
+                                <button class="print-all-btns" onclick="DownloadAllStudentsPdf(2)">Print All Student Interview FeedBack Forms</button>
+                            </div> 
+                            <div class="section-buttons" >
+                                <div id='stud-cnt'></div>
+                            </div> 
+                        </div>  
+                        <div style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    ">
+                            <input style="height:4vh;margin-right:6px;" placeholder="Search Student" type="text" class="section-item-3-table-item-heder-row-search-inp"  id="section-item-3-table-item-heder-row-search-inp-id" oninput="searchStudents()" />
+                            <!-- <div class="btn-round-view">Search</div> -->
+                        </div>
+                    </div>
+                    <div class="section-item-3">
+                              <div class="section-item-3-table">    
+                                    <div class="section-item-3-table-item-heder">
+                                          <div class="section-item-3-table-item-heder-row">
+                                            <div>Student Name</div>
+                                            <!-- <div  id = 'name-up'>
+                                                <img onclick="SortArrowClick('up','name')" class="sort-icon" src="{!URLFOR($Resource.UpArrow)}" alt="Novigo Icon"/>
+                                            </div>
+                                            <div  id = 'name-down'>
+                                                <img  onclick="SortArrowClick('down','name')" class="sort-icon" src="{!URLFOR($Resource.DownArrow)}" alt="Novigo Icon"/>
+                                            </div> -->
+                                         </div>
+                                          <div class="section-item-3-table-item-heder-row">Student Usn</div>
+                                          <div class="section-item-3-table-item-heder-row">Student Phone</div>
+                                          <div class="section-item-3-table-item-heder-row"> Round 1</div>
+       
+                                          <div class="section-item-3-table-item-heder-row">
+                                            <div> Round 2</div>
+                                            <!-- <div id = 'round1-up' >
+                                                <img onclick="SortArrowClick('up','round1')"  class="sort-icon" src="{!URLFOR($Resource.UpArrow)}" alt="Novigo Icon"/>
+                                            </div>
+                                            <div id = 'round1-down'>
+                                                <img onclick="SortArrowClick('down','round1')"   class="sort-icon" src="{!URLFOR($Resource.DownArrow)}" alt="Novigo Icon"/>
+                                            </div> -->
+                                         </div>
+                                         <div class="section-item-3-table-item-heder-row">
+                                            <div> Round 3</div>
+                                            <!-- <div id = 'round2-up'>
+                                                <img  onclick="SortArrowClick('up','round2')"  class="sort-icon" src="{!URLFOR($Resource.UpArrow)}" alt="Novigo Icon"/>
+                                            </div>
+                                            <div id = 'round2-down'>
+                                                <img onclick="SortArrowClick('down','round2')"   class="sort-icon " src="{!URLFOR($Resource.DownArrow)}" alt="Novigo Icon"/>
+                                            </div> -->
+                                         </div>
+                                         <div class="section-item-3-table-item-heder-row">
+                                            <div> Round 4</div>
+                                            <!-- <div id = 'round3-up'>
+                                                <img onclick="SortArrowClick('up','round3')"   class="sort-icon" src="{!URLFOR($Resource.UpArrow)}" alt="Novigo Icon"/>
+                                            </div>
+                                            <div id = 'round3-down'>
+                                                <img onclick="SortArrowClick('down','round3')"   class="sort-icon " src="{!URLFOR($Resource.DownArrow)}" alt="Novigo Icon"/>
+                                            </div> -->
+                                         </div>
+                                         <div class="section-item-3-table-item-heder-row-new">
+                                            <div id="ResetApproveViewButton">View</div> 
+                                         </div>
+                                    </div>
+                                    <div class="section-item-3-table-item-body"> 
+                                        <div class="section-item-3-table-item-body-init">
+                                            No Students Selected.
+                                        </div>
+                                    </div> 
+                              </div>
+                    </div>
+                    <!-- <div class="section-item-4">
+                        <div class="section-buttons">
+                            <button class="go-back-button">Select All</button>
+                        </div>
+                        <div class="section-item-1">
+                            <span class="section-item-text">Select An Round To Assign:</span>
+                            <select class="select-style" style="width:16vw" id="RoundDropDown" >
+                                <option  value="invalid" disabled="disabled" selected="selected">Select Round Name</option>
+                            </select>
+                        </div>
+                        <div class="section-item-1">
+                            <span class="section-item-text">Select An Panelist:</span>
+                            <select class="select-style" style="width:16vw" id="PanelistDropDown" >
+                                <option  value="invalid" disabled="disabled" selected="selected">Select An Panelist</option>
+                            </select>
+                        </div>
+                        <div class="section-buttons">
+                            <button class="go-back-button">Assign</button>
+                        </div> 
+
+                        
+                    </div> -->
+                </div>
+
+            </div>
+            
+        </div>
+        <div>
+            <img class="novigo-icon-big" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+        <script>
+
+            function CL(log_val){
+                console.log(log_val);
+            }
+
+
+           var currentStudentTestToUpdate = '';
+           var currentPanelistToUpdate = '';
+           var currrentRoundNumber = 0;
+           var isPopUpActive = false;
+           var globalSearchStudentList;
+
+
+
+
+ 
+
+            function showLoader() {
+                document.querySelector(".loader").classList.remove("hidden");
+            }
+    
+            function hideLoader() {
+                document.querySelector(".loader").classList.add("hidden");
+            }
+  
+
+              function getUrlParameter(name) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get(name);
+              }
+
+             const eventID = getUrlParameter('eventID');
+             if(!eventID){
+                routeToAdminLogin();
+             }
+
+             function routeToAdminLogin()
+             {
+                var targetPageUrl = '/apex/AdminLogin';
+                window.location.href = targetPageUrl;
+             }
+
+
+
+              showLoader();
+              var PanelistData = [];
+
+              Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetPanalistData}',
+                    eventID,
+                        function (result, event) {
+                                    console.log("success"); 
+                                    hideLoader();
+                                    console.log(result); 
+                                    PanelistData = result;
+                                    // const PanalistDropDownEle = document.getElementById("PanelistDropDown1"); 
+                                    // fillPanalistSelectOptions(PanalistDropDownEle,result);
+                            }
+            ); 
+            function fillPanalistSelectOptions(ele,list){ 
+                for (let i = 0; i < list.length; i++) {
+                    const option = document.createElement("option");
+                    option.value = list[i].panelists_id__r.Id;
+                    option.text =  list[i].panelists_id__r.panelistsName__c;
+                    ele.appendChild(option);
+                }
+            }
+
+            var PanelistCount  = 0;
+
+
+
+            var curInputSearchValue = '';
+            const inputElement = document.getElementById('section-item-3-table-item-heder-row-search-inp-id');
+
+            inputElement.addEventListener('input', function() {
+                curInputSearchValue = inputElement.value; 
+            });
+
+            function PromoteClick(){ 
+                const GlobFilterDownEle = document.getElementById("FilterStudentDropdown");
+                const GlobStudentCountDropdown = document.getElementById("StudentCountDropdown");  
+                var GlobStudentFilter = GlobFilterDownEle.value; 
+                var GlobStudentCount = GlobStudentCountDropdown.value; 
+
+                showLoader();
+                   Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.AssignPanalistToStudentsCtrl.PromoteDemoteStudent}',
+                    currentStudentTestToUpdate,
+                    currrentRoundNumber,
+                    true,
+                    function(result,event){
+                        popupClose();
+                        hideLoader();
+                        console.log(result);
+                        if(result){
+                         if(GlobStudentCount != 'invalid' || GlobStudentFilter != 'invalid' ){
+                            GetStudentsData(false);
+                         }else if(curInputSearchValue != ''){
+                            searchStudents();
+                         }else{
+                            InitDataFn();
+                         }
+                        }
+                    }
+                   );
+            }
+
+
+            function DemoteClick(){ 
+                const GlobFilterDownEle = document.getElementById("FilterStudentDropdown");
+                const GlobStudentCountDropdown = document.getElementById("StudentCountDropdown");  
+                var GlobStudentFilter = GlobFilterDownEle.value; 
+                var GlobStudentCount = GlobStudentCountDropdown.value;
+                showLoader();
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.AssignPanalistToStudentsCtrl.PromoteDemoteStudent}',
+                    currentStudentTestToUpdate,
+                    currrentRoundNumber,
+                    false,
+                    function(result,event){
+                        popupClose();
+                        hideLoader();
+                        console.log(result);
+                        if(result){
+                         if(GlobStudentCount != 'invalid' || GlobStudentFilter != 'invalid'  ){
+                               GetStudentsData(false);
+                         }else if(curInputSearchValue != ''){
+                            searchStudents();
+                         }else{
+                            InitDataFn();
+                         }
+                        }
+                    }
+                );
+
+            }
+
+            var GlobStudList;
+
+            
+            function RoundClick(buttonElement, round){
+                        isPopUpActive = true;
+                        PanelistCount = 0;  
+                        var main_body_remove = document.querySelector('.student-info-popup-body-cnt');
+                        while (main_body_remove.firstChild) {
+                            main_body_remove.removeChild(main_body_remove.firstChild);  
+                        }
+                        console.log(round); 
+                        showLoader();
+                        var student_test_id = buttonElement.getAttribute('data-custom-value');
+                        currentStudentTestToUpdate = student_test_id;
+                        for(var i = 0;i < GlobStudList.length; i++){
+                            if(GlobStudList[i].Id == currentStudentTestToUpdate){
+                                document.getElementById('student-info-popup-body-stud-info-name-id').textContent = GlobStudList[i].student_id__r.Name;
+                                document.getElementById('student-info-popup-body-stud-info-email-id').textContent = GlobStudList[i].student_id__r.email__c;
+                                document.getElementById('student-info-popup-body-stud-info-phone-id').textContent = GlobStudList[i].student_id__r.phone__c;
+                                 break;
+                            }
+                        }
+
+
+                        if(round == 5)
+                        {
+                            var student_id = buttonElement.getAttribute('data-custom-student_id');
+                            routeToStudentPage(eventID,student_id);
+                            return;
+                        }
+                        
+
+
+                        currrentRoundNumber = round;
+                        CL("RoundClick student_test_id  "+student_test_id);
+                        CL(" RoundClick round Round "+round);
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetStudentPanelists}',
+                             student_test_id, round,
+                             function(result,event){
+                                       console.log(result);
+
+                                       document.querySelector(".student-info-popup").classList.toggle('student-info-popup-hide');
+                                       for(var i = 0;i<result.length ;i++){
+                                                CL("result down");
+                                                CL(result);
+                                                currrentRoundNumber = result[i].assigned_panelist_round__c;
+                                                addMorePan(100,0,result[i].panelist_id__r.panelistsName__c, result[i].panelist_id__c);   
+                                            }
+                                            if(currrentRoundNumber == 2){
+                                                document.getElementById('student-info-popup-demote-id').style.display = 'none';
+                                                document.getElementById('student-info-popup-cont-id').style.display = 'grid';
+                                                document.getElementById('student-info-popup-cont-id').style.gridTemplateColumns = '1fr';
+                                            }
+                                            else if(currrentRoundNumber == 4){
+                                                document.getElementById('student-info-popup-promote-id').style.display = 'none';
+                                                document.getElementById('student-info-popup-cont-id').style.display = 'grid';
+                                                document.getElementById('student-info-popup-cont-id').style.gridTemplateColumns = '1fr';
+                                            }else{
+                                                document.getElementById('student-info-popup-demote-id').style.display = 'grid';
+                                                document.getElementById('student-info-popup-promote-id').style.display = 'grid';
+                                                document.getElementById('student-info-popup-cont-id').style.display = 'grid';
+                                                document.getElementById('student-info-popup-cont-id').style.gridTemplateColumns = '1fr 1fr';
+                                                
+                                            }
+                                       hideLoader();
+                                    }
+                        )
+            }
+
+            var addMoreBtnClickedFlag = false;
+
+
+            function popupClose(){
+                isPopUpActive = false;
+                addMoreBtnClickedFlag = false;
+                document.querySelector(".student-info-popup").classList.toggle('student-info-popup-hide');
+            }
+            
+
+
+            function fillColorsForbtn(status ){
+                if( status === '5 - NA'){
+                    return '#808080';
+                }else if(status === '0 - Waiting'){
+                    return '#ab7cc9';
+                }else if(status === '1 - In Progress'){
+                    return '#6593bd';
+                }else if(status === '2 - Cleared'){
+                    return '#72bb83';
+                }else if(status === '3 - On Hold'){
+                    return '#f3a25b';
+                }else if(status === '4 - Rejected'){
+                    return '#cb4545';
+                }
+            }
+
+            
+            function routeToStudentPage(eventId,studentId) {
+                var panelID = getUrlParameter('panelistId');
+                var adminId = getUrlParameter('adminId');
+                var directorId = getUrlParameter('DirectorId');
+                var targetPageUrl = '';
+
+                if(panelID != null)
+                {
+                    targetPageUrl = '/apex/studentProfile?eventId=' + eventId  + '&studentId=' + studentId + '&panelistId=' + panelID;
+                }
+                else if(adminId != null)
+                {
+                    targetPageUrl = '/apex/studentProfile?eventId=' + eventId  + '&studentId=' + studentId + '&adminId=' + adminId;
+                }
+                else
+                {
+                    targetPageUrl = '/apex/studentProfile?eventId=' + eventId  + '&studentId=' + studentId + '&DirectorId=' + directorId;
+                }
+                window.location.href = targetPageUrl;
+                
+          }
+
+
+
+
+            function initTable(result){
+                console.log('initTable')
+                console.log(result)
+                document.getElementById('stud-cnt').textContent = 'Student Count : '+ result.length;
+                var main_body_remove = document.querySelector('.section-item-3-table-item-body');
+                while (main_body_remove.firstChild) {
+                    main_body_remove.removeChild(main_body_remove.firstChild);  
+                }
+                for(var i = 0 ; i< result.length ;i++){
+                    var main_body = document.querySelector('.section-item-3-table-item-body');
+                    var main_ele = document.createElement('div');
+                    main_ele.className = 'section-item-3-table-item-body-row';
+                    if(result[i].RoundFourStatus__c === '2 - Cleared'){
+                        main_ele.style.gridTemplateColumns = '1fr 1fr 1fr 33vw 3.2vw';
+                    }
+                    var ele = document.createElement('div');
+                    ele.className = 'section-item-3-table-item-body-row-item-1';
+                    ele.textContent = result[i].student_id__r.Name;
+                    main_ele.appendChild(ele);
+
+                    ele = document.createElement('div');
+                    ele.className = 'section-item-3-table-item-body-row-item-2';
+                    ele.textContent = result[i].student_id__r.usn__c;
+                    main_ele.appendChild(ele);
+
+
+                    ele = document.createElement('div');
+                    ele.className = 'section-item-3-table-item-body-row-item-3';
+                    ele.textContent = result[i].student_id__r.phone__c;
+                    main_ele.appendChild(ele); 
+
+                    if(result[i].RoundFourStatus__c != '2 - Cleared'){
+                        ele = document.createElement('div');
+                        ele.className = 'section-item-3-table-item-body-row-item-4';
+                        var btnele = document.createElement('div');
+                        btnele.className = 'btn-round-view';
+                        btnele.textContent =   result[i].RoundOneStatus__c.replace(/^\d+\s*-\s*/, '');
+                        btnele.setAttribute("data-custom-value",result[i].Id);
+                        btnele.style.background = fillColorsForbtn(result[i].RoundOneStatus__c);
+                        ele.appendChild(btnele); 
+                        main_ele.appendChild(ele);
+                    }
+
+
+                    if(result[i].RoundFourStatus__c != '2 - Cleared'){
+                        ele = document.createElement('div');
+                        ele.className = 'section-item-3-table-item-body-row-item-5';
+                        btnele = document.createElement('div');
+                        btnele.className = 'btn-round-view';
+                        btnele.textContent =  result[i].RoundTwoStatus__c.replace(/^\d+\s*-\s*/, '');
+                        btnele.style.background = fillColorsForbtn(result[i].RoundTwoStatus__c);
+                        btnele.setAttribute("data-custom-value",result[i].Id);
+                        btnele.onclick = function (){
+                            RoundClick(this,2);
+                        };
+                        ele.appendChild(btnele); 
+                        main_ele.appendChild(ele);
+                    }
+
+                    
+                    if(result[i].RoundFourStatus__c != '2 - Cleared'){
+                        ele = document.createElement('div');
+                        ele.className = 'section-item-3-table-item-body-row-item-5';
+                        btnele = document.createElement('div');
+                        btnele.className = 'btn-round-view';
+                        btnele.textContent =    result[i].RoundThreeStatus__c.replace(/^\d+\s*-\s*/, '');
+                        btnele.style.background = fillColorsForbtn(result[i].RoundThreeStatus__c);
+                        btnele.setAttribute("data-custom-value",result[i].Id);
+                        btnele.onclick = function (){
+                            RoundClick(this,3);
+                        };
+                        ele.appendChild(btnele); 
+                        main_ele.appendChild(ele);
+                    }
+
+
+                    if(result[i].RoundFourStatus__c != '2 - Cleared'){
+                        ele = document.createElement('div');
+                        ele.className = 'section-item-3-table-item-body-row-item-5';
+                        btnele = document.createElement('div');
+                        btnele.className = 'btn-round-view';
+                        btnele.textContent = result[i].RoundFourStatus__c.replace(/^\d+\s*-\s*/, '');
+                        btnele.style.background = fillColorsForbtn(result[i].RoundFourStatus__c);
+                        btnele.setAttribute("data-custom-value",result[i].Id);
+                        btnele.onclick = function (){
+                            RoundClick(this,4);
+                        };
+                        ele.appendChild(btnele); 
+                        main_ele.appendChild(ele);
+                    }
+
+                    if(result[i].RoundFourStatus__c == '2 - Cleared'){
+                        ele = document.createElement('div');
+                        ele.className = 'section-item-3-table-item-body-row-item-6';
+                        btnele = document.createElement('div');
+                        btnele.className = 'btn-round-view';
+                        btnele.textContent =   'Hired';
+                        btnele.style.background = '#05b705';
+                        btnele.style.width = '20vw';
+                        btnele.style.color = 'white';
+                        btnele.style.boxShadow = '0 0 0';
+                        ele.appendChild(btnele);
+                        main_ele.appendChild(ele);
+                    }
+
+                    ele = document.createElement('div');
+                    ele.className = 'section-item-3-table-item-body-row-item-6';
+                    btnele = document.createElement('div');
+                    btnele.className = 'btn-round-view';
+                    btnele.textContent =   '↗';
+                    btnele.style.background = '#150958';
+                    btnele.style.width = '2vw';
+                    btnele.style.color = 'white';
+                    btnele.setAttribute("data-custom-value",result[i].Id);
+                    btnele.setAttribute("data-custom-student_id",result[i].student_id__c);
+                    btnele.onclick = function (curStudID){
+                        RoundClick(this,5);
+                    }; 
+                    ele.appendChild(btnele);
+                    main_ele.appendChild(ele);
+                    
+
+                    main_body.appendChild(main_ele);
+                }  
+            }
+
+
+
+            function searchStudents(){
+                // showLoader();
+                var serchString = document.getElementById('section-item-3-table-item-heder-row-search-inp-id').value;
+                globalSearchStudentList = GlobStudList;
+                if(serchString){  
+                    globalSearchStudentList =  globalSearchStudentList.filter((value) => ((value.student_id__r.Name.toLowerCase().includes(serchString.toLowerCase()) ) ));
+                    } 
+                initTable(globalSearchStudentList);
+
+                /*
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetSearchStudentsData}',
+                    eventID,serchString,
+                        function (result, event) {
+                                    console.log("success"); 
+                                    hideLoader();
+                                    console.log(result); 
+                                    GlobStudList = result; 
+                                    initTable(result);
+                            }
+            ); 
+            */
+            
+            }
+
+            InitDataFn();
+
+
+
+            function InitDataFn(){ 
+
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetStudentsData}',
+                            '',eventID,'',0,'','',true,
+                                function (result, event) {
+                                            console.log("success"); 
+                                            hideLoader();
+                                            console.log(result);  
+                                            GlobStudList = result;
+                                            globalSearchStudentList = result;
+                                            initTable(result);
+                                    }
+                    ); 
+            }
+
+
+            function GetAllStudnts(){  
+                showLoader();
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetAllStudentsData}',
+                            eventID,
+                            function (result, event) {
+                                        console.log("success"); 
+                                        hideLoader();
+                                        console.log(result);  
+                                        GlobStudList = result;
+                                        initTable(result);
+                                }
+                ); 
+            }
+
+
+ 
+
+            const FilterDownEle = document.getElementById("FilterStudentDropdown");
+            var FilterDownEleList = [
+                {
+                    value: "All Students" ,
+                    text: "All Students",
+                },
+                {
+                    value: "1st Round Cleared" ,
+                    text: "1st Round Cleared",
+                },
+                {
+                    value: "2nd Round Cleared",
+                    text: "2nd Round Cleared",
+                },
+                {
+                    value: "3rd Round Cleared",
+                    text: "3rd Round Cleared",
+                },
+                {
+                    value: "Approved Students",
+                    text:  "Approved Students",
+                },
+                {
+                    value: "Rejected Students",
+                    text: "Rejected Students",
+                },  
+                {
+                    value: "On Hold Students",
+                    text: "On Hold Students",
+                },  
+                {
+                    value: "Hired Students",
+                    text: "Hired Students",
+                },  
+            ]
+            fillFilterSelectOptions(FilterDownEle,FilterDownEleList)
+
+            function fillFilterSelectOptions(ele,list){ 
+                for (let i = 0; i < list.length; i++) {
+                    const option = document.createElement("option");
+                    option.value = list[i].value;
+                    option.text =  list[i].text;
+                    ele.appendChild(option);
+                }
+            }
+
+
+
+ 
+ 
+            function displayErrorMessage(errorText) {
+                const errorCustom = document.getElementById("errorCustom");
+                const alertText = errorCustom.querySelector("#alertText");
+                const alertImg = errorCustom.querySelector("#alertImg");
+                errorCustom.textContent = "";
+                errorCustom.appendChild(alertImg);
+                errorCustom.appendChild(document.createTextNode("Error: " + errorText));
+                errorCustom.appendChild(alertText);
+    
+                errorCustom.style.display = 'flex';
+                errorCustom.classList.add("alert-animation");
+                setTimeout(() => {
+                    errorCustom.style.display = "none";
+                    errorCustom.classList.remove("alert-animation");
+                }, 5000);
+            }
+    
+            function displayWarningMessage(warningText) {
+                const warningCustom = document.getElementById("warningCustom");
+                const warnText = document.getElementById("warnText"); // Get the warnText element
+                const warnImg = document.getElementById("warnImg"); // Get the warnImg element
+    
+                warningCustom.textContent = ""; // Clear any existing content
+                warningCustom.appendChild(warnImg);
+    
+                // Create a text node and set its content
+                const warningTextNode = document.createTextNode("Warning: " + warningText);
+                warningCustom.appendChild(warningTextNode);
+    
+                warningCustom.appendChild(warnText); // Append the warnText element
+    
+                warningCustom.style.display = 'flex';
+                // warningCustom.classList.add("alert-animation");
+                setTimeout(() => {
+                    warningCustom.style.display = "none";
+                    warningCustom.classList.remove("alert-animation");
+                }, 5000);
+            }
+    
+            function routeToAdminPage(loginDetails) {
+                var targetPageUrl;
+                //assiging ID as per login
+                if(loginDetails.isAdmin)
+                {
+                    targetPageUrl = '/apex/adminPage?adminId=' + loginDetails.recordID;
+                }
+                else
+                {
+                    targetPageUrl = '/apex/adminPage?panelistId=' + loginDetails.recordID;
+                }
+
+                window.location.href = targetPageUrl;
+                
+            }
+
+
+            function NavToLoginPage(){
+                var targetPageUrl = '/apex/studentRegistrationAlt';
+                window.location.href = targetPageUrl;
+            }
+    
+             
+    
+ 
+
+             var StudentsFromDataBase;
+
+             var StudentSort  = 'Name ASC';
+
+             function GetStudentsData(autoRefresh){
+                const FilterDownEle = document.getElementById("FilterStudentDropdown");
+                const StudentCountDropdown = document.getElementById("StudentCountDropdown");
+                 
+                var StudentFilter = FilterDownEle.value; 
+                var StudentCount =  StudentCountDropdown.value; 
+                if(!StudentCount) StudentCount = 0;
+                if(StudentFilter == 'invalid') StudentFilter = '';
+                var panelistID = '';
+                var RoundSelected = '';
+                var eventID = getUrlParameter('eventID');
+
+                if(!autoRefresh)
+                {
+                    showLoader(); 
+                }
+                var allStud = false;
+                if(StudentFilter == 'All Students'){
+                    allStud = true;
+                }
+
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetStudentsData}',
+                    panelistID,eventID,StudentSort,StudentCount,StudentFilter,RoundSelected,allStud,
+                        function (result, event) { 
+                                    console.log("success"); 
+                                    hideLoader();
+                                    console.log(result);
+                                    console.log(event);
+                                    if(result){
+                                        StudentsFromDataBase = result; 
+                                        console.log(result);
+                                        checkInterviewStatus(result);
+                                        GlobStudList = result;
+                                        globalSearchStudentList = result;
+                                        initTable(result);
+                                    }
+                            }
+                    );
+             }
+
+
+             
+
+
+             function removePanSelect(ele){ 
+                const GlobFilterDownEle = document.getElementById("FilterStudentDropdown");
+                const GlobStudentCountDropdown = document.getElementById("StudentCountDropdown");  
+                var GlobStudentFilter = GlobFilterDownEle.value; 
+                var GlobStudentCount = GlobStudentCountDropdown.value;
+                showLoader(); 
+                CL('currentStudentTestToUpdate '+currentStudentTestToUpdate)
+                CL('currrentRoundNumber '+currrentRoundNumber);
+                currentPanelistToUpdate = ele.getAttribute('data-custom-value-pan-id');
+                CL('currentPanelistToUpdate ' +currentPanelistToUpdate);
+
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.AssignPanalistToStudentsCtrl.RemovePanStudtestJunction}',
+                    currentPanelistToUpdate,
+                    currentStudentTestToUpdate,
+                    currrentRoundNumber,
+                    function (result,event){
+                        console.log(result);
+                        ChangeUiOnRemoveClick();
+                        if(GlobStudentCount || GlobStudentFilter != 'invalid' ){
+                            GetStudentsData(false);
+                         }else if(curInputSearchValue != ''){
+                            searchStudents();
+                         }else{
+                            InitDataFn();
+                         }
+                        hideLoader();
+                    }
+                ); 
+
+
+                function ChangeUiOnRemoveClick(){
+
+                        PanelistCount--;
+                        var childId =  ele.getAttribute('data-custom-value');
+                        var parentDiv = document.querySelector(".student-info-popup-body-cnt");
+        
+                        var childElement = document.getElementById(childId); 
+                        if (childElement && parentDiv.contains(childElement)) { 
+                            parentDiv.removeChild(childElement);
+                        } else {
+                            console.log("Child element not found or not a child of the parent div.");
+                        }
+                        
+                        parentDiv = document.querySelector(".student-info-popup-body-cnt");
+
+                        
+                        var parentElement = document.querySelector(".student-info-popup-body-cnt");
+
+                        if (parentElement) {
+                            var childElements = parentElement.querySelectorAll(".student-info-popup-body-cnt-pan");
+                            var i = 1;
+                            childElements.forEach(function(childElement) {
+                                var textElement = childElement.querySelector(".student-info-popup-body-cnt-pan-txt");
+                                if (textElement) {
+                                    textElement.textContent = 'Panelist '+i;
+                                    i++;
+                                }
+                            });
+                        }
+
+                        addMoreBtnClickedFlag = false;
+
+                }
+
+             }
+
+            
+             var slectedEle;
+             function SelectOnChangeCalled(e){
+                slectedEle = e;
+                CL('panlist id')
+                CL(e.value);
+                currentPanelistToUpdate = e.value;
+
+             }
+
+
+
+
+ 
+
+             function AssignBtnClicked(e){  
+                const GlobFilterDownEle = document.getElementById("FilterStudentDropdown");
+                const GlobStudentCountDropdown = document.getElementById("StudentCountDropdown");  
+                var GlobStudentFilter = GlobFilterDownEle.value; 
+                var GlobStudentCount = GlobStudentCountDropdown.value;
+                console.log(GlobStudentFilter);
+                console.log(GlobStudentCount);
+                if(currentPanelistToUpdate == ''){
+                    displayErrorMessage("please select a panelist to assign");
+                    return;
+                }
+                CL(e);
+                e.style.display = 'none';
+                addMoreBtnClickedFlag = false;
+                CL('currentPanelistToUpdate ' +currentPanelistToUpdate);
+                CL('currentStudentTestToUpdate '+currentStudentTestToUpdate)
+                CL('currrentRoundNumber '+currrentRoundNumber);
+
+                showLoader();
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.AssignPanalistToStudentsCtrl.AssignPanelistAddJunction}',
+                      currentPanelistToUpdate,
+                      currentStudentTestToUpdate,
+                      currrentRoundNumber,
+                      function (result, event){
+                         console.log(result);
+                         clearSelction();
+                         CL("before assign");
+                         console.log(GlobStudentCount);
+                         console.log(GlobStudentFilter); 
+                         if(GlobStudentCount || GlobStudentFilter != 'invalid'  ){
+                            GetStudentsData(false);
+                         }else if(curInputSearchValue != ''){
+                            searchStudents();
+                         }else{
+                            InitDataFn();
+                         }
+                         popupClose();
+                         hideLoader();
+                         
+                      }
+                );
+                function clearSelction(){
+                        var selectedOption = slectedEle.options[slectedEle.selectedIndex];
+                        for (var i = slectedEle.options.length - 1; i >= 0; i--) {
+                            if (slectedEle.options[i] !== selectedOption) {
+                                slectedEle.remove(i);
+                            }
+                        }
+                }
+             }
+
+             
+             
+             
+
+             function addMorePan(flag_for_init,flag,pan_name,pan_id){
+
+                if(addMoreBtnClickedFlag){
+                    displayErrorMessage('please assign the selected panelist before adding more');
+                    return;
+                }
+                if(flag_for_init != 100)
+                    addMoreBtnClickedFlag = true;
+ 
+                 // Create a new select element
+                // Create a new select element 
+                PanelistCount++; 
+
+                var selectElement = document.createElement('select');
+                selectElement.className = 'select-style';
+                selectElement.style.width = '16vw';
+                selectElement.id = 'PanelistDropDown'+PanelistCount;
+
+              
+                if(flag == 0){
+                    var Option_res = document.createElement('option');
+                    Option_res.value = pan_id;
+                    Option_res.textContent = pan_name;
+                    Option_res.selected = true;
+                    selectElement.appendChild(Option_res);
+                }else{ 
+                    var defaultOption = document.createElement('option');
+                    defaultOption.value = 'invalid';
+                    defaultOption.textContent = 'Select An Panelist';
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    selectElement.appendChild(defaultOption);
+                }
+                // Create the "Assign" button
+                var assignButton = document.createElement('div');
+                assignButton.className = 'div-btn-blue';
+                assignButton.textContent = 'Assign';
+                assignButton.onclick = function(){
+                    AssignBtnClicked(this);
+                }
+
+                // Create the "Remove" button
+                var removeButton = document.createElement('div');
+                removeButton.className = 'div-btn-red';
+                removeButton.textContent = 'Remove';
+                removeButton.onclick   = function(){
+                    removePanSelect(this);
+                };
+                removeButton.setAttribute("data-custom-value",'PanelistDropDown'+PanelistCount);
+                removeButton.setAttribute("data-custom-value-pan-id",pan_id);
+
+                // Create the "Panelist 1" text
+                var panelistText = document.createElement('div');
+                panelistText.className = 'student-info-popup-body-cnt-pan-txt';
+                panelistText.textContent = 'Panelist '+PanelistCount; 
+                
+
+                // Create a new div for the dropdown
+                var dropdownDiv = document.createElement('div');
+                dropdownDiv.className = 'student-info-popup-body-cnt-pan-dropdown';
+                dropdownDiv.appendChild(selectElement);
+
+                // Create a new div for the "Assign" and "Remove" buttons
+                var assignRemoveDiv = document.createElement('div');
+                assignRemoveDiv.className = 'student-info-popup-body-cnt-pan-assign';
+                if(flag_for_init != 100)
+                    assignRemoveDiv.appendChild(assignButton);
+                assignRemoveDiv.appendChild(removeButton);
+
+                // Create a new div to contain all the elements within "student-info-popup-body-cnt-pan"
+                var panelDiv = document.createElement('div');
+                panelDiv.className = 'student-info-popup-body-cnt-pan';
+                panelDiv.setAttribute("data-custom-value",'PanelistDropDown'+PanelistCount);
+                panelDiv.id = 'PanelistDropDown'+PanelistCount;
+                panelDiv.appendChild(panelistText);
+                panelDiv.appendChild(dropdownDiv);
+                panelDiv.appendChild(assignRemoveDiv);
+
+
+                selectElement.onchange = function(){
+                    SelectOnChangeCalled(this);
+                }
+
+                // Append the "student-info-popup-body-cnt-pan" div to the "student-info-popup-body-cnt" div
+                var parentDiv = document.querySelector('.student-info-popup-body-cnt');
+                parentDiv.appendChild(panelDiv);
+
+                if(flag_for_init != 100)
+                    fillPanalistSelectOptions(selectElement,PanelistData);  
+
+
+
+             }
+
+
+             //Auto Refresh Feature
+            var updateTimerInterval =  setInterval(() => { 
+                if(isPopUpActive) return;
+                var serchString = document.getElementById('section-item-3-table-item-heder-row-search-inp-id').value;
+                if(serchString != '')
+                {
+                    console.log(serchString);
+                    searchStudents();
+                }   
+                else
+                {
+                    GetStudentsData(true);
+                }
+                }, 10000);
+             
+             var savedResult;
+             var studentDetails;
+             var generatedPdf; 
+
+            function DownloadAllStudentsPdf(PrintClickNumber){
+                showLoader();
+                var StudentIdList = [];
+                for(var i = 0;i<globalSearchStudentList.length;i++){
+                    StudentIdList.push(globalSearchStudentList[i].student_id__c);
+                }
+                Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.AssignPanalistToStudentsCtrl.retrieveStudentDetails}',
+                        StudentIdList,
+                        eventID, 
+                        function (result,event){
+                            console.log(result);    
+                            //savedResult = result.studentAssessmentList;
+                            //studentDetails = result.studentDetails;
+                            if(PrintClickNumber == 1){
+                                generatedPdf =  downloadStudentProfilePdf(result);
+                            }else if(PrintClickNumber == 2){
+                                generatedPdf =  downloadStudentInterviewFeedbackPdf(result);
+                            }
+                            hideLoader();
+                        }
+                    ); 
+            }
+
+
+            function checkInterviewStatus(result)
+            {
+                var studentListInBrowser = GlobStudList;
+                var studentListFromDatabase = result;
+
+
+                if(studentListInBrowser.length != studentListFromDatabase.length)
+                {
+                    return;
+                }
+
+                studentListInBrowser.sort();
+                studentListFromDatabase.sort();
+
+                console.log('Data in the broswer : ');
+                console.log(studentListInBrowser);
+                console.log('Result from database');
+                console.log(studentListFromDatabase);
+
+                for(var i = 0 ; i < studentListInBrowser.length; i++)
+                {
+                    checkStudentStatus(studentListInBrowser[i],studentListFromDatabase[i]);
+                }
+
+
+            }
+
+            function checkStudentStatus(studentDataFromBrowser, studentDataFromDatabase)
+            {
+
+                var studentStatus, roundNumber;
+                if(studentDataFromBrowser.RoundFourStatus__c != studentDataFromDatabase.RoundFourStatus__c)
+                {
+                    if(!(studentDataFromDatabase.RoundFourStatus__c == '0 - Waiting' || studentDataFromDatabase.RoundFourStatus__c == '1 - In Progress'))
+                    {
+                        studentStatus = statusToMessage(studentDataFromDatabase.RoundFourStatus__c);
+                        roundNumber = 4;
+                    }
+                }
+
+                if(studentDataFromBrowser.RoundThreeStatus__c != studentDataFromDatabase.RoundThreeStatus__c)
+                {
+                    if(!(studentDataFromDatabase.RoundThreeStatus__c == '0 - Waiting' || studentDataFromDatabase.RoundThreeStatus__c == '1 - In Progress'))
+                    {
+                        studentStatus = statusToMessage(studentDataFromDatabase.RoundThreeStatus__c);
+                        roundNumber = 3;
+                    }
+                }
+
+                if(studentDataFromBrowser.RoundTwoStatus__c != studentDataFromDatabase.RoundTwoStatus__c)
+                {
+                    if(!(studentDataFromDatabase.RoundTwoStatus__c == '0 - Waiting' || studentDataFromDatabase.RoundTwoStatus__c == '1 - In Progress'))
+                    {
+                        studentStatus = statusToMessage(studentDataFromDatabase.RoundTwoStatus__c);
+                        roundNumber = 2;
+                    }
+                }
+
+                if(studentStatus == undefined)
+                {
+                    return false;
+                }
+
+                //do remoting
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.AssignPanalistToStudentsCtrl.getPanelistId}',
+                studentDataFromDatabase.Id,
+                roundNumber,
+                        function (result, event) {
+                                    console.log('Panelist ID: ');
+                                    console.log(result); 
+
+                                    if(result)
+                                    {
+                                        var panelistName = panelistIdToName(result);
+                                        var message =  panelistName + ' ' + studentStatus + ' ' + studentDataFromDatabase.student_id__r.Name;
+                                        displaysSuccessMessage(message);
+                                    }
+                                    else
+                                    {
+                                        displayErrorMessage('Panelist not found for student Test');
+                                    }
+
+                                    // const PanalistDropDownEle = document.getElementById("PanelistDropDown1"); 
+                                    // fillPanalistSelectOptions(PanalistDropDownEle,result);
+                            }
+            ); 
+
+
+                
+            }
+
+            function panelistIdToName(panelistId)
+            {
+                for(var i = 0; i < PanelistData.length; i++)
+                {
+                    if(PanelistData[i].panelists_id__c === panelistId)
+                    {
+                        console.log('WE GOT PANELISTS');
+                        return PanelistData[i].panelists_id__r.panelistsName__c;
+                    }
+                }
+
+                return 'null';
+            }
+
+            function statusToMessage(studentStatus)
+            {
+                switch(studentStatus)
+                {
+                    case '2 - Cleared':
+                        return 'Promoted';
+                    case '3 - On Hold':
+                        return 'On Hold';
+                    case '4 - Rejected':
+                        return 'Rejected';
+                }
+
+                return 'null';
+
+            }
+
+
+            function displaysSuccessMessage(warningText) {
+                const warningCustom = document.getElementById("sucessCustom");
+                const warnText = document.getElementById("alertText"); // Get the warnText element
+                const warnImg = document.getElementById("alertImg"); // Get the warnImg element
+    
+                warningCustom.textContent = ""; // Clear any existing content
+                warningCustom.appendChild(warnImg);
+    
+                // Create a text node and set its content
+                const warningTextNode = document.createTextNode("Sucess: " + warningText);
+                warningCustom.appendChild(warningTextNode);
+    
+                warningCustom.appendChild(warnText); // Append the warnText element
+    
+                warningCustom.style.display = 'flex';
+                // warningCustom.classList.add("alert-animation");
+                // setTimeout(() => {
+                //     warningCustom.style.display = "none";
+                //     warningCustom.classList.remove("alert-animation");
+                // }, 5000);
+            }
+
+        
+
+            function downloadStudentProfilePdf(result)
+            {
+                var htmlContent = '';
+                var experienceHTML = '';
+                var academicHTML = '';
+
+                            for(var i = 0; i < result.studentTestList.length; i++)
+                            {
+                                experienceHTML = GenerateExperienceHTML(result.experienceMap[result.studentDetailsList[i].Id]);
+                                academicHTML = GenerateAcademicDetailsHTML(result.studentDetailsList[i]);
+                                
+                                    htmlContent += `
+                                    <div id = 'header' style="page-break-after: always;">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <img style="display: block; width:25%; height:5%;" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/>
+                                            <img src="${result.studentDetailsList[i].student_image__c}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #150958; margin-right: 10px;">
+                                        </div>
+                                        <div style="text-align:center;"><h4>Interview Record form</h4></div>
+
+                                        <div><h3><b>Name: ${result.studentDetailsList[i].Name}</b></h3></div>
+                                        <div style="display:flex;justify-content: space-between;"><span><b>Date Of Birth:</b> ${result.studentDetailsList[i].DateOfBirth__c}</span><span><b>Gender:</b> ${result.studentDetailsList[i].Gender__c}</span><span><b>Status:</b> ${result.studentDetailsList[i].MartialStatus__c}</span></div>
+
+                                        <!-- Table for Address -->
+                                        <div style="justify-content: center;">  
+                                        <table style="align-items:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse;" border="1">
+                                            <tr>
+                                                <th>
+                                                    Correspondence Address
+                                                </th>
+                                                <th>
+                                                    Permanent Address
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    ${result.correspondenceAddressMap[result.studentDetailsList[i].Id].Address}
+                                                    ${result.correspondenceAddressMap[result.studentDetailsList[i].Id].City}
+                                                    ${result.correspondenceAddressMap[result.studentDetailsList[i].Id].State}
+                                                    ${result.correspondenceAddressMap[result.studentDetailsList[i].Id].Pincode} 
+                                                </td>
+                                                <td>
+                                                    ${result.permanentAddressMap[result.studentDetailsList[i].Id].Address}
+                                                    ${result.permanentAddressMap[result.studentDetailsList[i].Id].City}
+                                                    ${result.permanentAddressMap[result.studentDetailsList[i].Id].State}
+                                                    ${result.permanentAddressMap[result.studentDetailsList[i].Id].Pincode}
+                                                </td>
+                                                
+                                            </tr>
+                                        
+                                        </table>
+                                        </div>
+
+                                        <div style="display:flex;justify-content: space-between;"><span><b>Mobile Number:</b> ${result.studentDetailsList[i].phone__c} </span><span><b>Alternate Contact Number:</b> ${result.studentDetailsList[i].alternate_phone__c} </span></div>
+                                        <div style="margin-top: 1vh; margin-bottom: 1vh;"><b>Email ID: </b> ${result.studentDetailsList[i].email__c}</div>
+                                        <div><b>Number of days required to join:</b> 1 Year (Immediate/Number of days required to join)</div>
+                                        
+                                        
+                                        ${academicHTML}
+                                       ${experienceHTML}
+
+                                        <!-- Table for Aptitude Marks Details -->
+                                        <div style="justify-content: center; margin-top: 3vh;"> 
+                                            <h3><b>1. Aptitude Test</b></h3> 
+                                            <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; width: 100%; border-collapse: collapse;" border="1">
+                                                <tr>
+                                                    <th>
+                                                        Test Type
+                                                    </th>
+                                                    <th>
+                                                        Total Questions
+                                                    </th>
+                                                    <th>
+                                                        Marks Obtained
+                                                    </th>
+                                                    <th>
+                                                        Result
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th>
+                                                        C
+                                                    </th>
+                                                    <td>
+                                                        ${GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.CEasy__c
+                                                        + GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.CMeduim__c
+                                                        + GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.CHard__c}
+                                                    </td>
+                                                    <td>
+                                                        ${GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).student_cprogram_marks__c}
+                                                    </td>
+                                                    <td rowspan="2">
+                                                        ${GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).student_cprogram_marks__c 
+                                                        + GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).student_apti_marks__c}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Aptitude
+                                                    </td>
+                                                    <td>
+                                                        ${GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.aptiEasy__c
+                                                        + GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.aptiMeduim__c
+                                                        + GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).event_id__r.aptiHard__c}
+                                                    </td>
+                                                    <td>
+                                                        ${GetStudentTestData(result.studentTestList,result.studentDetailsList[i].Id).student_apti_marks__c}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    `;
+                            }
+
+
+                            //Print the PDF
+                            openWin(htmlContent) ;
+            }
+
+            function GenerateExperienceHTML(experienceData)
+            {
+
+                var expereinceContent =
+                `
+                <div><b>Certification/Project/Intership, if any: </b></div>
+                                <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                                    <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%; page-break-inside: avoid;" border="1">
+                                        <tr style="padding: 10px;">
+                                            <th style="font-size: 14px;">Start Duration</th>
+                                            <th style="font-size: 14px;">End Duration</th>
+                                            <th style="font-size: 14px;">Instituion/Organisation and Location</th>
+                                            <th style="font-size: 14px;">Area and Topic Covered</th>
+                                        </tr>
+                `;
+
+                if(experienceData){experienceData.forEach(data => {
+                    expereinceContent += `
+                                        <tr style="padding: 5px;">
+                                                <td style="font-size: 14px; padding: 5px;">${data.StartDuration}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.EndDuration}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.Organization + ', ' + data.Location}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.Topic}</td>
+                                        </tr>
+                                   
+                                `;});}
+
+                                expereinceContent += ` </table>
+                                </div>
+                                `
+                                
+                    console.log("Experience Content " + expereinceContent);        
+                    return expereinceContent;
+
+            }
+
+            function GenerateAcademicDetailsHTML(studentDetails)
+            {
+                var academicDetails =
+                `
+                <div style="margin-top: 3vh;"><b>Academic Details(10th to highest Qualification) </b></div>
+                                <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                                    <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%; " border="1">
+                                        <tr style="padding: 10px; page-break-inside: avoid;">
+                                            <th style="font-size: 14px;">Course</th>
+                                            <th style="font-size: 14px;">Specialisation</th>
+                                            <th style="font-size: 14px;">Institution</th>
+                                            <th style="font-size: 14px;">Year Of passing</th>
+                                            <th style="font-size: 14px;">Score Grade</th>
+                                        </tr>
+
+                                        ${studentDetails.hsc_marks__c !== undefined 
+                                            ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.hscCourse__c  !== undefined ? studentDetails.hscCourse__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_specialization__c !== undefined ? studentDetails.hsc_specialization__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_name__c !== undefined ? studentDetails.hsc_name__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_pass_year__c !== undefined ? studentDetails.hsc_pass_year__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.hsc_marks__c !== undefined ? studentDetails.hsc_marks__c : 'NA'}</td>
+                                            </tr>`
+                                            : ''}
+
+                                            ${studentDetails.ssc_marks__c !== undefined 
+                                            ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.SecondarySchoolCourse__c !== undefined ? studentDetails.SecondarySchoolCourse__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">  ${studentDetails.SecondarySchoolSpecialization__c !== undefined ? studentDetails.SecondarySchoolSpecialization__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.ssc_name__c !== undefined ? studentDetails.ssc_name__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.ssc_pass_year__c !== undefined ? studentDetails.ssc_pass_year__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.ssc_marks__c !== undefined ? studentDetails.ssc_marks__c : 'NA'}</td>
+                                            </tr>`
+                                            : ''}
+
+
+                                            ${studentDetails.diploma_marks__c !== undefined 
+                                            ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.DiplomaCourse__c !== undefined ? studentDetails.DiplomaCourse__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">  ${studentDetails.DiplomaSpecialization__c !== undefined ? studentDetails.DiplomaSpecialization__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.diploma_college_name__c !== undefined ? studentDetails.diploma_college_name__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.diploma_passing_year__c !== undefined ? studentDetails.diploma_passing_year__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.diploma_marks__c !== undefined ? studentDetails.diploma_marks__c : 'NA'}</td>
+                                            </tr>`
+                                            : ''}
+
+                                            ${studentDetails.degree_cgpa__c !== undefined 
+                                            ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.degree_pursuing__c !== undefined ? studentDetails.degree_pursuing__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">  ${studentDetails.branch_type__c != 'invalid' ? studentDetails.branch_type__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.college_id__r.Name !== undefined ?  studentDetails.college_id__r.Name : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;"> ${studentDetails.degree_pass_year__c !== undefined ? studentDetails.degree_pass_year__c : 'NA'}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${studentDetails.degree_cgpa__c !== undefined ? studentDetails.degree_cgpa__c : 'NA'}</td>
+                                            </tr>`
+                                            : ''}
+
+                                            </table>
+                                            </div>
+                `;
+
+               
+                                
+                                     
+                    return academicDetails;
+            }
+
+             function downloadStudentInterviewFeedbackPdf(result) {
+            //let dynamicHeight = window.innerHeight * 2;
+
+
+                    
+                    function generateRoundHtml(roundData) {
+                        let roundHtml = '';
+                        
+                        
+                        //console.log("Current Round for PDf " +roundData[0].round);
+                        if(roundData){roundData.forEach(data => {
+                                roundHtml += `
+                                <div style="display: flex; justify-content: space-between">
+                                    <span style="font-size: 16px;">
+                                        <b> Round ${data.round}: </b> ${data.round === '2' ? 'Technical Round' : data.round === '3' ? 'Managerial Round' : ''}&nbsp; | &nbsp;Attempt: <b>${data.instanceId} </b>
+                                    </span>
+                                    <span style="font-size: 16px;">
+                                        Interviewed By: <b>${data.panelistName}</b>
+                                        
+                                    </span>
+                                </div>
+                                <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                                    <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%; page-break-inside: avoid;" border="1">
+                                        <tr style="padding: 10px;">
+                                            <th style="font-size: 14px;"></th>
+                                            <th style="font-size: 14px;">Rating</th>
+                                            <th style="font-size: 14px;">Comments</th>
+                                        </tr>
+                                        ${data.techRating !== undefined && data.techComment !== undefined
+                                            ? `<tr style="padding: 5px;">
+                                                <th style="font-size: 14px; padding: 5px;">Professional/Technical Knowledge</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.techRating}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.techComment}</td>
+                                            </tr>`
+                                            : ''}
+
+                                        ${data.commRating !== undefined && data.commComment !== undefined
+                                            ? `<tr style="padding: 10px;">
+                                                <th style="font-size: 14px; padding: 5px;">Communication Skills</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.commRating}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.commComment}</td>
+                                            </tr>`
+                                            : ''}
+
+                                        ${data.attitudeRating !== undefined && data.attitudeComment !== undefined
+                                            ? `<tr style="padding: 10px;">
+                                                <th style="font-size: 14px; padding: 5px;">Attitude/Promptness in Response</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.attitudeRating}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.attitudeComment}</td>
+                                            </tr>`
+                                            : ''}
+
+                                        ${data.readyToJoinRating !== undefined && data.readyToJoinComment !== undefined
+                                            ? `<tr style="padding: 10px;">
+                                                <th style="font-size: 14px; padding: 5px;">Readiness to Join</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.readyToJoinRating}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.readyToJoinComment}</td>
+                                            </tr>`
+                                            : ''}
+
+                                        ${data.longTermRating !== undefined && data.longTermComment !== undefined
+                                            ? `<tr style="padding: 10px;">
+                                                <th style="font-size: 14px; padding: 5px;">Long Term Plans and goals</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.longTermRating}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.longTermComment}</td>
+                                            </tr>`
+                                            : ''}
+                                         ${data.longTermRatingAlt !== undefined && data.longTermCommentAlt !== undefined
+                                            ? `<tr style="padding: 10px;page-break-inside: avoid;">
+                                                <th style="font-size: 14px; padding: 5px;">Long Term Plans and goals</th>
+                                                <td style="font-size: 14px; padding: 5px;">${data.longTermRatingAlt}</td>
+                                                <td style="font-size: 14px; padding: 5px;">${data.longTermCommentAlt}</td>
+                                            </tr>`
+                                    : ''}
+                                    </table>
+                                    <div>
+                                        <span style="font-size: 16px;">Round ${data.round} Status: <b><span style="color: ${data.studentStatus === 'Approved' ? 'green' : data.studentStatus === 'On-Hold' ? 'orange' : 'red'}">${data.studentStatus}</span></b></span>
+                                    </div>
+                                </div>
+                                `;});}
+                                
+                            
+                                return roundHtml;
+                            }
+
+                            let roundHtmlContent = '';
+                            const rounds = {};
+                            // generateRoundHtml(savedResult);
+                            
+
+                            var htmlContent = '';
+
+                            for(var i = 0; i < result.studentTestList.length; i++)
+                            {
+                                roundHtmlContent = generateRoundHtml(result.studentAssessmentList[result.studentTestList[i].Id]);
+                                
+                                    htmlContent += `
+                                    <div id = 'header' style="page-break-after: always;">
+                                    <div style="text-align:center; display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;"><h4 style="font-size: 16px;">Interview Feedback form</h4><img style="display: block; width:25%; height:25%;" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/></div>
+                                    <div><span style="font-size: 16px; ">Candidate Name: <b>${result.studentTestList[i].student_id__r.Name}</b></span></div>
+                                    <div style="display:flex;justify-content: space-between; flex-direction:column; width:100%; margin-top: 30px;/">
+                                        ${roundHtmlContent}
+                                    <div style="display:flex;justify-content: space-between;">
+                                    <span style="font-size: 16px;"><b>Round 4: </b>Director's Round</span>
+                                    <span style="font-size: 16px; margin-right: 200px;">Interviewed By:</span>
+                                    </div>
+                                    <!-- Table for Round 4 -->
+                                    <div style="justify-content: center; margin-top:1vh;">
+                                    <div style="height: 10vh;border: 1px solid black;display: grid;grid-template-columns: 10vw 1fr; page-break-inside: avoid;">
+                                        <div style="display: grid;place-items: center;">FeedBack</div>
+                                        <div style="border-left: 1px solid black;"></div>
+                                    </div>
+                                    <div style="margin-top:4vh;"><h3 style="font-size: 16px;">Final Status:</h3></div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    `;
+                            }
+
+                    
+                            // Add the HTML content to the PDF
+                            openWin(htmlContent) ; 
+                }
+        
+         		function openWin(htmlContent)
+  				{
+                    console.log('Within open window function');
+    				var myWindow=window.open('','','width=1280,height=720');
+    				myWindow.document.write(htmlContent);
+    				myWindow.document.close();
+					myWindow.focus();
+					myWindow.print();
+					myWindow.close();
+				}
+        
+                document.getElementById('downloadPdfButton').addEventListener('click', function() {
+                    if (generatedPdf) {
+                        generatedPdf.save("RESULTS");
+                    } else {
+                        console.error('PDF has not been generated yet.');
+                    }
+                });
+
+                function GetStudentTestData(studentTestList, studentID)
+                    {
+                        for(var i = 0; i < studentTestList.length; i++)
+                        {
+                            if(studentTestList[i].student_id__c == studentID)
+                            {
+                                console.log(studentTestList[i]);
+                                return studentTestList[i];
+                            }
+                        }
+                        return null;
+                    }
+
+                    
+
+                function SearchStudentFn(){
+                    var string_to_search = document.getElementById('section-item-3-table-item-heder-row-search-inp-id').value;
+                    // console.log(string_to_search);
+                    // GlobStudSearchList = GlobStudList;
+                    if(string_to_search){  
+                        // GlobStudSearchList =  GlobStudSearchList.filter((value) => ((value.student_id__r.Name.toLowerCase().includes(string_to_search.toLowerCase()))));
+                        Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.AssignPanalistToStudentsCtrl.GetSearchStudentsData}',
+                    eventID,
+                    string_to_search,
+                            function (result, event) { 
+
+                                        if(result)
+                                        {
+                                            StudentsFromDataBase = result;
+                                            GlobStudList = result;
+                                            initTable(result);
+                                        }
+                                        else
+                                        {
+                                            displayErrorMessage('Panelist not found for student Test');
+                                        } 
+                                }
+                            );
+                    } 
+                }
+
+                function studnetCountFilter(){
+                    var searchStringCount = parseInt(document.getElementById('StudentCountDropdown').value);
+                    globalSearchStudentList = GlobStudList;
+                    if(searchStringCount){
+                        globalSearchStudentList = globalSearchStudentList.slice(0,  searchStringCount );
+                    } 
+                    initTable(globalSearchStudentList);
+                }
+
+
+                    // document.getElementById('name-down').classList.add('hide-name-down-icon'); 
+                    // document.getElementById('round1-down').classList.add('hide-name-down-icon'); 
+                    // document.getElementById('round2-down').classList.add('hide-name-down-icon'); 
+                    // document.getElementById('round3-down').classList.add('hide-name-down-icon');
+
+
+
+                    // function SortArrowClick(ArrowType, SortVar){
+
+                    //     console.log(ArrowType  + ' '  + SortVar); 
+                    //     document.getElementById('name-down').classList.add('hide-name-down-icon'); 
+                    //     document.getElementById('round1-down').classList.add('hide-name-down-icon'); 
+                    //     document.getElementById('round2-down').classList.add('hide-name-down-icon'); 
+                    //     document.getElementById('round3-down').classList.add('hide-name-down-icon');
+
+                    //     document.getElementById('name-up').classList.remove('hide-name-down-icon'); 
+                    //     document.getElementById('round1-up').classList.remove('hide-name-down-icon'); 
+                    //     document.getElementById('round2-up').classList.remove('hide-name-down-icon'); 
+                    //     document.getElementById('round3-up').classList.remove('hide-name-down-icon');
+
+                        
+                    //     if(ArrowType === 'up'){
+                    //         StudentSort = (SortVar == 'name') ? 'Name DESC' 
+                    //         :(SortVar == 'round1' ? 'RoundOneStatus__c DESC'
+                    //         : (SortVar == 'round2' ? 'RoundTwoStatus__c DESC'
+                    //         :(SortVar == 'round3' ? 'RoundThreeStatus__c DESC'
+                    //         :'Name ASC'))); 
+                    //         if(SortVar =='name'){
+                    //             document.getElementById('name-up').classList.add('hide-name-down-icon');
+                    //             document.getElementById('name-down').classList.remove('hide-name-down-icon');
+                    //         }else if(SortVar =='round1'){
+                    //             document.getElementById('round1-up').classList.add('hide-name-down-icon');
+                    //             document.getElementById('round1-down').classList.remove('hide-name-down-icon');
+                    //         }else if(SortVar =='round2'){
+                    //             document.getElementById('round2-up').classList.add('hide-name-down-icon');
+                    //             document.getElementById('round2-down').classList.remove('hide-name-down-icon');
+                    //         }else if(SortVar =='round3'){
+                    //             document.getElementById('round3-up').classList.add('hide-name-down-icon');
+                    //             document.getElementById('round3-down').classList.remove('hide-name-down-icon');
+                    //         }
+
+                    //     }else{
+                    //         StudentSort = (SortVar == 'name') ? 'Name ASC' 
+                    //         :(SortVar == 'round1' ? 'RoundOneStatus__c ASC'
+                    //         : (SortVar == 'round2' ? 'RoundTwoStatus__c ASC'
+                    //         :(SortVar == 'round3' ? 'RoundThreeStatus__c ASC'
+                    //         :'Name ASC')));
+                    //     }
+
+                    //     GetStudentsData(false);
+                    // }
+
+
+
+
+
+                
+
+        </script>
+    </body>
+</apex:page>

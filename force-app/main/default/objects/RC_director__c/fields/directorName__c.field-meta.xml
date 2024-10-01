@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>directorName__c</fullName>
+    <description>The name of the director</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the name of the director</inlineHelpText>
+    <label>directorName</label>
+    <length>250</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

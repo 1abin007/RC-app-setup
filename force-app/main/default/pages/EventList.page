@@ -1,0 +1,1114 @@
+<!-- THIS PAGE IS DISCARDED -->
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" controller="EventList">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,800;1,100;1,200;1,300;1,400;1,500;1,800&display=swap" rel="stylesheet"/>
+<style>
+              :root{
+                --blue-color: #150958;
+                --blue-color-hover: #200e89;
+                --blue-color-hover-alt: #312a5a;
+                --blue-color-select: #534798;
+                --text-color: black;
+                --background-color: white;
+                --red-color: #EF233C;
+                --yellow-color: #ffb01d;
+
+                --green-color: #008000;
+          }
+          *{
+          margin: 0;
+          padding: 0;
+          font-family: 'Poppins', sans-serif;
+        }
+        .main{
+          height: 100vh;
+          width: 100%;  
+        }
+            .header {
+            height: 10vh;
+            width: 100%;
+            background: var(--blue-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            }
+            .novigo-icon{
+          height: 8vh;
+          margin-left: 8px;
+        }
+        .title {
+            /* margin-top: 4vh; */
+            margin-right:4vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            /* background-color: white; */
+            z-index: 1;
+        }
+        .title-text {
+            font-size: 2vw;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            padding:10px;
+            color: var(--background-color);
+        }
+
+        button{
+            width: 10vw;
+            margin-left: 1.5vw;
+            background-color: var(--red-color); 
+            color: white; 
+            border-radius: 5px; 
+            border: 2px solid var(--red-color); 
+            cursor: pointer;
+            transition: ease-in-out 0.2s;
+            margin-top: 1vh;
+            height: 4vh;
+        }
+        button:hover{
+          background-color: var(--text-color);
+        }
+
+        #table-container{
+
+            width: 100%;
+            
+        }
+
+        #event-list{
+            width: 100%;
+            margin-right: 10vh;
+            margin-left: 10vh;
+        }
+
+        .searchbar{
+            display: flex;
+            height: 6%;
+            /* margin-left: 10vh;
+            margin-right: 10vh; */
+            margin-top: 5vh;
+        }
+
+        #sum-display{
+            color: black;
+            display: flex;
+            align-items: center;
+            margin-left: 1vh;
+        }
+
+
+                    table {
+                    border-collapse: collapse;
+                    /* margin-left: 10vh;
+                    margin-right: 10vh; */
+                    /* margin-top: 25vh; */
+                    font-size: 0.9em;
+                    font-family: sans-serif;
+                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 4px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+
+                #approved-column {
+                    background-color: var(--red-color);
+                }
+
+                #approved-btn{
+                    background-color: var(--blue-color);
+                    height: 4vh;
+                    margin-left: 3vw;
+                    margin-bottom: 1vh;
+                }
+
+                #approved-btn:hover{
+                    background-color: var(--text-color);
+                }
+                
+                .eventText:hover{
+                    color: var(--red-color);
+                }
+
+                input {
+                    border-radius: 5px;
+                    margin-left: 1.5vw;
+                    margin-top: 1vh;
+                    border: 2.5px solid lightblue;
+                    height: 3vh;
+                }
+
+                input:active{
+                    border: 2.5px solid red;
+                }
+
+                .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+                .go-back-button {
+                background-color: var(--blue-color);
+                color: var(--background-color);
+                width: 10vw;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border: 2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: .3s ease;
+                }
+
+                .go-back-button:hover{
+                    box-shadow: 0px 0px 10px #150958;
+                }
+    
+                .go-back-button:active{
+                    box-shadow: 0px 0px 30px #150958;
+                }
+
+/* CSS for the modal content */
+.modal-content {
+    background-color: #f4f4f4;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    width: 700px;
+    text-align: center;
+}
+
+/* CSS for the close button */
+.close {
+    color: #888;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+
+
+.loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+            /* .loader-inner {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                width: 100px;
+                height: 100px;
+                animation: spin 0.5s linear infinite;
+            } */
+            .loader-logo{
+                position: absolute;
+                top: 50;
+                left: 50;
+            }
+
+            .loader-logo .logo-section-one {
+                animation: moveOne 1.25s infinite alternate;
+            }
+
+            .loader-logo .logo-section-two {
+                animation: moveTwo 1.25s infinite alternate;
+            }
+
+            .title {
+                /* margin-top: 4vh; */
+                margin-right:4vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                /* background-color: white; */
+                z-index: 1;
+            }
+
+            .header-right-1{
+                    transition: 0.3s ease;
+                    width: 7vw;
+                    background: white;
+                    border-radius: 5px;
+                    display: grid;
+                    place-items: center;
+                    height: 5vh;
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                }
+
+                .header-right-1:hover{
+                    background: rgb(201, 200, 200);
+                }
+
+                .success-section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .error-image{
+                height:18px; 
+                width:18px; 
+                margin-left:0.5vw;
+                margin-right: 1vw;
+            }
+            .error-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--red-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+
+            .sucess-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color:  var(--green-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .alert-animation {
+                animation-name: fade;
+                animation-duration: 0.5s; /* Adjust the duration as needed */
+            }
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .error-warning {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--yellow-color);
+                color: black;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .closebtn {
+            margin-left: 15px;
+            color: white;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            }
+
+            .closebtn:hover {
+            color: black;
+            }
+            .closebtn-black-color{
+                color: black;
+            }
+            .closebtn-black-color:hover{
+                color: white;
+            }
+            ::selection{
+                color: white;
+                background: var(--blue-color-hover);
+            }
+
+            @keyframes moveOne {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(-15px, -25px);
+                    opacity: 0;
+                    
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes moveTwo {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(10px, 10px);
+                    opacity: 0;
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+            .hide {display: none;}
+            .hidden {
+                display: none;
+            }
+
+            .tableData
+            {
+                overflow: scroll;
+                max-height: 50vh;
+            }
+
+            /* td{
+                display: fle;
+                width: auto;
+            } */
+
+
+
+
+
+
+</style>
+<script>
+
+    window.onload = (event) => {
+    console.log("page is fully loaded");
+    showLoader();
+    showTable('random',1);
+
+    };
+
+    var input, filter, table, tr, td, i, txtValue, cpinput, cutoffinput, studentcutoff, studentcpcutoff, clickedevent;
+    var eventID;
+
+    var activeTable = 'Event';
+    var cpsearch = document.createElement("input");
+    cpsearch.type = "number";
+    cpsearch.id = "cpsearch";
+    cpsearch.placeholder = "Enter C Programming Cutoff";
+
+    var cutoffsearch = document.createElement("input");
+    cutoffsearch.type = "number";
+    cutoffsearch.id = "cutoffsearch";
+    cutoffsearch.placeholder = "Enter Cutoff";
+
+    var printButton = document.createElement("button");
+    printButton.id = "print-button";
+    printButton.innerText = "Generate Excel";
+    printButton.onclick = function(){openFilenameModal();};
+
+    var backButton = document.createElement("button");
+    backButton.id = "go-back-button";
+    backButton.innerText = "Go Back";
+    //backButton.onclick = function() {showTable('yes',2);};
+
+    var autoSubmitButton = document.createElement("button");
+    autoSubmitButton.id = "auto-submit-btn";
+    autoSubmitButton.innerText = "Auto Submit";
+    autoSubmitButton.onclick = function() {compileTest(clickedevent);};
+
+    var approveAll = document.createElement("button");
+    approveAll.id = "approve-all-btn";
+    approveAll.innerText = "Clear Students";
+    approveAll.onclick = function() {changeRound1ClearedforAll(clickedevent);};
+
+
+
+
+            function showLoader() {
+            document.querySelector(".loader").classList.remove("hidden");
+            }
+
+            function hideLoader() {
+            document.querySelector(".loader").classList.add("hidden");
+            }
+
+
+
+
+            function openFilenameModal() {
+                var modal = document.getElementById("filenameModal");
+                modal.style.display = "block";
+            }
+
+            function closeFilenameModal() {
+                var modal = document.getElementById("filenameModal");
+                modal.style.display = "none";
+            }
+
+            function exportWithFilename() {
+                var filenameInput = document.getElementById("filenameInput");
+                var filename = filenameInput.value;
+
+                if (!filename.toLowerCase().endsWith(".xlsx")) {
+                    filename += ".xlsx";
+                }
+                
+                // Call your export function with the filename
+                exportTableToExcel("student-list", filename);
+                
+                // Close the modal
+                closeFilenameModal();
+            }
+
+
+
+
+
+    
+            // Load the xlsx library dynamically
+            var script = document.createElement('script');
+            script.src = '{!URLFOR($Resource.xlsxLib)}';
+            script.type = 'text/javascript';
+            script.onload = function() {
+            // The xlsx library is now loaded and you can use it
+            };
+            document.head.appendChild(script);
+
+
+        function exportTableToExcel(tableId, filename) {
+            var table = document.getElementById(tableId);
+
+            // Filter the rows based on your criteria (e.g., using the display style)
+            var filteredRows = [];
+            var rows = table.getElementsByTagName("tr");
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].style.display !== "none") {
+                    filteredRows.push(rows[i]);
+                }
+            }
+
+            // Create a new table containing only the visible rows
+            var filteredTable = document.createElement("table");
+
+            // Create and add the table headers to the filtered table
+            var headerRow = filteredTable.insertRow(0);
+            var headerCells = table.rows[0].cells;
+            for (var i = 0; i < headerCells.length; i++) {
+                var newHeaderCell = headerRow.insertCell(i);
+                newHeaderCell.innerHTML = headerCells[i].innerHTML; // Copy cell content
+            }
+
+            // Add the visible rows to the filtered table, excluding the header row
+            for (var i = 1; i < filteredRows.length; i++) {
+                var newRow = filteredTable.insertRow(i);
+                var cells = filteredRows[i].getElementsByTagName("td");
+                for (var j = 0; j < cells.length; j++) {
+                    var newCell = newRow.insertCell(j);
+                    newCell.innerHTML = cells[j].innerHTML; // Copy cell content
+
+
+            // Get cell background color style for the "Approved" column (modify the index as needed)
+            if (j === cells.length - 1) {
+                var cellBackgroundColor = getComputedStyle(cells[j]).backgroundColor;
+                if (cellBackgroundColor !== "transparent") {
+                    // Set a checkmark symbol (✓) if the background color is green (selected)
+                    newCell.textContent = cellBackgroundColor === "rgb(0, 128, 0)" ? "✓" : "";
+                }
+
+                //                 // Check if the last cell contains a button element and exclude its label
+                //                 if (cells[j].querySelector("button")) {
+                //     newCell.textContent = "";
+                // }
+            }
+
+            }
+        }
+
+            // Export the filtered data to Excel using the new filtered table
+            var wb = XLSX.utils.table_to_book(filteredTable, { sheet: "Sheet1" });
+            XLSX.writeFile(wb, filename);
+
+            // Discard the filtered table (not appended to the document)
+            filteredTable = null;
+        };
+
+
+
+
+    function routeToStudentPage(eventId,studentId) {
+                var panelID = getUrlParameter('panelistId');
+                var adminId = getUrlParameter('adminId');
+                var targetPageUrl = '';
+
+                if(panelID != null)
+                {
+                    targetPageUrl = '/apex/studentProfile?eventId=' + eventId  + '&studentId=' + studentId + '&panelistId=' + panelID;
+                }
+                else{
+                    targetPageUrl = '/apex/studentProfile?eventId=' + eventId  + '&studentId=' + studentId + '&adminId=' + adminId;
+                }
+                window.location.href = targetPageUrl;
+                
+            }
+
+
+    function changeApproval(testId,eventID,check){
+        showLoader();
+        Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EventList.changeApproval}',
+                testId,
+                eventID,
+                check,
+                function(result,event){
+                    if(event.status){
+                        showTable(eventID,1);
+                        displaysSuccessMessage('Approval Status Changed Successfully');
+                    }
+                    else
+                    {
+                        displayErrorMessage('Something went wrong');
+                    }
+
+
+
+                });
+        
+    }
+
+    function displayErrorMessage(errorText) {
+                const errorCustom = document.getElementById("errorCustom");
+                const alertText = errorCustom.querySelector("#alertText");
+                const alertImg = errorCustom.querySelector("#alertImg");
+                errorCustom.textContent = "";
+                errorCustom.appendChild(alertImg);
+                errorCustom.appendChild(document.createTextNode("Error: " + errorText));
+                errorCustom.appendChild(alertText);
+    
+                errorCustom.style.display = 'flex';
+                errorCustom.classList.add("alert-animation");
+                setTimeout(() => {
+                    errorCustom.style.display = "none";
+                    errorCustom.classList.remove("alert-animation");
+                }, 5000);
+            }
+    
+            function displayWarningMessage(warningText) {
+                const warningCustom = document.getElementById("warningCustom");
+                const warnText = document.getElementById("warnText"); // Get the warnText element
+                const warnImg = document.getElementById("warnImg"); // Get the warnImg element
+    
+                warningCustom.textContent = ""; // Clear any existing content
+                warningCustom.appendChild(warnImg);
+    
+                // Create a text node and set its content
+                const warningTextNode = document.createTextNode("Warning: " + warningText);
+                warningCustom.appendChild(warningTextNode);
+    
+                warningCustom.appendChild(warnText); // Append the warnText element
+    
+                warningCustom.style.display = 'flex';
+                // warningCustom.classList.add("alert-animation");
+                setTimeout(() => {
+                    warningCustom.style.display = "none";
+                    warningCustom.classList.remove("alert-animation");
+                }, 5000);
+            }
+
+
+            function displaysSuccessMessage(warningText) {
+                const warningCustom = document.getElementById("sucessCustom");
+                const warnText = document.getElementById("alertText"); // Get the warnText element
+                const warnImg = document.getElementById("alertImg"); // Get the warnImg element
+    
+                warningCustom.textContent = ""; // Clear any existing content
+                warningCustom.appendChild(warnImg);
+    
+                // Create a text node and set its content
+                const warningTextNode = document.createTextNode("Sucess: " + warningText);
+                warningCustom.appendChild(warningTextNode);
+    
+                warningCustom.appendChild(warnText); // Append the warnText element
+    
+                warningCustom.style.display = 'flex';
+                // warningCustom.classList.add("alert-animation");
+                setTimeout(() => {
+                    warningCustom.style.display = "none";
+                    warningCustom.classList.remove("alert-animation");
+                }, 5000);
+            }
+
+    function changeRound1ClearedforAll(eventID){
+        showLoader();
+    // Get the table
+    var table = document.getElementById("student-list");
+
+    // Get all rows in the table
+    var tr = table.getElementsByTagName("tr");
+
+    // Create an array to store the testId values for visible rows
+    var testIds = [];
+
+    // Iterate through the rows to check if they are visible
+    for (var i = 1; i < tr.length; i++) {
+        if (tr[i].style.display !== "none") {
+            // This row is visible, so get the testId value from the button in this row
+            var approvedBtn = tr[i].querySelector(".approved-btn");
+            if (approvedBtn) {
+                var testId = approvedBtn.getAttribute("data-testId");
+                if (testId) {
+                    testIds.push(testId);
+                }
+            }
+        }
+    }
+
+        if (testIds.length > 0) {
+        // Continue with your logic to send testIds for approval
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.EventList.changeRound1ClearedforAll}',
+            testIds, // Send the array of testIds for visible rows
+            function (result, event) {
+                if (event.status) {
+                    showTable(eventID, 1);
+                }
+            });
+    }
+
+
+    }
+
+
+
+
+        function EnableApprove(checkapprove){
+            var approw;
+            for (let i = 0; i < checkapprove.length; i++){
+            approw = document.getElementById("approved-column-"+i.toString());
+            if(checkapprove[i].approve== true){
+                approw.style.backgroundColor = "green";
+            }
+            else{
+                approw.style.backgroundColor = "red";
+            }
+        }
+        
+        }    
+
+
+        function filterTable(viewTable) {
+        var panelID = getUrlParameter('panelistId');
+
+        input = document.getElementById("search");
+        filter = input.value.toUpperCase();
+        if(viewTable == 'Event'){
+            table = document.getElementById("event-list");
+        }
+        else{
+            table = document.getElementById("student-list");
+            
+            if(panelID == null)
+            {
+                cpinput = parseInt(document.getElementById("cpsearch").value.trim());
+                cutoffinput = parseInt(document.getElementById("cutoffsearch").value.trim());
+            }
+           
+        }
+        tr = table.getElementsByTagName("tr");
+        var sum = 0;
+
+        for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0]; // Change the index to target the desired column (0 for the first column)
+        
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            ta = tr[i].getElementsByTagName("td")[9];
+            if(viewTable == 'Event'){
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+                sum++;
+                } else {
+                tr[i].style.display = "none";
+                }
+            }
+            else{
+                studentcutoff = parseInt(tr[i].getElementsByTagName("td")[4].textContent);
+                studentcpcutoff = parseInt(tr[i].getElementsByTagName("td")[5].textContent);
+
+                if (panelID == null && (!isNaN(cutoffinput) ||  !isNaN(cpinput))){
+
+                    // if (!isNaN(cutoffinput) &&  !isNaN(cpinput) ){
+                    //     if (txtValue.toUpperCase().indexOf(filter) > -1 && (((!isNaN(cutoffinput) && studentcutoff >= cutoffinput) && (!isNaN(cpinput) && studentcpcutoff >= cpinput)) ||(ta.style.backgroundColor=="green")  )) {
+                    //             tr[i].style.display = "";
+                    //             sum++;
+                    //     }else{
+                    //             tr[i].style.display = "none";
+                            
+                    //         }
+                            
+                    // }
+                    
+                        if (txtValue.toUpperCase().indexOf(filter) > -1 && ((!isNaN(cutoffinput) && studentcutoff >= cutoffinput) || (!isNaN(cpinput) && studentcpcutoff >= cpinput)||(ta.style.backgroundColor=="green")) ){
+                                tr[i].style.display = "";
+                                sum++;
+                        } else{
+                            tr[i].style.display = "none";
+                        }
+                }
+                else{
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    sum++;
+                    } else {
+                    tr[i].style.display = "none";
+                    }
+
+                }
+
+                
+            }
+            
+        }
+        }
+            var sumDisplay = document.getElementById("sum-display");
+            if (sumDisplay) {
+                sumDisplay.textContent = "Total Rows: " + sum;
+            }
+        }
+
+  
+                 function getUrlParameter(name) {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get(name);
+              }
+
+            function showTable(eventId,check) {
+                //get panel ID and send to back end
+                var eventId = getUrlParameter('eventID');
+                var panelID = getUrlParameter('panelistId');
+
+               showLoader();
+            // Call an action in the controller to fetch associated contacts and re-render the table
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EventList.showResults}',
+                eventId,
+                panelID,
+                check,
+                function(result, event) {
+                    if (event.status) {
+                        // Handle the result and re-render the table
+                        var tableHtml = '';
+                        if (check == 1){
+                            clickedevent = eventId;
+                            var panelID = getUrlParameter('panelistId');
+                            eventID = eventId;
+
+                            document.getElementById("searchbar").appendChild(cutoffsearch);
+                            document.getElementById("searchbar").appendChild(cpsearch);
+                            document.getElementById("searchbar").appendChild(autoSubmitButton);
+                            document.getElementById("searchbar").appendChild(approveAll);
+                            document.getElementById("searchbar").appendChild(printButton);
+                           // document.getElementById("searchbar").appendChild(backButton);
+
+                            if(panelID)
+                            {
+                                document.getElementById("searchbar").removeChild(autoSubmitButton);
+                                document.getElementById("searchbar").removeChild(approveAll);
+                                document.getElementById("searchbar").removeChild(printButton);
+                                document.getElementById("searchbar").removeChild(cutoffsearch);
+                                document.getElementById("searchbar").removeChild(cpsearch);
+                            }
+
+
+                            tableHtml += '<table id ="student-list">';
+
+                            var resetButtonHTML = '';
+                        
+                            if(panelID == null) //if we are logged in as a Admin
+                            {
+                                tableHtml += '<tr><th>Student Name</th> <th>Email</th><th>USN</th><th>Marks Scored</th><th>C Programming Marks</th><th>Aptitude Marks</th><th>Negative Marks</th> <th>Negative C Programming Marks</th><th>Negative Aptitude Marks</th> <th>Approve Student</th></tr><tbody class="tableData">';
+                            }
+                            else
+                            {
+                                tableHtml += '<tr><th>Student Name</th><th>Email</th><th>USN</th><th>Marks Scored</th><th>C Programming Marks</th><th>Aptitude Marks</th><th>Negative Marks</th> <th>Negative C Programming Marks</th><th>Negative Aptitude Marks</th></tr><tbody class="tableData">';
+                            }
+
+                            
+                            for (var i = 0; i < result.studentInfoList.length; i++) {
+                                var resetButtonHTML = panelID == null ? '<button style="width:2vw" onclick = "resetStudent(\'' + result.studentInfoList[i].studentData.email +  '\' , \'' + eventID + '\')">↻</button>' : '';
+                                tableHtml += '<tr>';
+                                tableHtml += '<td><a href="javascript:void(0);" onclick = "routeToStudentPage(\'' + eventId + '\' , \'' + result.studentInfoList[i].Id + '\')">' + result.studentInfoList[i].studentData.name +  '</a>' + resetButtonHTML + '</td>';
+                                //tableHtml += '<td>' + result.studentInfoList[i].studentData.phone + '</td>';
+                                tableHtml += '<td>' +  handleNullValues(result.studentInfoList[i].studentData.email) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].studentData.usn) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].marksScored) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].cpMarks) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].aptiMarks) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].negtotalMarks) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].negcpMarks) + '</td>';
+                                tableHtml += '<td>' + handleNullValues(result.studentInfoList[i].negaptiMarks) + '</td>';
+
+                            
+                                    //Show Aprove button only if we have logged in as admin
+                                if(panelID == null)
+                                {
+                                    tableHtml += '<td id="approved-column-'+i+'" class ="approved-btn" data-testID = "' + result.studentInfoList[i].testId +'"><button style="width:5vh;" id = "approved-btn" onclick=changeApproval(\''+result.studentInfoList[i].testId+'\',\''+eventId+'\','+1+',)>✔️</button></td>';
+                                }
+
+                                tableHtml += '</tr>';
+                            
+                            }
+                            tableHtml += '</tbody></table>';
+                            activeTable = 'Student';
+
+                            // Replace the existing table with the updated table
+                            document.getElementById('displayTable').innerHTML = tableHtml;
+
+                            if(panelID == null)
+                            {
+                                EnableApprove(result.studentInfoList);
+
+                                setTimeout(() => {
+
+                                document.getElementById("cpsearch").addEventListener("keyup", function(event){
+                                filterTable(activeTable);
+                                });
+
+                                document.getElementById("cutoffsearch").addEventListener("keyup", function(event){
+                                filterTable(activeTable);
+                                });
+
+
+
+                                }, 1000);    
+                            }
+
+                            filterTable(activeTable);
+                            
+                        }
+                        else{
+                            var checkcpsearch = document.getElementById("cpsearch");
+                            var checkcutoffsearch = document.getElementById("cutoffsearch");
+                            var checkprintbutton = document.getElementById("print-button");
+                            //var checkbackbutton = document.getElementById("go-back-button");
+                            var checkautoSubmitButton = document.getElementById("auto-submit-btn");
+                            if (checkcpsearch && checkcutoffsearch){
+                                checkcpsearch.parentNode.removeChild(checkcpsearch);
+                                checkcutoffsearch.parentNode.removeChild(checkcutoffsearch);
+                                checkprintbutton.parentNode.removeChild(checkprintbutton);
+                                //checkbackbutton.parentNode.removeChild(checkbackbutton);
+                                checkautoSubmitButton.parentNode.removeChild(checkautoSubmitButton);
+                                approveAll.parentNode.removeChild(approveAll);
+                            }
+                            tableHtml += '<table id = "event-list">';
+                            tableHtml += '<tr><th> Event Name</th><th> Event Date</th></tr>'
+                            for (var i = 0; i < result.Event_List.length; i++){
+                            
+                                var timestamp = result.Event_List[i].event_date__c;
+                                
+                                var date = new Date(result.Event_List[i].event_date__c);
+                                date = date.toISOString().slice(0,10);
+                                console.log(date);
+
+                                var eventDate = convertDate(date);
+                                
+                                tableHtml += '<tr>';
+                                tableHtml += '<td> <a class = "eventText" href="javascript:void(0);" onclick="showTable(\'' + result.Event_List[i].Id + '\',1)">' + result.Event_List[i].Name + '</a></td>';   
+                                tableHtml += '<td>'+ eventDate +'</td>';
+                                tableHtml += '</tr>';
+                                }
+                                tableHtml += '</table>';
+                                activeTable = "Event";
+                            // Replace the existing table with the updated table
+                            document.getElementById('displayTable').innerHTML = tableHtml;
+                            filterTable(activeTable);
+                        }
+
+                        hideLoader();
+
+                    } 
+                    
+                    else {
+                        alert('Error fetching contacts: ' + event.message);
+                    }
+                },
+                { escape: false }
+            );
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("search").addEventListener("keyup", function(event){
+        filterTable(activeTable);
+    });
+  });
+
+  
+  function convertDate(dateString){
+var p = dateString.split(/\D/g)
+return [p[2],p[1],p[0] ].join("-")
+}
+
+  function compileTest(eventIDa){
+               showLoader();
+               console.log('eventID '+eventIDa);
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EventList.compileEventTests}',
+                eventIDa,
+                (result,event)=>{
+                   hideLoader();
+
+                    if(result == 'Updation Completed' )
+                        // displaysSuccessMessage('Updation Completed');
+
+                    console.log('Result of resubmission is : ');
+                    console.log(result);
+                    console.log('Event : ');
+                    console.log(event);
+
+                    displaysSuccessMessage('Updation In Progress, please refresh after a few minutes.');
+                }
+                );
+            }
+
+            function refreshData()
+            {
+                showTable(eventID,1);  
+            }
+
+
+            function resetStudent(studentEmail,eventID)
+            {
+                showLoader();
+                
+                Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EventList.resetStudent}',
+                    studentEmail,
+                    eventID,
+                    (result,event)=>{
+                        hideLoader();
+                        if(result.ErrorMsg != '')
+                        {
+                            displayErrorMessage(result.ErrorMsg);
+                        }
+                        else
+                        {
+                            displaysSuccessMessage("Student Test has been reset!");
+                        }
+                    }
+                );
+            }
+
+            function handleNullValues(passedValue)
+            {
+                passedValue = (passedValue !== undefined ? passedValue : 'NA');
+                return passedValue;
+            }
+</script>
+</head>
+<body>
+    <div class = "main">
+        <div class="loader hidden">
+            <div class="loader-logo loader-logo-animation">
+              <svg width="120" height="120" viewBox="0 0 61 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30.8919 50.5334C33.472 46.3136 35.8983 42.4107 38.2198 38.4516C38.447 38.062 38.1813 37.2563 37.8911 36.7808C30.6681 24.8707 23.4241 12.9705 16.1242 1.10328C15.7781 0.541945 14.9355 0.0697652 14.2502 0.0565574C9.65982 -0.0325952 5.0659 0.0103303 0 0.0103303C10.3486 16.9361 20.5293 33.5845 30.8919 50.5334Z" fill="white"/>
+                <path class="logo-section-one" d="M21.9257 0.0785001C28.4739 10.7867 34.8054 21.135 41.3047 31.7607C43.8779 27.5738 46.3182 23.6643 48.6536 19.7053C48.8844 19.3123 48.6641 18.5133 48.3844 18.0444C44.9897 12.4146 41.567 6.80127 38.0743 1.22428C37.7422 0.692662 36.8996 0.137935 36.2843 0.124727C31.6869 0.0322727 27.0825 0.0751975 21.9257 0.0751975V0.0785001Z" fill="#EF233C"/>
+                <path class="logo-section-two" d="M60.6489 0.124756H45.0002C47.6293 4.4404 50.1395 8.56784 52.7965 12.9264C55.4326 8.62727 57.9394 4.54276 60.6489 0.124756Z" fill="#EF233C"/>
+              </svg>
+            </div>
+            <div class="loader-inner"></div>
+          </div>
+
+          <div class="error-warning" id="warningCustom">
+            <img id="warnImg" src="{!URLFOR($Resource.iconAlertBlack)}" class="error-image"/>
+            <span id="warnText" class="closebtn closebtn-black-color"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="error-alert" id="errorCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="sucess-alert" id="sucessCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+
+    <div class="header">
+        <div>
+            <img class="novigo-icon" src="{!URLFOR($Resource.novigo_logo)}" alt="Novigo Icon"/>
+        </div>
+        <div class="title" id = 'header-right'>
+           
+            <div class="header-right-2">
+
+                <svg style="margin-right: 1vw;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="white" d="M11 9c0 1.66-1.34 3-3 3s-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3m3 11H2v-2c0-2.21 2.69-4 6-4s6 1.79 6 4m8-6v2h-9v-2m9-4v2h-9V8m9-4v2h-9V4Z"/></svg>
+                <span class="title-text">Exam Results</span>
+            </div>
+        </div>
+      </div>
+      <div class="section-item"> 
+        <div class="section-buttons" >
+            <button class="go-back-button" onclick="refreshData()">Refresh Data</button>
+        </div>
+    </div>
+      
+    <div id = "table-container">
+    
+      <div class = "searchbar" id = "searchbar">
+        <div id = "sum-display" style = "color:black"></div>
+        <input type="text" id="search" placeholder="Search by name"></input>
+    </div>
+    <div class = "displayTable" id = "displayTable">
+    </div>
+
+    </div>
+    <div id="filenameModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close" onclick="closeFilenameModal()">&times;</span>
+            <input type="text" id="filenameInput" placeholder="Enter a filename"></input>
+            <button onclick="exportWithFilename()">Export</button>
+        </div>
+    </div>
+</div>
+</body>
+
+</apex:page>

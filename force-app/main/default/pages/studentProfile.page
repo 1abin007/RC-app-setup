@@ -1,0 +1,2845 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" controller="studentProfileController">
+<!-- <apex:includeScript value="{!URLFOR($Resource.jsPdf)}"/> -->
+<head>  
+        <link REL="SHORTCUT ICON" HREF="{!URLFOR($Resource.favicon)}"/> 
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,800;1,100;1,200;1,300;1,400;1,500;1,800&display=swap" rel="stylesheet"/>
+        <title>Novigo | Student Profile</title>
+        <style>
+            :root {
+                --blue-color: #150958;
+                --blue-color-hover: #200e89;
+                --blue-color-hover-alt: #312a5a;
+                --blue-color-select: #534798;
+                --text-color: black;
+                --background-color: white;
+                --red-color: #EF233C;
+                --yellow-color: #ffb01d;
+
+                --green-color: #008000;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+            input{
+                width: 15vw;
+                height: 3vh;
+                border: 1.5px solid var(--blue-color);
+                padding: 2px;
+                font-size: 1.25vw;
+            }
+            textarea{
+                width: 100%;
+                height: 20vh;
+                border: 1.5px solid var(--blue-color);
+                border-radius: 5px;
+                padding: 2px;
+                font-size: 1.25vw;
+                resize: none;
+            }
+            textarea:focus{
+                outline: none;
+            }
+            .phone-text{
+                padding-right: 2px;
+                font-size: 1.2vw;
+            
+                border-right: 1px dashed var(--blue-color);
+            }
+            input:focus{
+                outline: none;
+            }
+            option{
+                color: solid var(--blue-color)!important;
+                width: 15vw;
+                border: 1.5px solid var(--blue-color);
+                background-color: none;
+
+            }
+
+            .phone-container{
+                border: 1.5px solid var(--blue-color);
+                display: flex;
+            }
+            .phone-container-error{
+                border: 1.5px solid var(--red-color);
+            }
+            select{
+                width: 15vw !important;
+                height: auto !important;
+                border: 1.5px solid var(--blue-color);
+                border-radius: 5px;
+                padding-right: 2px; 
+                background-color: none;
+                font-size:1.2vw;
+
+            }
+            option{
+                width: 15vw;
+            }
+            .input-error{
+                border: 1.5px solid var(--red-color);
+            }
+            .input-warning{
+                border: 1.5px solid var(--yellow-color);
+            }
+
+
+            .main {
+                height: 100vh;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header {
+                height: 10vh;
+                width: 100%;
+                background: var(--blue-color);
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .novigo-icon {
+                height: 6vh;
+                margin-left: 8px;
+            }
+            .novigo-icon-big{
+                opacity: 0.05;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: -1; 
+                filter: grayscale(50%);
+            }
+            .title {
+                /* margin-top: 4vh; */
+                margin-right:4vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                /* background-color: white; */
+                z-index: 1;
+            }
+            .content-container {
+                
+                /* justify-content: center; */
+            }
+
+            .title-text {
+                font-size: 2vw;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+                color: var(--background-color);
+            }
+            .section-body{
+                margin-top:4vh;
+                background-color: var(--background-color);
+                border: 1px solid var(--blue-color);
+                border-radius: 8px;
+                box-shadow: 0px 1px 10px #150958;
+                height: 60%;
+            }
+            .section-body-green-shadow{
+                box-shadow: 0px 1px 10px var(--green-color);
+            }
+            .section-body-red-shadow{
+                box-shadow: 0px 1px 10px var(--red-color);
+            }
+
+            .section-wrapper{
+                padding: 1.5vh;
+                margin-bottom: 2vh;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+
+            }
+            .section {
+                
+                padding: 1.5vh;
+                /* cursor: pointer; */
+                transition: border 0.2s, transform 0.2s;
+                width: 40vw;
+                max-height: 50vh;
+                overflow-y: scroll;
+
+            }
+
+
+            .section-text-container{
+                display:flex;
+                flex-direction: column;
+            }
+
+            .section-text {
+                font-weight: 500;
+                font-size: 1.5vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+                display: none;
+
+            }
+            .section-text-small{
+                font-weight: 300;
+                font-size: 0.8vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+                color: var(--red-color);
+            }
+
+            .section-items {
+                padding: 2vh;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5vh;
+            }
+
+            .section-item {
+                display: flex;
+                justify-content: space-between;
+                padding: 1;
+                margin: 2vh;
+            }
+
+            .section-item-text {
+                margin-right: 1vw;
+                font-size: 1.2vw;
+            }
+            .section-buttons{
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                margin-top: 1.5vh;
+            }
+
+            .prev-button, .next-button, .go-back-button {
+                background-color: var(--blue-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border: 2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: .3s ease;
+                }
+
+            .prev-button:hover, .next-button:hover {
+                background-color: var(--blue-color-hover);
+                }
+
+            .submit-button{
+                background-color: var(--green-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border:2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+
+
+            .progress-bar {
+                width: 100%;
+                height: 35px;
+                background-color: white;
+                position: sticky;
+                border-radius: 7px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+                top: 0;
+                z-index: 1;
+            }
+
+            .progress {
+                height: 100%;
+                border-top: 1px solid var(--blue-color);
+                display: flex;
+                justify-content: flex-start;
+                background-color: var(--blue-color);
+                width: 25%;
+                clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+                transition: width 0.5s;
+                align-items: flex-end;
+            }
+            .progress-green {
+                background-image: linear-gradient(45deg, var(--green-color), #026d02);
+            }
+            .progress-red {
+                background-image: linear-gradient(45deg, var(--red-color), red);
+            }
+            .progress-text{
+                margin-left: 1vw;
+                color: white;
+                font-size: 22px;
+                font-weight: 400;
+            }
+            .custom-checkbox{
+                width: 20px;
+                height: 3vh;
+            }
+            #successfulSection, #failSection{
+                display: none;
+            }
+            
+            .success-section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .error-image{
+                height:18px; 
+                width:18px; 
+                margin-left:0.5vw;
+                margin-right: 1vw;
+            }
+            .error-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--red-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .alert-animation {
+                animation-name: fade;
+                animation-duration: 0.5s; /* Adjust the duration as needed */
+            }
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .error-warning {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--yellow-color);
+                color: black;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .closebtn {
+            margin-left: 15px;
+            color: white;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            }
+
+            .closebtn:hover {
+            color: black;
+            }
+            .closebtn-black-color{
+                color: black;
+            }
+            .closebtn-black-color:hover{
+                color: white;
+            }
+            ::selection{
+                color: white;
+                background: var(--blue-color-hover);
+            }
+
+            .hide {display: none;}
+            .loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+            .loader-logo{
+                position: absolute;
+                top: 50;
+                left: 50;
+            }
+
+            .loader-logo .logo-section-one {
+                animation: moveOne 1.25s infinite alternate;
+            }
+
+            .loader-logo .logo-section-two {
+                animation: moveTwo 1.25s infinite alternate;
+            }
+
+            @keyframes moveOne {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(-15px, -25px);
+                    opacity: 0;
+                    
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes moveTwo {
+                0%, 100% {
+                    fill: white;
+                    transform: translate(10px, 10px);
+                    opacity: 0;
+                }
+                50% {
+                    fill: var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+            }
+
+            ::-webkit-scrollbar {
+                    width: 12px;
+                }
+
+            ::-webkit-scrollbar-track {
+                    /* background-color: rgb(181, 223, 251); */
+                    background-color: whitesmoke;
+                    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 25, 88, 0.3);  */
+                }
+
+            ::-webkit-scrollbar-thumb {
+
+                    background-color: var(--blue-color);
+                    transition: 0.3s;
+                }
+            ::-webkit-scrollbar-thumb:hover {
+                    background-color: var(--blue-color-hover);
+                }
+
+
+
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                input[type=checkbox]{
+                    height: 0;
+                    width: 0;
+                    visibility: hidden;
+                }
+
+                label {
+                    cursor: pointer;
+                    text-indent: -9999px;
+                    width: 4vw;
+                    height: 4vh;
+                    background: white;
+                    display: block;
+                    border-radius: 100px;
+                    position: relative;
+                    border: 2px solid var(--blue-color);
+                }
+
+                label:after {
+                    content: '';
+                    position: absolute;
+                    top: 5px;
+                    left: 8px;
+                    width: 1vw;
+                    height: 2vh;
+                    background: var(--blue-color);
+                    border-radius: 90px;
+                    transition: 0.3s;
+                }
+
+                input:checked + label {
+                    background: var(--blue-color);
+                }
+
+                input:checked + label:after {
+                    left: calc(100% - 5px);
+                    transform: translateX(-100%);
+                    background: white;
+                }
+
+                label:active:after {
+                    background: white;
+                    width: 40px;
+                }
+
+                .preview-section {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr; /* Two columns for .previewTitle and .previewValue */
+                    align-items: center; /* Center items vertically */
+                    gap: 2vh; /* Gap between columns */
+                    padding: 1;
+                    margin: 2vh;
+                }
+
+                    .previewTitle {
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    margin-left: 2vw;
+                }
+
+                    .previewValue {
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    font-weight: 500;
+                    margin-left: 2vw; /* Adjust margin if needed */
+                }
+
+                .details-summary{
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: scroll;
+                    max-height: 60vh;
+                }
+                .reg-text{
+                    margin-top: 1vh;
+                    font-size: 12px;
+                    color: var(--blue-color);
+                    text-align: center;
+                }
+                .branch-select{
+                    display:none;
+                }
+
+                .profile-basic-details-name-header{
+                    font-size: 24px;
+                    font-weight: 500;
+                }
+                .profile-basic-section-item{
+                    margin-right: 1vw;
+                }
+                .profile-banner {
+                    width:95%;
+                    padding: 2vh;
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    grid-template-rows: auto auto; 
+                    gap: 10px; 
+                    align-items: start;
+                }
+
+                .profile-image {
+                    grid-column: 1 / span 1;
+                    grid-row: 1 / span 2;
+                    height: 30vh;
+                    width:15vw;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: whitesmoke; 
+                    border:2px solid var(--blue-color); 
+                }
+
+                .profile-basic-details {
+                    margin-left:1vw;
+                    /* grid-column: 2 / span 1; */
+                    grid-row: 1 / span 1; /* Basic details occupy one row */
+                    display: grid;
+        
+                    gap: 10px; /* Adjust gap as needed */
+                }
+
+                .profile-basic-section-1 {
+                    grid-row: 2 / span 1; 
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr); /* Two columns for basic section items */
+                    gap: 10px; 
+                }
+                .profile-basic-section-2 {
+                    grid-row: 3 / span 1; 
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr); /* Two columns for basic section items */
+                    gap: 10px; 
+                }
+                .profile-basic-section-item{
+                    display:flex;
+                    flex-direction: column;
+                }
+                .profile-basic-details-text-header{
+                    font-size: 16px;
+                }
+                .profile-basic-details-text-value{
+                    font-size: 18px;
+                }
+                .marks-banner, .result-banner{
+                    width:95%;
+                    margin-top:1vh;
+                    height: auto;
+                    padding: 2vh;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .large-card-section{
+                    margin-right: 1vw;
+                    width: 30vw;
+                    height: 60vh;
+                    background-color: whitesmoke;
+                    border: 1px solid var(--blue-color);
+                    border-radius: 5px;
+                }
+                .wide-card-section{
+                    margin-right: 1vw;
+                    width: 100%;
+                    height: auto;
+                    background-color: whitesmoke;
+                    border: 1px solid var(--blue-color);
+                    border-radius: 5px;
+                }
+                .wide-card-group{
+                    margin-bottom: 2vh;
+                    grid-row: auto;
+                    grid-column: span 3;
+                    display: grid;
+                    grid-template-columns: 3fr 3fr;
+                    grid-template-rows: auto;
+                    grid-row-gap: 5px;
+                }
+                .card-details{
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-rows: repeat(4, 1fr);
+                    grid-column-gap: 10px;
+                    grid-row-gap: 2px;
+                }
+                .second-round-adjusted{
+                    grid-template-columns: repeat(3, 1fr);
+                    grid-template-rows: auto;
+                    grid-column-gap: 10px;
+                    grid-row-gap: 5px;
+                }
+                .marks-card-adjusted{
+                    grid-template-columns: repeat(4, 1fr);
+                    grid-template-rows: repeat(1, 1fr);
+                }
+
+
+                .card-contents{
+                    padding: 2vh;
+                    
+                }
+                .card-group{
+                    margin-bottom: 2vh;
+                    grid-row: auto;
+                    grid-column: span 3;
+                    display: grid;
+                    grid-template-columns: 1fr 3fr;
+                    grid-template-rows: auto;
+                    grid-row-gap: 5px;
+                }
+                .card-detail-row{
+                    display: flex;
+                    flex-direction: column;
+                    grid-row: auto;
+                    grid-column: auto;
+                    padding: 5px;
+                }
+                .card-title-container{
+                    margin-bottom: 2vh;
+                    display: flex;
+                    justify-content: space-between;
+
+                }
+                .button-group{
+                    display: flex;
+                }
+                .edit-button{
+                    width: auto;
+                    height: auto;
+                    border: 1px solid var(--blue-color);
+                    padding: 1vh;
+                    margin:4px;
+                    cursor: pointer;
+                    background-color: var(--blue-color);
+                    color: white;
+                    border-radius: 5px;
+                }
+                .edit-button:hover{
+                    background-image: linear-gradient(45deg, var(--blue-color-hover), var(--blue-color-hover-alt));
+                    box-shadow: 0px 0px 10px #150958;
+                }
+
+                .edit-button-alt{
+                    width: auto;
+                    height: auto;
+                    border: 1px solid var(--blue-color);
+                    padding: 1vh;
+                    margin:4px;
+                    cursor: pointer;
+                    background-color: var(--background-color);
+                    color: var(--blue-color);
+                    border-radius: 5px;
+                }
+                .edit-button-alt:hover{
+                    background-image: linear-gradient(45deg, var(--blue-color-hover), var(--blue-color-hover-alt));
+                    color: var(--background-color);
+                }
+
+                .dropbtn {
+                    border-radius: 10px;
+                    background-color: var(--background-color);
+                    padding: 1vh;
+                    color: var(--blue-color);
+                    border: 1px solid var(--blue-color);
+                    cursor: pointer;
+                }
+                .dropbtn:hover {
+                    background-color: whitesmoke;
+                    /* border: 2px solid var(--blue-color); */
+                }
+
+
+                .dropdown-content {
+                    border-radius: 10px;
+                    /* padding: 1vh; */
+                    display: none;
+                    position: absolute;
+                    background-color: var(--background-color);
+                    min-width: 160px;
+                    box-shadow: 0px 1px 10px #150958;
+                    z-index: 1;
+                }
+
+                .dropdown:hover .dropdown-content {
+                    display: block;
+                }
+
+
+
+
+                .save-button{
+                    width: auto;
+                    height: auto;
+                    border: 1px solid var(--green-color);
+                    padding: 1vh;
+                    margin:4px;
+                    cursor: pointer;
+                    background-color: var(--green-color);
+                    color: white;
+                    border-radius: 5px;
+                }
+                .save-button:hover{
+                    background-image: linear-gradient(45deg, #2bc22b, var(--green-color));
+                    box-shadow: 0px 0px 10px var(--green-color);
+                }
+
+                .cancel-button{
+                    width: auto;
+                    height: auto;
+                    border: 1px solid var(--red-color);
+                    padding: 1vh;
+                    margin:4px;
+                    cursor: pointer;
+                    background-color: var(--red-color);
+                    color: white;
+                    border-radius: 5px;
+                }
+                .cancel-button:hover{
+                    background-image: linear-gradient(45deg,rgb(255, 89, 89), var(--red-color));
+                    box-shadow: 0px 0px 10px var(--red-color);
+                }
+
+                .operation-buttons{
+                    display: flex;
+                }
+                .card-detail-heading{
+                    font-size: 18px;
+                }
+                .card-detail-value{
+                    font-size: 16px;
+                }
+                .card-detail-value-large{
+                    font-size: 28px;
+                }
+                .value-height-adjust{
+                    margin-top: 16px;
+                }
+                .bold{
+                    font-weight: bold;
+                }
+                .hidden {
+                    display: none;
+                }
+                .round-banner-title-container{
+                    display:flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 95%;
+                }
+                .round-banner-title{
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+                @media print {
+                    @page {
+                        margin-left: 0.5in;
+                        margin-right: 0.5in;
+                        margin-top: 0;
+                        margin-bottom: 0;
+                    }
+                }
+                .navButton {
+                    font-size: 28px;
+                    color: white;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+                .navButton:hover {
+                    color: rgb(200, 200, 200);
+                }
+
+
+
+    </style>
+    
+    </head>
+    <body>
+        <div class="loader">
+            <div class="loader-logo loader-logo-animation">
+                <svg width="120" height="120" viewBox="0 0 61 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30.8919 50.5334C33.472 46.3136 35.8983 42.4107 38.2198 38.4516C38.447 38.062 38.1813 37.2563 37.8911 36.7808C30.6681 24.8707 23.4241 12.9705 16.1242 1.10328C15.7781 0.541945 14.9355 0.0697652 14.2502 0.0565574C9.65982 -0.0325952 5.0659 0.0103303 0 0.0103303C10.3486 16.9361 20.5293 33.5845 30.8919 50.5334Z" fill="white"/>
+                    <path class="logo-section-one" d="M21.9257 0.0785001C28.4739 10.7867 34.8054 21.135 41.3047 31.7607C43.8779 27.5738 46.3182 23.6643 48.6536 19.7053C48.8844 19.3123 48.6641 18.5133 48.3844 18.0444C44.9897 12.4146 41.567 6.80127 38.0743 1.22428C37.7422 0.692662 36.8996 0.137935 36.2843 0.124727C31.6869 0.0322727 27.0825 0.0751975 21.9257 0.0751975V0.0785001Z" fill="#EF233C"/>
+                    <path class="logo-section-two" d="M60.6489 0.124756H45.0002C47.6293 4.4404 50.1395 8.56784 52.7965 12.9264C55.4326 8.62727 57.9394 4.54276 60.6489 0.124756Z" fill="#EF233C"/>
+                </svg>
+            </div>
+            <div class="loader-inner"></div>
+        </div>
+        <div class="error-warning" id="warningCustom">
+            <img id="warnImg" src="{!URLFOR($Resource.iconAlertBlack)}" class="error-image"/>
+            <span id="warnText" class="closebtn closebtn-black-color"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="error-alert" id="errorCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="main">
+            <div class="header">
+                <div style="display:flex; align-items: center; justify-content:center;">
+                    <img class="novigo-icon" src="{!URLFOR($Resource.novigo_logo)}" alt="Novigo Icon"/>
+                </div>
+                
+                <!-- <apex:includeLightning />
+
+                <div id="lightning"></div>
+
+                <script>
+                        $Lightning.createComponent(
+                            "c:navigationControl",
+                            {},
+                            "lightning",
+                            function(cmp) {
+                                // Component creation callback
+                                console.log('Component was created', cmp);
+                            }
+                        );
+                </script> -->
+                <!-- <lightning:container src="../lwc/navigationControl" /> -->
+                <div class="title" id="downloadPdfButtonBackup">
+                    <div style="display:flex; margin-right: 1vw; border-right:1px solid whitesmoke;">
+                        <div class="navButton" onclick="navigateHome();">
+                            🏠︎
+                        </div>
+                        <div class="navButton" onclick="history.back();">
+                            ⬅
+                        </div>
+                    </div>
+                    <div style="display:flex;">
+                        <svg style="margin-right: 1vw;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="white" d="M11 9c0 1.66-1.34 3-3 3s-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3m3 11H2v-2c0-2.21 2.69-4 6-4s6 1.79 6 4m8-6v2h-9v-2m9-4v2h-9V8m9-4v2h-9V4Z"/></svg>
+                        <span class="title-text">Student Profile</span>
+                    </div>  
+                </div>
+            </div>
+            <div class="profile-banner">
+                <div class="profile-image">
+                    <div style="display:flex; justify-content:center;">
+                        <img id="imgElement"/>
+                        <!-- <svg width="80%" height="80%" viewBox="0 0 61 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30.8919 50.5334C33.472 46.3136 35.8983 42.4107 38.2198 38.4516C38.447 38.062 38.1813 37.2563 37.8911 36.7808C30.6681 24.8707 23.4241 12.9705 16.1242 1.10328C15.7781 0.541945 14.9355 0.0697652 14.2502 0.0565574C9.65982 -0.0325952 5.0659 0.0103303 0 0.0103303C10.3486 16.9361 20.5293 33.5845 30.8919 50.5334Z" fill="#150958"/>
+                            <path class="logo-section-one" d="M21.9257 0.0785001C28.4739 10.7867 34.8054 21.135 41.3047 31.7607C43.8779 27.5738 46.3182 23.6643 48.6536 19.7053C48.8844 19.3123 48.6641 18.5133 48.3844 18.0444C44.9897 12.4146 41.567 6.80127 38.0743 1.22428C37.7422 0.692662 36.8996 0.137935 36.2843 0.124727C31.6869 0.0322727 27.0825 0.0751975 21.9257 0.0751975V0.0785001Z" fill="#EF233C"/>
+                            <path class="logo-section-two" d="M60.6489 0.124756H45.0002C47.6293 4.4404 50.1395 8.56784 52.7965 12.9264C55.4326 8.62727 57.9394 4.54276 60.6489 0.124756Z" fill="#EF233C"/>
+                        </svg> -->
+
+                    </div>
+                </div>
+                <div class="profile-basic-details">
+                    <div class="profile-name">
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <div style="display: flex; align-items: center; margin-right: 5vw;">
+                                <span id="profileName" class="profile-basic-details-name-header">Undefined</span>
+                                    <div class="dropdown" style="margin-left: 2vw;">
+                                        <button class="dropbtn">Download PDF Forms ⮟</button>
+                                        <div class="dropdown-content">
+                                            <div class="edit-button-alt" onclick="downloadStudentPdf()">Interview Form ⭳</div>
+                                            <div class="edit-button-alt" onclick="downloadProfilePdf()">Profile Form ⭳</div>
+                                            <div class="edit-button-alt" onclick="downloadCombinedPdf()">Combined Form ⭳</div>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div id="round1-features" style="display:flex;">
+                                <div class="edit-button" style="margin-left: 1vw;" onClick="openCompiler()">Code Compiler 🡭</div>
+                                <div class="edit-button" style="margin-left: 1vw;" onClick="openStudentAttempt()">Test Attempt 🡭</div>
+                                <div class="edit-button" style="margin-left: 1vw;" onClick="openLog()">Test Logs 🡭</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-basic-section-1">
+                        <div class="profile-basic-section-item">
+                            <span  class="profile-basic-details-text-header">USN</span>
+                            <span id="profileUSN" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                        <div class="profile-basic-section-item">
+                            <span class="profile-basic-details-text-header">Email</span>
+                            <span id="profileEmail" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                        <div class="profile-basic-section-item">
+                            <span class="profile-basic-details-text-header">Phone</span>
+                            <span id="profilePhone" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                    </div>
+                    <div class="profile-basic-section-2">
+                        <div class="profile-basic-section-item">
+                            <span class="profile-basic-details-text-header">College</span>
+                            <span id="profileCollege" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                        <div class="profile-basic-section-item">
+                            <span class="profile-basic-details-text-header">Degree</span>
+                            <span id="profileDegree" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                        <div id = "branchContainer" class="profile-basic-section-item">
+                            <span class="profile-basic-details-text-header">Branch</span>
+                            <span id="profileBranch" class="profile-basic-details-text-value">Undefined</span>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">ROUND I Assessment</div>
+                <!-- <div class="edit-button roundTwoEditButton hidden" id="addRoundTwoElementButton" onclick="setNewElement('round2')">ADD NEW ASSESSMENT</div> -->
+            </div>
+            <div class="marks-banner round1" id = "round1">
+                <div class="wide-card-section">
+                    <div class="card-contents">
+                        <div class="card-title-container">
+                            <span class="card-title">1<sup>st</sup> Round Report</span>
+                            <span class="hidden" id="instanceId"></span>
+                            <div class="button-group" id="buttonGroup" data-card-suffix="">
+                                <div class="edit-button hidden" id="editButton" onclick="enableEdit(round1)">Edit Details</div>
+                            </div>
+                            <div class="operation-buttons hidden">
+                                <div class="save-button" id="saveButton" onclick="saveStudent(round1)" data-card-suffix="">Save Details</div>
+                                <div class="cancel-button" id="cancelButton" onclick="location.reload()" data-card-suffix="">Cancel</div>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="card-details marks-card-adjusted">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Total Marks Overview</span>
+                                        <div>
+                                            <span id = "studentMarksScored" class="card-detail-value-large">NA</span>
+                                            <span id = "testTotalMarks" class="card-detail-value">/NA</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- <div class="wide-card-group" style="grid-row:2; grid-column:1">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1" >
+                                        <span class="card-detail-heading">Total Marks</span>
+                                        <span id = "studentMarksScored" class="card-detail-value bold">20</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:2"> 
+                                        <span class="card-detail-heading">Total Positve Marks</span>
+                                        <span id = "posStudentMarksScored" class="card-detail-value">20</span>
+                                    </div>
+                                </div>
+                                <div class="wide-card-group" style="grid-row:3; grid-column:1">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1"> 
+                                        <span class="card-detail-heading">Total Negative Marks</span>
+                                        <span id = "negStudentMarksScored" class="card-detail-value">-10</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:2">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Aptitude Marks</span>
+                                        <div>
+                                            <span id = "studentAptitudeMarks" class="card-detail-value-large">NA</span>
+                                            <span id = "testAptiMarks" class="card-detail-value">/NA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="wide-card-group" style="grid-row:2; grid-column:1">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1"> 
+                                        <span class="card-detail-heading">Total Marks</span>
+                                        <span id = "studentAptitudeMarks" class="card-detail-value">12</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:2"> 
+                                        <span class="card-detail-heading">Positive Marks</span>
+                                        <span id = "posStudentAptitudeMarks" class="card-detail-value">12</span>
+                                    </div>
+                                    <div class="wide-card-group" style="grid-row:3; grid-column:1">
+                                        <div class="card-detail-row" style="grid-row:1; grid-column:1"> 
+                                            <span class="card-detail-heading">Negative Marks</span>
+                                            <span id = "negStudentAptitudeMarks" class="card-detail-value">12</span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:3">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">C Programming Marks</span>
+                                        <div>
+                                            <span id = "studentCProgramMarks" class="card-detail-value-large">NA</span>
+                                            <span id = "testCMarks" class="card-detail-value">/NA</span>
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                                <!-- <div class="wide-card-group" style="grid-row:1; grid-column:1">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1" >
+                                        <span class="card-detail-heading">Total Marks</span>
+                                        <span id = "studentCProgramMarks" class="card-detail-value bold">20</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:2"> 
+                                        <span class="card-detail-heading">Total Positve Marks</span>
+                                        <span id = "posStudentCProgramMarks" class="card-detail-value">NA</span>
+                                    </div>
+                                </div>
+                                <div class="wide-card-group" style="grid-row:2; grid-column:1">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1"> 
+                                        <span class="card-detail-heading">Total Negative Marks</span>
+                                        <span id = "negStudentCProgramMarks" class="card-detail-value">NA</span>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Selection Status</span>
+                                        <span id = "roundOneStudentStatus" class="card-detail-value editable option student-status">NA</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:2; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Is Referred?</span>
+                                        <span id = "isReferred" class="card-detail-value editable option yes-or-no">NA</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="card-detail-row" style="gird-row:2; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Remarks</span>
+                                        <span id = "firstRoundRemark" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">ROUND II Assessment</div>
+                <div class="edit-button roundTwoEditButton hidden" id="addRoundTwoElementButton" onclick="setNewElement('round2')">ADD NEW ASSESSMENT</div>
+            </div>
+            <div class="marks-banner hidden" id="round2Err"> 
+                <div class="wide-card-section">
+                    <div class="card-contents">
+                        <span class="card-detail-value">Round II Not Yet Conducted</span>
+                    </div>
+                </div>
+            </div>
+            <div class="marks-banner hidden round2" id="round2">
+                
+                <div class="wide-card-section">
+                    <div class="card-contents" id="round2Container">
+                        
+                        <div class="card-title-container">
+                            <span class="card-title">2<sup>nd</sup> Round Report</span>
+                            <span class="hidden" id="instanceId"></span>
+                            <div class="button-group" id="buttonGroup" data-card-suffix="">
+                                <div class="edit-button hidden" id="editButton" onclick="enableEdit(round2)">Edit Details</div>
+                                <!-- <div class="edit-button" id="addElementButton" onclick="addNewElement('round2')"> + </div> -->
+                            </div>
+                            <div class="operation-buttons hidden">
+                                <div class="save-button" id="saveButton" onclick="saveStudent(round2)" data-card-suffix="">Save Details</div>
+                                <div class="cancel-button" id="cancelButton" onclick="location.reload()" data-card-suffix="">Cancel</div>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="card-details marks-card-adjusted">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Professional/Technical Knowledge</span>
+                                        <span id = "techRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "techComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Communication Skills</span>
+                                        <span id = "commRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "commComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Attitude/Promptness in Response</span>
+                                        <span id = "attitudeRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "attitudeComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:4; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 2">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Selection Status</span>
+                                        <span id = "studentStatus" class="card-detail-value editable option student-status">On-Hold</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:3 / span 4"> 
+                                        <span class="card-detail-value bold">Interviewed By</span>
+                                        <span id = "panelistFormId" class="card-detail-value">Rifat Ibrahim Bandadi
+                                            Ashish Kishore Kumar</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="card-detail-row" style="gird-row:2; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Remarks</span>
+                                        <span id = "studentMarksScored" class="card-detail-value">HELLO HELLO HELLO EHHD</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">ROUND III Assessment</div>
+                <div class="edit-button roundThreeEditButton hidden" id="addRoundThreeElementButton" onclick="setNewElement('round3')">ADD NEW ASSESSMENT</div>
+            </div>
+            <div class="marks-banner hidden" id="round3Err"> 
+                <div class="wide-card-section">
+                    <div class="card-contents">
+                        <span class="card-detail-value">Round III Not Yet Conducted</span>
+                    </div>
+                </div>
+            </div>
+            <div class="marks-banner hidden round3" id="round3">
+
+                <div class="wide-card-section">
+                    <div id = "round3ErrContainer" class="hidden"></div>
+                    <div class="card-contents" id ="round3Container">
+                        
+                        <div class="card-title-container">
+                            <span class="card-title">3<sup>rd</sup> Round Report</span>
+                            <span class="hidden" id="instanceId"></span>
+                            <div class="button-group" id="buttonGroup" data-card-suffix="">
+                                <div class="edit-button hidden" id="editButton" onclick="enableEdit(round3)">Edit Details</div>
+                                <!-- <div class="edit-button" id="addElementButton" onclick="addNewElement('round3')"> + </div> -->
+                            </div>
+                            <div class="operation-buttons hidden">
+                                <div class="save-button" id="saveButton" onclick="saveStudent(round3)" data-card-suffix="">Save Details</div>
+                                <div class="cancel-button" id="cancelButton" onclick="location.reload()" data-card-suffix="">Cancel</div>
+                            </div>
+                            
+                        </div>
+                        <div class="card-details marks-card-adjusted">
+                            <div class="card-detail-row" style="gird-row:2; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Communication Skills</span>
+                                        <span id = "commRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "commComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Attitude/Promptness in Response</span>
+                                        <span id = "attitudeRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "attitudeComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Readiness to Join</span>
+                                        <span id = "readyToJoinRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "readyToJoinComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Long term Goals/Plans</span>
+                                        <span id = "longTermRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "longTermComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Long term Goals &amp; Readiness to join</span>
+                                        <span id = "longTermRatingAlt" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "longTermCommentAlt" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-detail-row" style="gird-row:4; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 2">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Selection Status</span>
+                                        <span id = "studentStatus" class="card-detail-value editable option student-status">On-Hold</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:3 / span 4"> 
+                                        <span class="card-detail-value bold">Interviewed By</span>
+                                        <span id = "panelistFormId" class="card-detail-value">Rifat Ibrahim Bandadi
+                                            Ashish Kishore Kumar</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="card-detail-row" style="gird-row:2; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Remarks</span>
+                                        <span id = "studentMarksScored" class="card-detail-value">HELLO HELLO HELLO EHHD</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">Director's Round Assessment</div>
+                <div class="edit-button roundFourEditButton hidden" id="addRoundFourElementButton" onclick="setNewElement('round4')">ADD NEW ASSESSMENT</div>
+            </div>
+            <div class="marks-banner hidden" id="round4Err"> 
+                <div class="wide-card-section">
+                    <div class="card-contents">
+                        <span class="card-detail-value">Director's Round Not Yet Conducted</span>
+                    </div>
+                </div>
+            </div>
+            <div class="marks-banner hidden round4" id="round4">
+
+                <div class="wide-card-section">
+                    <div id = "round4ErrContainer" class="hidden"></div>
+                    <div class="card-contents" id ="round4Container">
+                        
+                        <div class="card-title-container">
+                            <span class="card-title">4<sup>th</sup> Round Report</span>
+                            <span class="hidden" id="instanceId"></span>
+                            <div class="button-group" id="buttonGroup" data-card-suffix="">
+                                <div class="edit-button hidden" id="editButton" onclick="enableEdit(round4)">Edit Details</div>
+                                <!-- <div class="edit-button" id="addElementButton" onclick="addNewElement('round4')"> + </div> -->
+                            </div>
+                            <div class="operation-buttons hidden">
+                                <div class="save-button" id="saveButton" onclick="saveStudent(round4)" data-card-suffix="">Save Details</div>
+                                <div class="cancel-button" id="cancelButton" onclick="location.reload()" data-card-suffix="">Cancel</div>
+                            </div>
+                            
+                        </div>
+                        <div class="card-details marks-card-adjusted">
+                            <div class="card-detail-row" style="gird-row:3; grid-column:1">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Feedback</span>
+                                        <span id = "techRating" class="card-detail-value editable option">Excellent</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:3; grid-column:2 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3 ">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Comments</span>
+                                        <span id = "techComment" class="card-detail-value editable comment"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:4; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 2">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Selection Status</span>
+                                        <span id = "studentStatus" class="card-detail-value editable option student-status">On-Hold</span>
+                                    </div>
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:3 / span 4"> 
+                                        <span class="card-detail-value bold">Interviewed By</span>
+                                        <span id = "panelistFormId" class="card-detail-value">Rifat Ibrahim Bandadi
+                                            Ashish Kishore Kumar</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="card-detail-row" style="gird-row:2; grid-column:1 / span 4">
+                                <div class="wide-card-group" style="grid-row:1; grid-column:1 / span 3">
+                                    <div class="card-detail-row" style="grid-row:1; grid-column:1 / span 3"> 
+                                        <span class="card-detail-value bold">Remarks</span>
+                                        <span id = "studentMarksScored" class="card-detail-value">HELLO HELLO HELLO EHHD</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">Academic Performance</div>
+                <!-- <div class="edit-button roundThreeEditButton hidden" id="addRoundThreeElementButton" onclick="setNewElement('round3')">ADD NEW ASSESSMENT</div> -->
+            </div>
+            <div class="marks-banner">
+                <div class="wide-card-section">
+                    <div class="card-contents">
+                        <div class="card-title-container">
+                            <span class="card-title">Marks Overview</span>
+                        </div>
+                        <div class="card-details marks-card-adjusted">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <span class="card-detail-heading">School Acaedmic Details</span>
+                                <span class="card-detail-heading bold" id = "schoolName">NA</span>
+                                <div>
+                                    <span class="card-detail-value" id="schoolMarks">NA</span>
+                                    <span class="card-detail-value" id="schoolMarksType"></span>
+                                </div>
+                                
+                            </div>
+                            <div class="card-detail-row" style="grid-row:1; grid-column:2" id = "sscCollegeBlock"> 
+                                <span class="card-detail-heading">PU Acaedmic Details</span>
+                                <span class="card-detail-heading bold" id="secCollege">NA</span>
+                                <div>
+                                    <span class="card-detail-value" id="secMarks">NA</span>
+                                    <span class="card-detail-value" id="secMarksType"></span>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="grid-row:1; grid-column:3" id="diplomaCollegeBlock"> 
+                                <span class="card-detail-heading">Diploma Acaedmic Details</span>
+                                <span class="card-detail-heading bold" id="dipCollege">NA</span>
+                                <div>
+                                    <span class="card-detail-value" id="dipMarks">NA</span>
+                                    <span class="card-detail-value" id="dipMarksType"></span>
+                                </div>
+                            </div>
+                            <div class="card-detail-row" style="grid-row:1; grid-column:4"> 
+                                <span class="card-detail-heading">Degree Academic Details</span>
+                                <span class="card-detail-heading bold" id="degreeCollege">NA</span>
+                                <div>
+                                    <span class="card-detail-value" id="degreeMarks"></span>
+                                    <span class="card-detail-value" id="degreeMarksType"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">Internships &amp; Certifications</div>
+                <!-- <div class="edit-button roundThreeEditButton hidden" id="addRoundThreeElementButton" onclick="setNewElement('round3')">ADD NEW ASSESSMENT</div> -->
+            </div>
+            <div class="marks-banner" id="internshipBanner">
+                <div class="wide-card-section">
+                    <div class="card-contents" id="internshipContainer">
+                        <div class="card-title-container">
+                            <span class="card-title">Internship Expirence</span>
+                        </div>
+                        <div class="card-details marks-card-adjusted" id="internshipValue">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <span class="card-detail-heading">Internship 1</span>
+                                <span class="card-detail-heading bold" id = "internshipOrganization">NULL COMPANY</span>
+                                <span class="card-detail-value" id="internshipLocation">NULL CITY</span>
+                                <span class="card-detail-value" id="internshipDomain">NULL JAVASCRIPT</span>
+                                <span class="card-detail-value" id="internshipStart">From: NULL</span>
+                                <span class="card-detail-value" id="internshipEnd">To: Null</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="marks-banner" id="certificationBanner">
+                <div class="wide-card-section">
+                    <div class="card-contents" id = "certificationContainer">
+                        <div class="card-title-container">
+                            <span class="card-title">Certifications</span>
+                        </div>
+                        <div class="card-details marks-card-adjusted" id="certificationValue">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <span class="card-detail-heading">Certs 1</span>
+                                <span class="card-detail-heading bold" id = "projectTitle">NULL CERTIFICATION</span>
+                                <span class="card-detail-value" id="certOrg">NULL ORGANIZATION</span>
+                                <span class="card-detail-value" id="certDomain">NULL DOMAIN</span>
+                                <span class="card-detail-value" id="certStart">From: NULL</span>
+                                <span class="card-detail-value" id="certEnd">To: Null</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="round-banner-title-container">
+                <div class="round-banner-title">Basic Student Details</div>
+                <!-- <div class="edit-button roundThreeEditButton hidden" id="addRoundThreeElementButton" onclick="setNewElement('round3')">ADD NEW ASSESSMENT</div> -->
+            </div>
+            <div class="marks-banner" id="basicDetailsBanner">
+                <div class="wide-card-section">
+                    <div class="card-contents" id = "certificationContainer">
+                        <div class="card-title-container">
+                            <span class="card-title">Basic Details</span>
+                        </div>
+                        <div class="card-details marks-card-adjusted" id="certificationValue">
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1">
+                                <span class="card-detail-heading">Name</span>
+                                <span class="card-detail-heading bold" id = "studentName">Person's Name</span>
+                            </div>
+
+                            <div class="card-detail-row" style="gird-row:1; grid-column:2">
+                                <span class="card-detail-heading">Date of Birth</span>
+                                <span class="card-detail-heading bold" id = "studentDob">NA</span>
+                            </div>
+
+                            <div class="card-detail-row" style="gird-row:1; grid-column:3">
+                                <span class="card-detail-heading">Gender</span>
+                                <span class="card-detail-heading bold" id = "studentGender">NA</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:4">
+                                <span class="card-detail-heading">Phone Number</span>
+                                <span class="card-detail-heading bold" id = "studentPhone">NA</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:1">
+                                <span class="card-detail-heading">Email</span>
+                                <span class="card-detail-heading bold" id = "studentMail">NA</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:2">
+                                <span class="card-detail-heading">Marital Status</span>
+                                <span class="card-detail-heading bold" id = "studentMaritalStatus">NA</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:3">
+                                <span class="card-detail-heading">City</span>
+                                <span class="card-detail-heading bold" id = "studentCity">NA</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:2; grid-column:4">
+                                <span class="card-detail-heading">Alternate Phone Number</span>
+                                <span class="card-detail-heading bold" id = "studentAltPhone">NA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="marks-banner" id="addressBanner">
+                <div class="wide-card-section">
+                    <div class="card-contents" id = "addressContainer">
+                        <div class="card-title-container">
+                            <span class="card-title">Student Address</span>
+                        </div>
+                        <div class="card-details marks-card-adjusted" >
+                            <div class="card-detail-row" style="gird-row:1; grid-column:1" id="permanentAddressValue">
+                                <span class="card-detail-heading bold" id = "permAddressMain">Permanent Address</span>
+                                <span class="card-detail-value" id="permAddress">NULL Address</span>
+                                <span class="card-detail-value" id="permCity">NULL City</span>
+                                <span class="card-detail-value" id="permState">NULL State</span>
+                                <span class="card-detail-value" id="permPincode">NULL Pincode</span>
+                            </div>
+                            <div class="card-detail-row" style="gird-row:1; grid-column:2" id="corrAddressValue">
+                                <span class="card-detail-heading bold" id = "projectTitle">Correspondence Address</span>
+                                <span class="card-detail-value" id="corrAddress">NULL</span>
+                                <span class="card-detail-value" id="corrCity">NULL </span>
+                                <span class="card-detail-value" id="corrState">NULL</span>
+                                <span class="card-detail-value" id="corrPincode">Null</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <img class="novigo-icon-big" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/>
+        </div>
+    </body>
+    
+    <script>
+
+        
+        let allResult = null;
+        let marksType = null;
+        function displayProfileImage(profileImage, gender){
+            const imgElement = document.getElementById('imgElement');
+            if(profileImage){
+                imgElement.src = profileImage;
+            }
+            else if (gender === "Male"){
+                imgElement.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhgAAAHTCAYAAABlQ2H6AAA5XElEQVR4Xu3dB7RkR3XucSYoJ4KQAIkoMPCIssnPJGMwLDBgHsEyJjqAbUwwIMAEE2yTHjbBJsjSnRsm38k5R03OM3fSnXROD+EhISFAKGv6ffv2CI12laQb+nSf8P/W+q0ekYS6qnZVn1D1kIcQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIW1MkiRmlIyWMTJWzpWHysXyWHn8SU+W35PL5Akn/7VHyyPtP5+m6XlJ43/D2P/eKP/3I4QQQkhBo4n9NHmUJvzfP3bs2Kv0+S799Yfl3+SHMkGWynrpkx/LL+RXcpvUh0N/H/v8rdwkP9dfp/rcImtlnnTKt+Xz8kH922/V58tqtZotWh6esCAhhBBC2pOkccXhAk3Oz5DX688fkm9Kr1wrx5PGIuHuJLIIyKkTcpfcpH+mw/pcqs8ufX5R3pc0FiFP0OeZ/vsghBBCyBCiyfR0eZz8iXw0aVx5WJbcu4Dwk3TZ2YLpN7JHZmoBYouq98uL9We7+jHaf4eEEEJIZZM0nn84X5Pki/T5QfmRrJPrTk6qfqJF6HY5Jgvl3+WdSeNZkdP9900IIYSULknj9sZZWky8UOyqxHjZK3eeMlmieX4pa+Tb+r7/Qp6S8JwHIYSQokeT2UNqtdolJx9m/FbSuDJxS2QiROv8TGbLZ9UuL9PnOb7dCCGEkNxFE9almrj+PGk8M7E/aTy86Cc55Ie99WJvuXxF7fbHcr5vU0IIIaTlSRr7Rbwhabx+aQ8gcruj2G6W5Vpo/LM8X38+zbc5IYQQ0vRowhmtiecZ+vxE0nirw34B+0kK5WG3VCbJO9XuF+nTdwlCCCFkeEkar4y+UhPM9/R5KGns2+AnIpTfHeoDdjvl0/p8esIDo4QQQoYaTR7naBJ5S9LY9dLeRvCTDWBvAP2r/H7CPhyEEELuL8m9i4op8uvIhALE2BWtI/JVuTxhsUEIIUQLijPkNZoUxsmNkckDGApbbOyTL6tfPS3hNgohhFQnVvTlWUnjDI9aZJIAmsFeUd4gH7IHRH0/JIQQUpLUarULVez/QbYlPKiJ1rpVerXQeJ0+x/q+SQghpGBRMR8jtmOjbcvNLprIAzvG/gtabDzR91dCCCE5j4r3hfKxpHE/nKsVyKPb1Efn65OrGoQQkueoSI9SwX520jiR1I729gUdyCNbAPfLP6n/PsL3a0IIIW2KCvMYFeY3yvKEI85RbL+S/5anJuwaSggh7YkWFOeoCH8gaRwq5gs1UGR2ps0c9fFXJuyrQQghrYkKrr0N8tmkcU6EL8xAmdjtE3vV9c8SntMghJBsol9zl6rIfj1hl01U016NgffJGX5sEEIIGWJUVG1h8UR9/iDhwU3AWP5OzvTjhRBCyIMkaSwsHi8/1J9vixRZoOpsP40P1Gq1s/z4IYQQEsmxY8cercL5Hbk9UlQB3Feihfhf6+N0P5YIIYQ8ZOAZi0fK1xJuhQDD0a/x83Z9jvFjixBCKhkVxHPlk3JdpGgCGJotaePME05yJYRUMyqCY1UE3y3HIkUSwPDZ660La7Xa5QkbdhFCqpSkcQDZ5khhBNA8tmHX1VrMP8qPQUIIKVVU7C6TWQlbegOtZHvHfKZWq53jxyQhhBQ6Km7nyVcSjkwH2umQvCFh+3FCSNFjhSxN0zfr83Ck2AFovRMak/PlqX68EkJIIaJCdpmK2FwraJEiB6C9btH4/Dd9slEXIaQYUcE6U4XrC1bAIkUNQL4c1Hh9VcJrrYSQPEdF6sWyJ1LEAOSX3TbpkYv8mCaEkLZGhekCFan/ThqvxfniBaAYbLO7v0h4CJQQ0u4kjUPJbNdAO3jJFysAxTRT4/pSP94JIaQlSRpbfH8/YU8LoIx+oUXGexOezSCEtDIqPH+csMU3UAVzNN4v9jWAEEKamlqtdrYKzjcTnrUAquTnWmS8JeFcE0JIFlGBebYKzO5I8QFQfrafzVX6kXGBrw2EEDKsqKiMkY8m7GsBoLFvxgt8nSCEkCFFxeSRsiBSZABU121aZFypzzG+ZhBCyIPm5O5+P4kUFwAwC1UnHu1rByGERFOr1U5T0fhiwoOcAB7cj+3HiK8jhBByn9jraLI4UkQA4P7cIZ9O2AGUEBKLFhb/WwXieKR4AMCDUg2Ze/z48Uf42kIIqWhUGEbJ3ye8JQJg5A5rofFcX2cIIRWLisFZ0hEpEgAwXDdrkXGFrzeEkIpEReCxsilSHABgpO7WIuM/El5lJaRa0cB/ScIrqACyN//48eMX+hpECClZNNjNXyY8bwGgdfboR82TfT0ihJQkGuSj5UsJx6sDaL3rtch4pa9LhJCCRwP7bJkaGfQA0Cq2xfi7E05lJaQc0WC+SFZHBjsAtNoJ2ym4Vqvx8CchRY4G8lM0oPdFBjkAtJO9Hn+ar1mEkAJEg/cP5GeRgQ0AbXfyWIJzfe0ihOQ4Griv18C9yQ9oAMiZTbVa7TG+hhFCchYNVltc/Lk+b4sMZADIo4OqW4/39YwQkpMkjcXFR/R5V2QAA0CeHa/Vapf7ukYIaXOSxoFlVybscQGguH6hH0nP9/WNENKmaFCO1qD8pj5PRAYsABTJL+Ulvs4RQlqcpLG4+H5kkAJAUd1Sq9Ve7+sdIaRF0SAco8XFjyKDEwCK7jYtMt7s6x4hJONoYWGLi6sjgxIAyuJmFhmEtDAadGOExQWAKuBKBiGtSNJ45oLbIgCq5NcsMgjJMFpY2OLih5HBBwBld6u83NdFQsgIo4E1SouL/4wMOmDYjh07Vj9y5Ej94MGD9b1799Z37txZ37p1a33Dhg31tWvX1leuXFlftmxZfdGiRfUFCxbU586dW589e3Z95syZ9RkzZtR7e3sHTJ06tT5lypSBz3v+tenTpw/8Z+w/b/89++8vXry4vmLFivrq1asH/h7299q9e3f9wIED9cOHDwf//wDntwmvsBLSvGhAmc8k7HOBQbpn4WAT965du+qbN28eWDDYYmH+/PkDCwRbEIwfP77e1dVVHzduXL2jo6Nt7O/f2dlZnzBhQn3atGn1efPm1ZcvXz6wCLH///39/QP/TP6fE5V0I5txEdKEJI3FxccSFhc4hU22Nunar/8tW7YMLB6WLl06MDHbBD1x4sSBhYOfyIvKFiD2z2RXQ+wKiP0z2+KJRUdlXV+r1Z7j6yUhZAjRQHpXwvbflXTPAmLTpk0DtxTsNsWsWbPqkyZNKtXiYSRs0WGLqmuvvXbgFo//DlFqR9M0fZyvmYSQQUSD500aRLdHBhZK4p4rETt27Bi4CmGLCHtuoaenp+23LYrGvi+7xbJw4cKBW0KHDh0Kvm+Ujp3CylHvhAwlGjR/qMFzS2RAocDsuQh7kNKuSNgvb7sawUIiG3aVx674rF+/fmAR59sCpbFBzvM1lBASiQbLM+X6yEBCwdgVCrvNsWrVqoEHK7u7u4OJENmzB0jnzJkzcGXj6NGjQTuh2PSDbIE+x/paSgg5JXa5TwPlsB9AKA6bwLZt2zZwqd4u2fvJDu1lb87Y2zT79u0L2g7Fpdp5jT5H+5pKCHnIwJWLc2WbHzgoBnud0vZ5sOcn/KSG/LFbU3ZVw55/4W2UctAi4wu+rhJS+SSN80Xm+QGDfLPNodatWzewwRTPUhSXvdprr76y0Ci8E1pkvNfXV0IqGw2KUfKdyGBBTtkbCrbLpV1u95MVissWiiw0Cu9WLTL+yNdZQioXDQZ77uLvEzbSKgS7YmELC26DlJttc25v+/j2R2FcJ0/y9ZaQSkWLi9dqINwZGSDIEftFa687csWiOuyWl71KbDuG+v6AQuiT833NJaQSqdVqT9cA+HlkYCBH9uzZM3CP3k9AqAbbT8P2LeH11kKy59p4s4RUK+r0F8juyIBATtiEYrdDbA8FP+mgeuz5DHtTyPcT5N43xJdgQsqZpPFQ57TIQEBO2B4JXLWAZ4tNO2yNqxmFYm+WXOHrMCGlS9J4qPOzkUGAnNi6dSsPceIB2eKTjboK5Tequ5y+SsoddfTXyV2RAYAcsHvt7GeBwbBt3+2kW9+HkFv9x48fv9DXZEJKEXXwJ8kvIh0fbWZviSxZsiSYRIAHs3TpUvbNKIg0TecknFlCyhZ17DOSxql/QadHe9nksGDBgmDiAAbLTm3lePhisFvUvj4TUtioU5tv+46O9mNxgWaZMmVKff/+/UEfQ+7YvkOv8HWakEJGK+Z3qEPfHenoaDNui6CZ7PRc2zfF9zPkTk0/Li7ytZqQQkWLC3vu4peRDo42W7NmTTBBACNlD3+yX0b+qTYvOn78OM9jkGJGndieu1jnOzbab9u2bbwtgszY7p92DLzvd8idj/u6TUghos771UiHRpvZ2RKcKYKs2SKDKxm5d1uapi/ytZuQXEed9jXqvHdEOjTayB7qtCf+/WQAZME2bOvr6wv6IXLlgOr1eb6GE5LLqLM+VJ32eKQjo8XsaoXdDrGTUNetW1dftmxZMAkAWbIHPzmRNfd+5Os4IbmMOuvkSAdGi9hT/PZ2yMSJE4NiD7SDHZR2+PDhoK8iN07In/paTkiukqbpu092Vt+BkTG73223P3h4E3k0Z84cdvzMt5/WarVH+ZpOSC6ixcWl6qQ3RDouMmS/DBctWsTCArm3cuXKoP8iV+yU69G+thPS1mhxMVodc36kwyJDdjtk8uTJQSEH8sgWwfZMkO/HyA072v09vr4T0taoU74v0lmRISvU9iqgL+JAntlDnwcPHgz6M3Lj56rnj/E1npC2RJ3xsQm3Rlpqy5Yt9c7OzqB4A0XA8xi5NyPhVglpd9QJR8nMSAdFRmyHRBYXKLoNGzYEfRu5YbdKrvD1npCWRh3x/1hnjHRQZGDfvn0Dmxf5Yg0UjfXj/v7+oI8jN34uj/Q1n5CWRJ3v4fKzSMdEBo4cOVLv7e0NCjVQVAsWLAj6OfIjTdNufY7ytZ+QTKNOZ37gOySywy6cKBt7q4TzSnLtbi0yXu3rPyGZRh3vpXJXpEMiA7t372afC5TS9OnTeeAz3/bLmX4OICSTWGeTXZGOiAxY8bUi7AszUBb2VpTv98iVf/HzACGZJE3TT0Q6IDJixdcXZKBM7KwSrmLk2m9V95/i5wJCmpparfY4dbZfRTogMsKDnaiCzZs3B30fuTLLzweENDXqZBMjHQ8Z2b59e1CIgTKaNm1a0P+RK7Y3xpv8nEBIU6LO9TJ1srsjHQ8ZmTt3blCIgbLauXNnMAaQK4fkDD83EDKiqFPZYWabIx0OGbFNiNixE1Uyb968YBwgd6708wMhI0qapu+PdDRkyLZS9gUYKDNbULO7Z+79slarcRgaaU7Uoc7XAuOnkY6GDHF7BFW0Zs2aYCwgd67y8wQhw4oWF1+JdDBk6OjRo/Xx48cHxRcoO15ZLYQ75dl+riBkSNHi4lJ1pF9HOhgy1NfXFxReoCqs//sxgdxZlHBOCRlJtMDojHQsZGz9+vVB0QWqYsWKFcGYQO7YKdqcU0KGFy0unqUOdHukYyFjixcvDoouUBV2m8SPCeTSRhnj5w5CHjTqONMiHQotMGPGjKDoAlWyf//+YFwgf/RD9O1+7iDkAaOO8+KETbXaZuLEiUHBBapk3bp1wbhALvXJWD+HEBKNOssoWRzpSGiBI0eO1Lu6uoKCC1SJvabtxwZy671+HiEkGnUW2xLcHuDxnQgtcODAgfq4ceOCggtUib2mba9r+/GBXDqapulZfi4h5D5JGlcvlkQ6EFpkz549QbEFqojXVYtDC4wP+PmEkPsk4epF29mBT77QAlXEcxiFcrRWq3EVg8STcPUiF7Zt2xYUWqCKFi5cGIwP5BpXMUg8aZq+NOHNkbbbsmVLUGiBKmI/jMLp1zzCce7kvlHHsAXGwkiHQYuxwAAa7G0qe6vKjxHkl+aR9/j5hVQ8tVrthQlXL3KBBQZwr7179wZjBLm2R0b7OYZUOOoQvZGOgjbgGQzgXps3bw7GCHLvzX6OIRVNmqa/lzSO3/WdBG3AWyTAvVatWhWMEeTetQknrRKLFhg/jHQQtAn7YAD34k2SQjphLw34uYZULLVa7SJ1ht9EOgjaxA55YidPoGHmzJnBGEEhzBA/5ZAqRR3gM5GOgTY6dOhQvbOzMyi0QBVNnjw5GCMohDvTNH2qn3NIRaIOcJb8JNIx0EZ2/kJPT09QaIEqsldV/RhBYXzPzzukItHq8i8jHQI5MGnSpKDQAlXFXhiFdZM8zM89pORRo4+WjZEOgRyw+86+yAJVZScM+zGCwviwn39IyZOm6fMSNtbKLXty3hdZoKrszSo/RlAYB2SMn4NIiaMG74h0BOTEypUrgyILVNWOHTuCMYLi0A/a1/o5iJQ0auxHqtFv9p0A+bFp06agyAJVtXXr1mCMoFBmJbyyWo2ooT8a6QDIkd27dwdFFqgqtgsvvDvkEj8XkZJFjTxK9kY6AHLE9sJgsy2gYcOGDcEYQbGkafoFPx+RksW2b/UNj/w5duxYfeLEiUGhBaqIBUYpHEl42LPcUQN3RxoeOTRr1qyg0AJVtG7dumB8oHj0A/eP/ZxEShI18EMTHu4sjGXLlgWFFqgiFhilMdnPS6Qk0erxbyINjpzauHFjUGiBKuIWSWn8Vh7p5yZS8KhRR2mBsTbS4Mipvr6+oNACVWSLbT8+UFgf9PMTKXjUqE+WuyKNjZyy8xfsoCdfbIGq4TXVUlnv5ydS8CQcy15Ivb29QbEFqoaNtkrFjnF/ip+jSEGTNPa+2BlpaOTcokWLgmILVA1bhZfO5/08RQoarRZ/P+Fgs0Jav359UGyBquGws9LpS9g6vBzRAuNrkQZGAfCgJ8Bx7SV0Qp7p5ypSsCSN2yO2g5pvYBTA0aNH693d3UHBBark8OHDwdhA4X3Fz1ekYEnT9PlJY7XoGxcFMXPmzKDgAlVhb1L5MYFS2C+j/JxFChQ14FcjDYsCWb58eVB0gaqwM3n8mEAp2A/f5/o5ixQkarzRaZr2RxoWBbJt27ag6AJVMW3atGBMoDS+5OctUpBocfGcSIOiYDi6HVU2b968YEygNHbLaD93kQJEDff5SIOigKZOnRoUXqAK7NA/Px5QGnez6VYBkzTeHtkYaVAU0JIlS4LCC1TB2rVrg/GAUvmYn79IzqNGu1TujDQmCmjLli1B4QWqgG3CS2+5n79IzqNG+9tIQ6Kg+vv7652dnUHxBcpu7969wXhAqdwiF/o5jOQ4arAZkYZEgXHwGarGFtV2qrAfCyiXNE3f6ucwktOosc5Wo93gGxHFxn4YqJpJkyYF4wCl1OXnMZLTaIHxR5EGRMHZiZK+AANlNmfOnGAcoJR+LGP8XEZyGDXU1yMNiIKzS8U9PT1BEQbKyq7a+XGAUjqhH8aX+7mM5CxqKLMl0oAoAftF54swUFYbN24MxgBK6xN+PiM5ixrp0Qmvp5bWunXrgiIMlFVfX18wBlBaC/18RnKWNE3fHmk4lMSBAwfYNhyV0N3dzRsk1fIbOdPPaSRHUQP9INJwKBFeV0UVcMhZJb3Uz2kkR1ED7Ys0GkpkxYoVQTEGymbx4sVB30fpfc7PaSQnSdPUnr+4O9JoKBG7L+2LMVA2GzZsCPo+Sm+Z+KmN5CFqmLdGGgwlZBsQ+YIMlAlbhFfSr/VD+Sw/t5EcRI3znUiDoYTsCGtfkIGysP1ejh49GvR7lJ8WGC/ycxtpcxL2v6iUXbt2BUUZKItZs2YFfR6V8VE/v5E2R41yvtwWaSyU0LFjx+oTJ04MCjNQBitXrgz6PKohTdOZfn4jbY4a5WW+oVBu3CZBWdm5O76/ozKOy1g/x5E2Rg3yqUhDocT27NnDplsoHY5or7wT8gQ/x5E2Rg0yLdJQKDG7TTJlypSgQANFNn369KCvo1rSNH2Hn+NIm6IGGS3HfCOh/FatWhUUaKDIOEEV8g0/z5E2Rau9SxI22Kqk/fv3c5sEpbJ9+/agn6Nylvt5jrQpWmC8PtJAqIiZM2cGRRoooq6uLp6/gLleTvNzHWlDtMD4fKSBUBG2pbIv1EAR2WLZ929Ukl2Rf7Kf60gboobojTQQKuLw4cMDR1v7Yg0UzerVq4P+jcp6i5/rSIuTNHbw7I80Dipk0aJFQbEGisZevfZ9G5X1JT/fkRYnTdOHJezgWXm7d+8OijVQJOPHjx949dr3bVQWO3q2O2qEF0QaBhXU29sbFG2gKObPnx/0aVTaIT/fkRZHjfDeSMOggtatWxcUbaAoNm7cGPRpVNodcoGf80gLk6bpNyMNgwriYU8UlW0P3t/fH/RpVN7lfs4jLYwaYH6kUVBRS5YsCYo3kHd2MjALDET8hZ/zSAujBjgSaRRUkO2AOG3atKB4A0Vgm2wtXry4fuDAgaBvo7L+1c95pEXRl39uwhsklWfbhc+ePTso2EAR2e2SlStX1o8ePRr0dVTOVD/vkRZFX/7TksbRtr5RUBH2YBzPXaCM7K2offv2BX0elbJT/NRHWhF98ZxBUlG2X4CdOslBZyiznp6e+o4dO4L+j8r4dcICoz1J0/TjkQZBBdi9al+MgTKyZzM4YbXSLvZzH2lB9MV/L9IYKDm7P+2LMFBmdhvQdqv1YwHlV6vVXuLnPtKC6Muf5xsD5bZlyxZui6CS7FXWQ4cOBWMC5Zam6Z/7uY9knKRxyNku3xgoL9snwM5r8IUXqAq2E6+kz/j5j2ScpLHAuCnSGCiphQsXBgUXqBK7esfzGJXzAz//kYyjL/2CSEOgpPbu3TuwP4AvuEDV2GZynLpaKfP8/EcyTpqmT480BEqKqxfAvXh1tVLYC6PV0Rf+mkhDoITsEDN7Vc8XWaCq5s2bF4wTlNZ1MtbPgSTD6At/T6QhUEK2W6cvsECV2YL7yJEjwVhBKd2epuk5fg4kGUZf+icjDYESWrBgQVBggarbtm1bMFZQWo/3cyDJMPrCvxVpBJTQpEmTguIKVN2KFSuCsYJyStP0+X4OJBlGX/oE3wgoH3v+go21gNDcuXOD8YLS+lM/B5IMoy98RaQRUDJ2mqQvrAAap6368YJyStP0/X4OJBlGX/o23wgon127dgWFFUDHwK1DP15QWp/0cyDJKPqyR2tFl0YaASVj7/v7wgqgcTaJHy8ora/6eZBkFH3Zp8mNkUZAyXAFA4jjCkal/I+fB0lG0Zd9htwSaQSUDM9gAHG2ZbgfLyitKX4eJBlFX/YjIg2AErLNhDiDBAixm2elLPbzIMko+rIvizQASmrKlClBcQWqbtWqVcFYQWlt9PMgySj6sp8TaQCU1KJFi4LiClTdzp07g7GC0urz8yDJKLVa7Q8jDYCS2rp1a1BcgSrr6empHz16NBgrKK1jCSeqtib6ol8baQCUlD2HYQXVF1mgquyqnh8nKK80TX+RcKJqa6Iv+s2+AVBuS5cuDYosUEW2df7u3buDMYJSu0nO9HMhySD6ot8WaQCU2IEDBwaOqPbFFqia2bNnB+MDpXezcGR7K6Iv+opIA6Dkli9fHhRboErsle09e/YEYwOlZ/s+nevnQpJBarXahyINgJKzk1UnT54cFF2gKpYtWxaMC1TCbXK+nwtJBknT9CORBkAF2NbhbLyFKrKdO3lzpLLukAv8XEgyiBYYH4s0ACpiw4YNQfEFymzChAkDzyH5sYDKuEvz3iP9XEgyCAsMrFmzZuBpel+IgbIZP358va+vLxgDqBbNe4/zcyHJIPqyr/RfPqpn/fr13C5BqdmJqXv37g36PqqHBUaLoi/7U/7LRzXZdskTJ04MCjNQdHPnzq0fOnQo6POoJhYYLUrCFQycwt4uWbJkCVczUAr2vMXGjRuDfo5qY4HRouiL/if/5QP79u0b2EKZDblQRHY7ZO3atQNb4/u+DbDAaFF4yBMPxC4r25smdonZHpDjYVDkkfXLKVOmDFx927FjR/3YsWNBXwZOOlGr1S7xcyHJIOyDgcGyon3w4MGB/TO2bNnCbqBoG7uytnnz5vq2bdsG3gqxW3u+vwL3g30wWhWt5P4x0gDAg7LbKL7wA61gG2X5/ggM0u0JO3m2JmmavjfSAMCDsp0QeUYD7bBw4cKgPwKDdKuc5+dCkkESTlPFCEydOjUo/kDWbHM43xeBQeI01VZFX/SbIw0ADMr8+fOD4g9kzZ698H0RGKRfyZl+LiQZJE3TP4k0ADAoq1evDoo/kCV7Y4SzRDBcmvNu1Ofpfi4kGURf9it8AwCDtXXr1mACALLU3d3NSagYiWPip0KSRfRFPzfSAMCg8CYJWo03SDBC+/w8SDKKvuynRBoAGBT7JWm/KP0kAGSFN0gwQlv8PEgyir7siyINAAxab29vMAkAWeENEozQUj8PkoySpunZSWPjEd8IwKAsWLAgmASArPAGCUZohp8HSUbRl32a/DLSCMCg8CYJWoU3SNAE1/h5kGQUfdlj0jT9SaQRgEHhTRK0Sk9PD2+QYKS+5udBkmH0hW+PNAIwKLxJglbhDRI0waf9HEgyjL7wVZFGAAaFN0nQKosWLQr6HzAUaZr+rZ8DSYbRlz7FNwIwFLxJglZYu3Zt0PeAodAC401+DiQZRl/6d30jAEPBmyRohe3btwd9DxgKLTBe4udAkmH0pf+zbwRgKHiTBK3AGyRogsv8HEgyjN2TijQCMGi8SYKs8QYJmuBOOdfPgSTD6AvnRFWMyP79+4MJAWim6dOnB/0OGKIbZKyfA0mGSdP0OZGGAAaNN0mQNd4gQRPsSThJtbXRF35hpCGAIeFNEmSJN0gwUvoxzTkkrY6++FHyW98YwFDYKZd+UgCaZceOHUGfA4aow89/JOPoSzf7Io0BDNq1114bTApAM9gZJP39/UGfA4boX/z8R1oQffGLI40BDNqePXuCiQFohilTpgT9DRiqNE3f4+c+0oLoy/++bwxgKI4dOzbwKqGfHICR4gFPNIMWGK/0cx9pQfTlf8o3BjBUc+fODSYHYKQ2b94c9DVgGC7xcx9pQfTFvy3SGMCQrF+/PpgcgJHo7OysHzp0KOhrwBDZiwxj/NxHWpA0TZ8XaRBgSA4ePDjwQJ6fJIDhmjlzZtDPgGHYnbAHRnuiL/5hckekUYAhmTFjRjBJAMNlV8V8HwOGYbaf90iLkjReVT0eaRRgSLhNgmbh9gia6Bt+3iMtjBpgSaRRgCGxCYFtw9EM8+bNC/oXMEzv93MeaWHUAN+LNAowZPZaoZ8sgKFi90400Yv8nEdaGDXAP0QaBRiyvr4+HvbEiEydOnVgbxXft4BhsGPaH+HnPNLCqAFeGmkYYFhmz54dTBrAYG3cuDHoU8AwpQlvkLQ3aoCLk8ZKzzcOMGQ7d+4MJg1gMCZPnlw/evRo0KeAYVrk5zvS4qgRRieNlZ5vHGBYuIqB4diwYUPQl4AR+Kqf70gbooZYEGkcYFjsADSexcBQ8OwFmi1N03f6uY60IWqMf/WNA4wEb5RgKHhzBBl4hp/rSBuild5bI40DDFt/f399/PjxwUQCePPnzw/6DzBCN8lZfq4jbYga4olyItJIwLDZPXU/mQCnskWonWXj+w4wQuv9PEfaFDXGWPlppJGAYbN76hzljgeyadOmoN8ATfBdP8+RNkYNsjDSSMCIcKsE92fBggVBfwGaIU3Td/s5jrQxapSv+EYCmsEe4OOtEpzK9rw4fPhw0FeAZtAC46l+jiNtjBrk9b6RgGZZvXp1MMmgmuxQvL179wZ9BGiS6+V0P8eRNkYNcqHcFWksYMTseQy7JO4nG1SLXcnaunVr0D+AZtGP5cV+fiNtjhpmlOzzjQU0i20DPWvWrGDSQXVce+21Qb8Amuzzfn4jOYga5upIYwFNY/fdp02bFkw8KL+VK1cG/QFotjRN/8jPbSQHUeO8xzcW0GyHDh1ikVEhdluExQVa5FYtMM73cxvJQdQ4lyVsuIUWsEXG9OnTg8kI5WKLi1WrVgXtD2RkY8IR7flM0ngOw+IbDWi6I0eO1OfMmRNMSigHW1ysW7cuaHcgQ1/z8xrJUdRAXZFGAzJhb5csXbo0mJxQbD09PbwtgpZL0/R1fk4jOYoa6b2+0YCs2bklXV1dwUSF4rGj19nnAm1wm/D8RZ6TNA4+Yz8MtFxfX9/A5OQnLBTHokWLBm59+bYFWuBaP5+RnEWNZA5EGg/InE1Oy5YtY2vxgrHzZrZs2RK0J9BCX/LzGclh1FD/FWk8oGXs/JJJkyYFExnyZ968eQOH2vk2BFopTdOX+rmM5DBqrDf4xgNazTblWrhwYTChIR/sTBF7dsa3G9AGN8iZfi4jOUytVnuYGuu3kUYEWs4uvXPke77MnDmzvn///qCtgDbp9fMYyXHSNF0eaUSgLQ4ePFifPXt2MNGhtTo7Owc2zrLXi30bAW30V34OIzmOGuyjkUYE2sYmNTssi9dZ22PKlCn13bt3B+0CtNkd+kF8iZ/DSI6jBnu6Gu7uSGMCbWWvs/b29gYTILJhb/QsXryY10+RV9tklJ/DSI6jBhud8LoqcsqOfl++fDmvs2ZswoQJ9W3btgXfP5AjX/TzFylA0jT9RqQxgdzYuXMnr7NmhNdPURCX+7mLFCBquBdHGhPIFbt0b5fwuZrRHHaOyMaNG3mQE0VwVMb6uYsUIGq4MfKTSKMCubN9+/b6xIkTgwkTg2en29obO/67BXLqP/28RQoUNeAPIo0K5JJtzsXVjKGzfUa4aoEC+t9+ziIFihrwVZFGBXLNns2YPHlyMJEiNH/+fJ61QBH9WMb4OYsUKGrA0+TnkcYFcs3eNFm5cuXA5lB+UkXHwMOxvCGCAvuOn69IAZOm6Q8jjQsUwt69e+uzZs0KJtiqsgXXihUr2NcChcbhZiWJGvKVvnGBIrFnC2xPBz/ZVpHtH+K/H6BgLNweKUOSxm0Si29koDBYYDTY1Qv/3QBFoh+93/LzFClw1Kjf9I0MFAkLjAYWGCi4u7XAeJ6fo0iBowZ9rjVspLGBQmCB0cACAwW3R0b7OYoUONagsiPS2EAhsMBoYIGBgvu0n59ICZKm6ZWRxgYKgQVGAwsMFNjtmoee4OcmUoKocR8tt0UaHcg9FhgNLDBQYIv8vERKFDXwjEijA7nHAqOBBQYK7G1+TiIlSpqmb4o0OpB7LDAaWGCgoK6Ts/2cREqUpLEnRi3S+ECucdJqAwsMFJF+3HJyahWixv4X3/hAnrGT573YyRMFZHtfPN3PRaSEUUM/UQ1+R6QTALlhi4pdu3bVly1bxsmqp7Cj7GfOnFlfu3Zt/cCBA8H3BuTQKvFTESlr1NgzI50AaCs7wMtOCF20aFF9/PjxweSKUG9vb33VqlX1vr6+4PsEcuIKPweREidN09dFOgHQcocOHapv3ry5Pn/+/HpPT08wgWLw7EqPXfGxKz923L3/roE2+Kmc6ecgUuKowcfI3khnADLX399fX79+fX327Nn1rq6uYKLEyNkzK4sXL65v376do93RTl/28w+pQNTwH4l0BiAT+/fvH3huYMaMGfXOzs5gQkR27MqQXSGyK0WHDx8O2gbIyC1yiZ97SAWSpulD1fg3RDoF0BT2XIA9H2DPCdjDiX7iQ+vZFaM5c+bUN2zYMHAlybcZ0EST/LxDKhR1gG9HOgUwLHbff+fOnQPPAUyaNCmY3JAvtuizK0p2ZcmuMPn2BEbghLzAzzmkQknT9MkJr6xiBE5984O9KorLFhu8kYImWi2j/JxDKhR1ADMl0jmA+8WbH+XHGykYCf14/TM/35AKRh3hxUnjclbQSYB78OZHdZ36RgqLDQxCn4z1cw2paNQZVkQ6CSru1Dc/eEgThjdS8GD0o/Vv/BxDKhx1ilcnXMWoPNue2+6/r1y5sj516lQWFXhA9rqxXdGyK1u8kYKTjssZfo4hFY46xGjZFuksKDm75H3qmR8sKjActtjgjRTIR/38Qog9i/GWSGdBCdmigjc/kBX/RopdGfN9EKV0fa1Wu8DPLYQ8RJ1jrOyMdBqUgN0vv+fNj+7u7mBSALJy6hspLDbKSz9Sv+DnFUJ+F3WSt/lOg+I6ePDg7978YHtu5IFdMbMrZ3YFjTdSSuUGLTAe7ucUQn6XpHEVY1ek86AgOPMDRcEbKaXC1Qvy4Em4ilE497z5wZkfKKp7zkixK2525c33ceTadWmaPsLPJYQESRpHufMsRo7ZfexTz/xgUYEy4Y2UYtHi4nN+HiHkfqMO82bfidBevPmBKrrnjRS7QscZKbn0UznHzyGE3G+Sxr4Y6yOdCS3Emx/AfdkVO95IyZV/9PMHIQ8adZxXyN2RDoUM2aJi06ZNA/ejOfMDuH8TJ06sL1myhMVG+xxN0/RMP3cQ8qBR5xmlzrMw0qnQZFYcrUguXLiQ00mBYbC9NlavXl0/cOBAML6QmXf6eYOQQUcd6JlyR6RjoQmOHDlSX7du3cC5H75gAhg6e0B07ty59R07dnBVI1s7Ek5MJSNNmqbXRDoXRsBew1u+fDlXK4AM2cJ948aNbOjVfHYw5qv8XEHIkKMFxiXqTL+KdDIMkb1yt3jxYjbAAlrIntW49tprB64Y+jGJYZkjo/xcQciwos702UgnwyDZFQsWFkB72ULDbklyRWNE7tCPzmf4OYKQYef48ePnJI34zoYHYG+ErFixgrdBgByxB0Lt9W+e0Rg6LS7+S59+iiBkZEkaW4jbvbeg0+G+rHBt2LChPn78+KC4AciHmTNn1vfs2ROMX9yv64QDzUjzo441WqvXFZFOh1NYwZo+fXpQzADkj+0UantpcNjag6vVah/y8wIhTYsWGM9RR7vNdzw0Xjm1N0M4FwQoHtt+f8uWLcG4xu9s1QKD11JJttEi4zuRzldptkmW3df1RQtAsdi2/IcOHQrGeMXZg50v9HMBIU2PVrEPV4dLI52wcuxpdHuIk6sWQHnY1Qw7WNCP9wr7gZ8HCMksWs2+Q3wnrBTb04JnLYBysh8Ndqgar7QmP5dH+DmAkMyiDjdKFkQ6YyXYvVp24QTKz35EVPx8E84bIa2POt4T5eZIhywte/2UWyJAtdjr5na2ia8HFbAoTdPRvvYT0pKoA34i0ilLyV5js0OUfPEBUH62C69tN+7rQonZj8cn+5pPSMuiDjhW1kc6Z6nYJVJOPAWwdOnSSuwAmqbpp329J6TlObk3xq2+g5ZFX1/fwFPlvtAAqCa7klnyg9PsR+MYX+sJaUu0yPhipJMWnt137e7uDgoMgGqzhz9Lul/GLfIsX+MJaVu0wDhTnXJrpLMW1tatWzmkDMD96u3trff39we1o+A+6+s7IW2PFhmXJyXZRtxeQ+VodQAPZsqUKfWDBw8GNaSgNsrpvrYTkotokfGFSKctFBYXAIbCFhkluJLxa9Xv/+VrOiG5iTrpaeqk6yKdtxBse2AWFwCGyt4yK/IzGarbnJRK8h911MvUYX/lO3De7dy5k2cuAAybPfhZ0GPf54sv5YTkM1pk/I067IlIR84lexWVrb8BjNTs2bOLdn7JL1SvH+NrOCG5TdI4q2RCpDPnjj2gNWnSpKBQAMBwLFy4sCibcd2lxcVbfP0mJPdRx71QHfhYpFPnhm2Ww4moAJpt1apVQb3Joe/LKF+7CSlE1HlfLHdGOnbb2S+M+fPnB4UBAEbKDkS0N9J83ckL/QDcqc+zfc0mpDBRB7YrGR/3nTsP1qxZExQFAGgW2wV47969Qe3JAXsI/2m+XhNSuCSNA9HmRjp529gW4LyOCiBr9vpqzt4sOaEffe/ydZqQwqZWq12kjp1GOnvL2YY4HF4GoFUWLFgQ1KF20eLiqoTnLkjZok79gqRxkE7Q6VvFnruw18h8AQCALG3YsCGoR22wXT/2zvG1mZBSxHaLi3T6llm7dm0w8AEga/Y8xr59+4Ka1ELXaXHxFF+TCSlN1MFHq6N3RDp/5uxhK3bqBNAuM2bMaNf+GHfqx93rfT0mpHRRRz9LHX5LZBBkxgY1+10AaDe7iurrU9ZUcz+fsBU4qUrU2R8r/88PhKxwawRAHthV1P379wc1KitaXEzV52hfgwkpddTxX66Of5sfEM124MABbo0AyA170NzXqSyoxu6Rc33tJaQSacWhaHPnzg0GOAC00+bNm4Na1UyqrdfJk3zNJaQy0UAYpUHwn35wNMu2bduCgQ0A7TZx4sSBs5B8zWqS21RXX+nrLSGVS9LY6XNeZJCMiB2ZbLvo+YENAHmwcuXKoG41wV3yXl9nCalsNCDOlT2RwTJs69evDwY0AOSF7Y1x8ODBoHaN0JcT3hgh5L5J09TeLLH4ATNkdumR7cAB5N3ixYuD+jVcqqHj9TnG11ZCyEMGFhl/oAHySz9whmr16tXBQAaAvLFDF5vx2qpq52p9nuFrKiHklGigvDoZweurdnLh+PHjg4EMAHm0cOHCoI4N0V7VzYf5WkoIiUQD5opkmK+vrlmzJhjAAJBXI7yKcaxWqz3B11BCyP1Eg8auZFwZGUwPyN4c4dkLAEWzZMmSoJ4Nwo3ydF8/CSGDiAbPvydDuJLBmyMAish2G+7v7w9q2gP4tX6EvcTXTELIIKNBNFqD6H8igytgB5qx7wWAolq1alVQ1+6HbaT1J75eEkKGGA2k0zSg7PUrP8juY/v27cGABYCisN097Tavr23OHaqJV/g6SQgZZjSobJExPTLYfmfevHnBgAWAItmyZUtQ205xZ8IunYQ0PxpYZ2rlviIy6AZ2w7Mnsf1gBYAimTVrVlDfTvEBXxcJIU3Kj3/843O1yFjlBx4bawEog3HjxtUPHDjgFxZ3q+59PGELcEKyTa1WO0+DbeWpA5CHOwGUhXvY84Rq3mf1OcrXQkJIBtGAO18DbmCR0dfXFwxQACiqKVOmsLggpJ05eSVj1fLly4MBCgBFph9O99wWYXFBSDty/Pjxc3p7e9f5wQkABXbXvHnzPsQzF4S0ORqMZ8msyCAFgKK5c9y4cX8tvtQRQtoRDcYzZUJksAJAIaiG3d7Z2XmF/uxLHCGkndHgPE2D80d+0AJAAfxGNeyNvq4RQnISDdDR8jUN1hORAQwAeXST6tbLfD0jhOQwnZ2dn9CgvSsykAEgT36ixcVzfA0jhOQ0GrR2NeOd+rwtMqABoO1Uo/brx9CTfP0ihBQgGsSvlhv9wAaAdtLiYq0+L/I1ixBSoHR1dT1XAznxAxwA2qS3p6fnHF+rCCEFTGdn56X6xbAtMtABoFVOqA59S8b4GkUIKXA0qM+TGZFBDwBZu10+2MEeF4SUM1pgjJVvapDfHSkAAJCFX3R2dr7W1yNCSMmiBcYoDfa/0qC/NVIIAKBp7E0RfT7d1yFCSInT1dX1Ug38n/iCAADNoMXFgmuuueZhvvYQQioQFYDHyiZfGABgBOwW7FflNF9zCCEVSldX11laZFzVwfbiAEbuV6on7+jgYU5CiOXkcxl/q6Lw20jBAIDB2KsfLM/09YUQQmyh8Tw5EikcAHB/TshkucDXFEII+V3Gjx//CC0yZkaKCAB4t6pefFifo30tIYSQIFYs5KNWPCIFBQDMIXmBrx+EEPKAueaaa2yhYbdM+iOFBUCFqS5M7O7u5hVUQsjw09PTc4GKSWcHu38CaLwl8n59jvK1ghBChhwrJioqV+jzhkjBAVAN61UHnurrAyGEjDhdXV2PV4FZHik8AEpKY/5O+dI111xzuq8JhBDStKjgjFGxsQdAb/aFCEC5aKzv0+cLfR0ghJDM0tnZ+XQVnnW+IAEoBbtq8R9yjh/7hBCSeVSE7Pj3K4UdQIHy2K8xbYch+iFPCCGtzcmrGasihQpAcdwuX+eqBSEkV+loPJvxd3JTpHAByLft8nw/rgkhJDdRkXqMFhnTIgUMQP78uqur65MdHK1OCClCOhr7ZrxBbCthX9AAtN8Jjc/ZnZ2dT/TjlxBCch/9MjpPhewrHZxpAuTJIS0u/rSDA8oIIUWPfiU9VQVtXkfjWGdf7AC0xm81Dr+gTx7iJISUJypso7q6uuy2yf5I4QOQnRMyVeOP2yGEkPJGC4wzVOw+LNdHCiGA5tqkMffyDva0IIRUJSp6F8q3VfhuiRRFACOTdHZ2vkefY/3YI4SQSqSrq+v3VAQnyp2RIglgaK7Xwv1TcrYfa4QQUrmoKJrnqSgu6eBBUGDIxjW26/+aXRn044sQQshDBm6dvEKFco0voACibtWY+X5nZ+clfiwRQghx6e7uHq2i+WpZHymoABoLi6tso6xrrrnGDyFCCCEPFBXQMSqgr+toXNE4ESmyQNXYQ9FXaWw8qYM3QwghZGRRIR0tr5Llcnek6AKlpgXFzfJdeYIfH4QQQkYYuxTc1dX1YhXcmXKXL8JA2WhBcYM+v6zPi/14IIQQ0uSo4NpC42n6/KHc7IsyUAKHOzs7/8nO8/H9nxBCSAuiAnyxivHn9AvvJ5EiDRSJnXC6Tp9vk9N9XyeEENKG6Nfe2fIuFehNHTyngWKxPSy65YUyyvdtQgghOYgVaC0yXqDPcR3cPkG+HVNf/Wd5tO/HhBBCcpyurq4LOzs7P6oCvidS3IGWU1+8Q+bIG/TXp/k+SwghpEDpaLzmam+fXC03+aIPtMBBu1qhBe+lHexfQQgh5YuK/Pkq8O+WpXJHZCIAmuUG9ber5Q/15zG+LxJCCClhVPBHdXV1PVG/KO3kyR0dPBiKJlBfuuXkLZC3y7m+3xFCCKlQNBHYg6HPkC9rktjXwbbkGJrbZYn6z/u0aH2k71+EEELIwJWNzs7OZ+vzS5owdnew2ECcHTa2UP6KRQUhhJAhpaOx2HiKPj/e0Thw7bbIRIPquE4LiknqE1fo86HiuwwhhBAytGhyMRdrcvlLTSwT9OefRSYglMudaus+tfn/1ecr5SzfLwghhJCmRpPP6Zp4bOdF26bcrm7cGpmgUCy2VffPZar8tTxR2FmTEEJI+6LFxgWajF4n35DNHbwCWxQ3qr3mySf058tlrG9bQgghJDfRRGULjteOa7yZskKfbPDVZmqDE/pMT16h+Ij+/NwOFhSEEEKKnM7OzjM1qdkv5A/qs2NcY/tybqtk60ZZpe/anqF4qzy+gw2vCCGElDma6EZ1d3dfoIXHSzTx/b3++ip9bpJfdvBq7FDdKcf13S3W59f1nb5TnqY/n3H11Vf7r54QQgipXjQp2pWOyzRBvlGfn9Zfd8pG/fl6fd4VmVyrwh7AtA2tUrGFxHf113+n7+kV+vPFHVyZIIQQQoYem0A1mT5Kk+qL9Gfbh+Fz+rRzLuxMlYNys/7sJ+VCGdd4RsIWUttklv76u/q0ZyVssfWsjsZzLf6rIYQQQkgW0cRrz3jYibF2PP2zNQm/Rt6jv75Sn9/UZ6c+F+hzvezTn3/a0ThVNss3XU50NJ4x+YX+fjV97tLnWn1Ol6vkK/KP+v/7ju7u7pfrz5fp3z9Pn6M6OG2UEEIIKVZOTuBj5HQ5Sx4uj5OnaYJ/7oQJE17W09Pzmq6urtfLG/SvvVn+7OTnqd6oxcEbtDh47fjx418lL9H/hl1lsJ1PLxnXOLX2TDlNRo9jPwlCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGkcPn/bwv+lvhiVW0AAAAASUVORK5CYII=";
+            }
+            else if (gender === "Female"){
+                imgElement.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMRBAMAAADmeM9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURUxpcdHR0d/f37i4uNra2uDg4J6enr+/v3EUb5gAAAAFdFJOUwAqzm6XA8CybwAAFKRJREFUeNrsnU1220gShEWTB7Ahzt6khT0tm3vqhxcgUMQJBJ2AmOsPbffTdM+o3QSYWRWZGbns7kWL38uIyKwCcHPDYrFYLBaLxWKxWCwWi8VisVgsFovFYrFYLBaLxWKxWCwWi8VisVgsFku35t/O9elXffzxD2bfPvJXKVG/GHx7XP+p7p7PtX56g8PKULNzR5x/9j9ApHfq1785/zdP5/+UYJRxfPr++Dcc/q8OP3rmib2iSeP2cV2nMVWfmXwlExUa38/2sE4T6nD2lqdvX/kTlu2N/1WvZ/aJXKC6jsZbn3z9dHNDKtc3hwCNNybfn0jk6uZIglWvHz7xV51ct8+yOH61yfMTDX6aWN0+1kmj1nfUrSkpd62D4yeSc5cQyjge66Ra5xmeREZ4+WOdlOuwfiARlPb4A8kdA9eFXp4y1Zqy9c9JN4Na/anuvs7I5Lft8bhOWetAc/9Nzb8/pux1eGYC/tv2qFOBOjcJf/t3edynQnV44K//Trhap2LFBPxOe9SpZN1x4fjXUfAxFa7DE5vkv/V9nYrXgU3yVss6JRLBGc4fIXj8MBIOiT+njwRTBxIBsHNa+1/svE5QdXiObSRLMB7BrX3+DMfj54wY1UjKLa/+gUjQ1db8sU6gRGKGLdD+iEpkBswjpfUDeYCFrWA9gs4j2o0UfB4/iHwiD/YIefyWCHmgOXuMfWIyU+sIe61lMlQBJkS8/W7s2yjGeLgncmuNh3Mi8705Hulwt/EbeB+TwfJ7qmuTh+Nx5D4ZrYNP0VrWVoEkl28auLXLI6Uv/ojM9slyuTtBtGrobzbijch9Ml7OjH1ZWwfiy9hv7fM4GzsNncYe/YgwiI0sk5NyYiMuDMSRjTgxEDfTiBcDcWMjy+SqzNvIvPYFxLqNWF9hubORKrmr1rJo3db+gFg+G/GUeF2sUO5d8rCbfZe1TyBWs69TwbIrWvduedgUrdvaLxCLouVYsGyKVuWaRzpYa5F57RuItZ2Wvx2W8Z3WMrkvUzutWe0fSFpxBOEwwp2Ji2HE+QhibxhZBuFhxddndRQgRnz9PgwPG74+j9MgJub1MI5uxdeXoXjg+/qsjgUE3terYDzQ9/DzaA2C3iL34XhgR9+ADQIdff0fSxlrkWUKWXecCTkdskEMTodhGwS1RcI2CGiLhFuaoLdIFZgH4gIldIMgLlBCNwhgiwRvELwWKdcg3dC/1eu/2SJFG6Tr36lXtkiZBnmXRjkmUC1SoEGG/vd1Ct0i2Rukv6Be4rZI7i3W0F9Wp6gtkneLdewvr5gtkrVBun5UZdWth4ANcuzHVrylb84G6SfUS7QWWaDKVf6pBKNFtrhylV22dpHuYg19D08E4Y7WvQEe2UYSgDtaubYm/ZV1itIilQ0eucJW8eEwU4P0vRUipfcnSzM8MqlW4eSbZyjse0NEyg6HWYbCQQpIlvTbus+8x763RKRo8s1h6ZI8shD54jvzdqI8cuy1CibfHA3SC1eG8LvynHl78dKPWuWS796YgeSykVI7X/09rwaPDDbSuLX0XqXUbaRQ8tW39F6pTj5tfWlSsLLYSJnku7faIBlE68GjpfeKpS1arUNLP2oCURetjT9LV+WhLlord5Y+6ALp3dn63rJgZRgPH5xZeq9eL75svTLeIOqilXla1z5Lz8BDu0Xy2vrCfoNot0jeJbzuWXqXhYd2i+z8DCFDHiDK8/oXN0PIMRMP5eibcxTZmnf0HC3y4GQIOeYDotsijZMhpO+dtEg+zdo7aRDtFnlwoVh976ZFWg+K1eUFotoimdYnumuTIS8Q3XE9z/pk7qhBlMf11r5iHXMD6c1rlq5iZeeh2yI5NGvhq0F0W6S1rlgFeOi2iL5mqS56SzSIbousbCtWER6qw2FrWrG6MkA0NUs9ZzlULNua5VCxdFukNaxYpRpEtUWUNUt1KizGQ9XWdTVrnlwCsatZPhXLsGb5VCzdFlkZVazOK5CGigWmWR+pWFgtsjM5ppdtENWz9cbkmF4YiE3N2rpVLJua5VixdDVrRcXC0qzWYOgtzkNVszbmQm/nG8jK3JheXrEMapZvxVJtEZ3guyUQqODrOvRqa9YXY6F38A5EQ7O8W4i54Os79NoLvv4txFjwXbhXLNXLJ/Imch8AiKXgq3khC0WxTG18ve9NzJlIFUCxdG8wbrg38WwimqG3wwFi56pDDAsxtD3RtJAhBhBZE4lhIXa2J6oPskUB0tBC/JpIRSBYJhLFQqw83BbGQqyYiNvndPICaWkhXk1kSyBQ66xAFqLr6o0BC4EDYsFEKgLBGg0jWYjui3yFTGQfCYiBdzWpWkgsIDImsohkIRZMpCIQrNFwTyBQJuLyLYulYlaDbiGAQOBdvSIQLFfXHAuhbpzkACIxGtaxPB3e1ecEguXqup8hDgfkgO3pHSKQV2xXVx0LEUMWuKvrfhc6IJAV8qo3IpAG2tMHSCAnZBPx8x1iECDXLnz3AYG8ALu6rqeHBLIC9vSQQFpgT+8iArnO1XU9HTP1Kufe64BsCQTK1ZU9PSaQFYFgAWlgPT0okAOsp4NuTtSBfET1dNAxRHt3co2r72MCeUF1dWVPjwqkQV2cRAXSooasqECmu3pFIFhHIlsCwYpZyiGriwpkBRqywgJpQEMWLJBX5T+8BQ1Zx6hApsasKioQ5WXW5Ji1JRCsmLUnEKiYpR2yAgNpIENWYCAtZMgKDGRazKoIBAvIvwgEK2btCQQqZqmHLAIhEBggDWLqjQykRUy9kYFMiVkVgSgWgYAB2QGm3tBAVoAhi0AIBAdIA5h6QwNpAVNvaCDjc29FIAQSCMj43LslEKyYVRMIFJAZgRBIKCAt3hgSG8jYmPWBQLCAVARCIKGAjL1wvSUQrMlwTyBQuTdH6iUQArELJMcYEhxIi3YaEh3IAW4ujA7kI9oYQiAEggRk3GS4JRCsyXBPIFC5N8sYQiAEQiAE8vfVoA3q0YG0aIN6dCBjBpGKQAiEQAikLJAxo/qWQLBG9T2BZKjPUBd7CWTEZDgjEAIhEAIpDaQhECwgLdgqi0DAVlnhgVw+qlcEQiAEQiAEQiATt4sEArZd3BII1nZxTyBYu5OaQKCAzAiEQAiEQMoDaQgEC0hLIDaBZNq+E8ilu5MFgRAIgZRfZREIgRAIgUjs3wkkF5AdgRAIgVx/IEIguYCsoA4MCeRSIHsCIRACAQAyEAjUkTqBXAhkRiCnmED68EAaAiEQk0BeoM5wCYRACIRACIRA3jkyJBACIZCrD9UJhEAIBOEmKYGAAekI5DIgCwJ5DQnkSCAEAnZCRSAEQiAEQiAEQiAEolADgRAIgZhcZWW7dkIgYMssAiEQAiEQAiEQAiGQWIN6rgMRAgGbDAmEQAiEQAiEQFwAGaCBnICAZLooB80j0yBCIARCINcDyXT7nUAIhEDMpt5MyyykR9rAgfQEEhFISyAEQiBGgIDzyLM7IRCw3EsgYEAaAsECAvSKv45AsICgh6w8MQvoNbEEMgLInkAIhEAKA4HnkWUyBPpcBT6QFwIhkIJf2CGQH4XzDSp8T8/i6gQCBmRDIFhAcL70ORBIgvr0qgEeGVydQIwCWRBINCCdBSCvMED0b1tbCFkZXP2yI/UcJ1QEAgZkIJDL7zjkAGKCh76rrwiEQOyGLCAg6rccbHi6volcDGRPIFhAtI8MBwIZcxyiv8wywkPdRAgEDMgGBEhnBYjyNuvSVZY6ECuerm0iBGIWiPL+fTAD5AQCZE5Pz+Hqly571XcnBIIFxI6FKJtIQyBYQFYgQAZDQE4YQHS3i4Z46JrICCBbAskA5PPlQCpaSAYT2REIFpANBhBTPDRd/fJBXXd3YgvIi3sgHYFMAKI4iNiyEE0TuXxzogpkIJDRmxNVIMZ4KGrWikDsAtHbnVizEEXNGgVkSyDqQHZjgFRULHXN2hAIFJAxY8jNzQcqlrZmjQOyIBBtIGPmQr3ca5CHlmY1BIIFZIUAxKJiaWnWOCBKk+FAIFMOcPUmQ5M8lDRrNw5IRcV6K5WnEsalXgJR16yxQBZULF3NGgtkTiC6QMbNhTq516piqWhWAwBkMAtE4TLQyDFEZRAxy0NDs0YD2VKxVDVrNxZIRSCqQDZjgXygYmlq1tjUqzCIWG4Q+RYZD0Q8ZhHINWOIAhDTPMQ1qxkNRDr32m4Q8QXjajyQLYEoatbn8UAqKpaiZu1KA7HeIMItMj5kSefegUCuBSIbs8zzkNWs8alXGIh9xZJtkQmpVzb3OuAhuoNfTQGyJRA1zdpNAVJRsdQ0azMFyIINotUiU0KW5D0HHw0iuD45TOEhGLMGH0D6siFL8CMJTnjIadZqGpAtFUupRT5PA1KxQZRaZFMUSOcHyGvJkCWWewc/QPqSIUssZjniIaRZE0OWUMw6egLSlwxZQutFApHZZIm5uiseMpq1mQrkA4FoAJkasmS2Wb4USyT4tlN5iMQsZ0D6kiFLxNUJRC5kiWyzBgIRC1kiMcsbkFPBkCWyPHHGQyBmTQ9ZIq5OIHIhi0BUgFzh6RIxq6eHyJxOSbk6TV3Q0yVcnbFX0NMlliccDAU9XcLVCUTS0wVcnctFWSAVY5Zw6t1cB2RBILJArvN0ujqYp9PVxYE0VwLhrI60OJFx9SMbRM7TJVy9Y4PIebrIRYeBDSLm6SIb+I4NImchIhcdBjaIwHm65PVFNoiYp8s8lDCwQaQ8XeihBDaI0FgodQf+yAaR8nShZz/ZIFKeLvRQwpENImQhUm90YIOIjIVyjxoabxGZ529FLETqxVlDeMESshCx59XDC1Y6bGSACD2vfgzfIDIWIvdaILuidZL5ARohIGJvX4wtWCk9SAGRegvNMbRgiWwWhV/2N4TmITMWyr5bLrJgyVmI4Ct8DR4eyr1pcSUH5F7sf+oYVrAELUT0jbHWbOSU8CxE9j3wQQ1E1ELivgdekIekhch+3aWLaOiyFiL8dZdjSB6SFiL9dZdjuIAlbSHSH9E7xuMht8iSNxEjRGT/YlkLkf807jEaj1aWh/yXWLtAfv6jvggDkf4SKziRF+m/Vuo4Xc1EsCfEk/jfKht65W5n2dhrKfyp0haiYCLIxi4PZCUORPrr0dBB6xXfQm5ulpFM/RXeQsQ1Czz2Cses5kah9kEilgaRlQaQKhIP4ei70QAiuT2xcJALHXqFTSTatldFsQSDr5EzQzkb2ekAWcQxEFkiGqE35i145NArF3wN3ZV7hVYsqeAb7hqQlmLd3MzrUIIlNY2oKdZ/2jub3LaxIAi3YR2AkoLsBU32TxbGa2uRCwgEvM4Qck4wPv94kvHEsf4eSfO96q6qI+hDVXU3KYnyL5DwXm/44MxyxuMDQmufpgPC+KOxoGv6f4Pv2Mxi/H7IakIgozPryaHG9nqaEsiMLbDGh9aUiTV6WXfJY2SvT5pYI7/c5tMgIy2SpgUy4zPIOItMm1jjMsurQUZZZOLEGpVZbnmMsUiaGsiM0CAjLNI2hppZrn9w/ACbWMMzy7NBhlskTQ9kRtcgIywyfWINzizfBhlqkQKJNTSznPMYaJFUAsiM0SDDLFIisQZmlnsegyxSJLEGZZZ/gwyySCoDZMZokCHPRdoyPAY8NwzxL1TfURNrwHPDCInVP7P2qRSQW8bE6l/rpRKr//tZMQzS2yK7ckAWjAbpa5F9Uw5Iv1UkzB9L9qv1tRXUn4yJ1TOzHkoC+cSYWP0yq21KAumTWXEM0ssiKyuqHrX+TAmk3BLSexUJxKNHZrVWWF8ZE6uHRXalgSwYEyv/wrhvSgPJrvVQPLIza23FdceYWNmZ9VAeyIwxsXKBtE15IJlPRYLxyMyslVXQgjGx8iyyb2oAyap1TiBrq6I7wsTKy6xUB0jGtv5ICaStwyOn1uMlVk5m7SoByTjCB+RxfVmvU+l5tR4RyAFy5s2bfCMm1tXM2qd6QK79XhMlkLVV1B1fYl3NrFQTyExAUGbenMk3ZmJdyaxdVSCXJ19GIG1TF8jFyTcoj4uZtbLKWggIxlKYYZGoiXUps6ob5NLkSwhkn+oDOb8chuVx/py1NgO2SFwgB2CDnF8OH+MC+Q65FF5bDuNWyNkSeYAAcm455APSNoZskcA8zpTIzgzZInRAUAxyZjl8pAMCY5DT95PIFXKyRPYNDpBTFqEDsjKDtkhoHid2dSSDnLRIbCAHbIOcsggZECyDnLBI7Ao5Pp6AGeTYIsGBPIEb5NgiZEDgDHJkkefgQP4GN8iRRYLzeNfqgAZ5f9GiAoJokHdH30cqIDszdItE7/TfWr1tMIG8tQgVEFCDvFjkCyUQVIP89gLKMxEQWIO8fUcrPI9frf6HAeuODwjGu1hXt0MeIGuD1oINCLZB/h994w9Zrwd4cIO8bocEQJ6AjybHvU4DZAXP4+foywKkxTfIz15nAbJzwONHrxPw+PcR1dpcaPmFAsjBQ6O/hhYHkJ0THi+hRQFkbW70iQHIX8kPkBsGIJ050mcCIMkTkJt7GQRs9A0PpPEFxKJbZOOMR/Re78ydlgos9boCizS0OnOppQJLk5YCizC0OnOrkKHVNX6BhAytjWMeEWffb+ZatwosHeJ1dCcKrY25V6jZt7MAWqpANPsqsChqJAiPMLNvZ2G0VIGIiDaQ4DWyMRMRFYiKnaFAAtRIQB6+iSSLqHsVuopdPAIS6SysblXoKnbxiEUkOA9/RJJFl69i35iJiHho+GXm4YgICQ83RGh4OCFCxMMFESoeDoiQ8YAnQscDnAghD2gilDyAiZDyeCGyFQ/dfq/e25OZiOj5Bw6Re/FQtZ/V1iQkIhvR+CGQYasTD6hqV3280bx+bG3FA2pHVFxBxZbiCmvaUlydJrLUdKW1XXGF1u2yB5RJZA+sJpE9oMYtDVdQuaW0gsotzbpY85ZwQCHZKK2QkAgHFBLhQKp3VflH6MOeXm3n+jBxbNIpq5DaREs5EJNONCY8qmzVG4BOuc90xvxGn1ax0esila0avBaX+XL7Vpu5IkqSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEmSJEnyqX8AWkhKzcvgZtwAAAAASUVORK5CYII=";
+            }
+            else{
+                imgElement.src="";
+            }
+            // imgElement.src = profileImage;
+            imgElement.style.width = '15vw';
+            imgElement.style.height = '30vh';
+        }
+
+        function navigateHome() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var adminId = urlParams.get('adminId');
+            var panelistId = urlParams.get('panelistId');
+            var targetPageUrl = '/apex/AdminPage';
+
+            if (adminId) {
+                targetPageUrl += '?adminId=' + adminId;
+            } else if (panelistId) {
+                targetPageUrl += '?panelistId=' + panelistId;
+            }
+
+            window.location.href = targetPageUrl;
+        }
+
+        
+        function displayErrorMessage(errorText) {
+            const errorCustom = document.getElementById("errorCustom");
+            const alertText = errorCustom.querySelector("#alertText");
+            const alertImg = errorCustom.querySelector("#alertImg");
+            errorCustom.textContent = "";
+            errorCustom.appendChild(alertImg);
+            errorCustom.appendChild(document.createTextNode("Error: " + errorText));
+            errorCustom.appendChild(alertText);
+
+            errorCustom.style.display = 'flex';
+            errorCustom.classList.add("alert-animation");
+            setTimeout(() => {
+                errorCustom.style.display = "none";
+                errorCustom.classList.remove("alert-animation");
+            }, 5000);
+        }
+
+        function displayWarningMessage(warningText) {
+            const warningCustom = document.getElementById("warningCustom");
+            const warnText = document.getElementById("warnText");
+            const warnImg = document.getElementById("warnImg"); 
+
+            warningCustom.textContent = ""; 
+            warningCustom.appendChild(warnImg);
+
+
+            const warningTextNode = document.createTextNode("Warning: " + warningText);
+            warningCustom.appendChild(warningTextNode);
+
+            warningCustom.appendChild(warnText); 
+
+            warningCustom.style.display = 'flex';
+
+            setTimeout(() => {
+                warningCustom.style.display = "none";
+                warningCustom.classList.remove("alert-animation");
+            }, 5000);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            //showLoader();
+            invokeRemoteActionWithParameters()
+            //hideLoader();
+            window.jsPDF = window.jspdf.jsPDF;
+        });
+
+        var studentId = null;
+        var eventId = null;
+        var savedResult = null;
+        var studentDetails = null;
+        var assignedPanelistName = "Unknown";
+        var assignedPanelistRoundNumber = "0";
+
+        function showLoader() {
+            document.querySelector(".loader").classList.remove("hidden");
+        }
+
+        function hideLoader() {
+            document.querySelector(".loader").classList.add("hidden");
+        }
+
+        function getURLParameters() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var studentId = urlParams.get('studentId');
+            var eventId = urlParams.get('eventId');
+            var panelistId = urlParams.get('panelistId');
+            var adminId = urlParams.get('adminId');
+            return { studentId: studentId, eventId: eventId, panelistId: panelistId  };
+        }
+
+        let editedFormData = {};
+        var generatedPdf = null;
+
+        function enableEdit(editCard, testEdit) {
+            
+
+            const parentElement = eval(editCard);
+            // console.log( "The Card To Edit is " + parentElement);
+            const findRoundNum = (parentElement instanceof HTMLDivElement) ? parentElement.id : parentElement.toString();
+
+            if(findRoundNum.includes('2'))
+            {
+                document.getElementById('round2Err').classList.add('hidden');
+            }
+            else if (findRoundNum.includes('3'))
+            {
+                document.getElementById('round3Err').classList.add('hidden');
+            }
+            else if (findRoundNum.includes('4'))
+            {
+                document.getElementById('round4Err').classList.add('hidden');
+            }
+
+            console.log("Parent Element "  + parentElement);
+            console.log("Allow Editing "+testEdit);
+
+            if(testEdit === "testEdit"){
+                console.log("Instance ID of the Editing Card "+parentElement.querySelector('#instanceId').textContent);
+                editedFormData.instanceId = parentElement.querySelector('#instanceId').textContent;
+            }
+            if (parentElement) {
+                const btnGroup = parentElement.querySelector('.button-group');
+                if (btnGroup) {
+                    btnGroup.classList.add('hidden');
+                }
+
+                const opButton = parentElement.querySelector('.operation-buttons');
+                if (opButton) {
+                    opButton.classList.remove('hidden');
+                }
+                const panelistName = parentElement.querySelector("#panelistFormId");
+                panelistName.textContent =  assignedPanelistName;
+                editedFormData.panelistName = assignedPanelistName;
+                editedFormData.panelistId = panelistId;
+                //Cancel Button, Unfinished, for now im just refreshing the window.
+                // const cancelButton = document.createElement('div');
+                // cancelButton.className = 'cancel-button';
+                // cancelButton.textContent = 'Cancel';
+                // cancelButton.addEventListener('click', function () {
+                //     location.reload();
+                // });
+
+                // parentElement.appendChild(cancelButton);
+
+                const editVar = parentElement.querySelectorAll('.editable');
+                for (const element of editVar) {
+                    if (element.classList.contains('option')) {
+                        const selectElement = document.createElement('select');
+                        selectElement.id = element.id;
+                        const defaultOption = document.createElement('option');
+
+                        const options = document.createElement('optgroup');
+                        options.label = 'Select an Option';
+
+                        if (element.classList.contains('student-status')) {
+                            const studentStatusOptions = ['Approved', 'On-Hold', 'Rejected'];
+                            studentStatusOptions.forEach(optionText => {
+                                const option = document.createElement('option');
+                                option.value = optionText;
+                                option.text = optionText;
+                                options.appendChild(option);
+                            });
+                        } 
+                        else if (element.classList.contains('yes-or-no')) {
+                            const studentStatusOptions = ['Yes','No'];
+                            studentStatusOptions.forEach(optionText => {
+                                const option = document.createElement('option');
+                                option.value = optionText;
+                                option.text = optionText;
+                                options.appendChild(option);
+                            });
+                        } 
+                        else {
+                            const otherOptions = ['Excellent', 'Good', 'Fair', 'Poor'];
+                            otherOptions.forEach(optionText => {
+                                const option = document.createElement('option');
+                                option.value = optionText;
+                                option.text = optionText;
+                                options.appendChild(option);
+                            });
+                        }
+
+                        selectElement.appendChild(options);
+                        selectElement.value = element.textContent;
+
+                        selectElement.addEventListener('change', function (event) {
+                            const editedValue = event.target.value;
+                            editedFormData[element.id] = editedValue;
+                        });
+
+                        editedFormData[element.id] = element.textContent;
+                        // editefFormData[]
+                        element.parentNode.replaceChild(selectElement, element);
+                    }
+                    if (element.classList.contains('comment')) {
+                        const textareaElement = document.createElement('textarea');
+                        textareaElement.type = 'text';
+                        textareaElement.id = element.id;
+                        textareaElement.value = element.textContent;
+
+                        textareaElement.addEventListener('input', function (event) {
+                            const editedValue = event.target.value;
+                            editedFormData[element.id] = editedValue;
+                        });
+
+                        editedFormData[element.id] = element.textContent;
+                        element.parentNode.replaceChild(textareaElement, element);
+                    }
+                }
+            }
+        }
+        function saveStudent(editCard) {
+            // showLoader();
+            console.log("The Edited Form Data is " + editedFormData);
+            if (typeof editedFormData === 'undefined') {
+                console.error('editedFormData is not defined');
+                return;
+            }
+
+            let roundNumber = null;
+            let jsonList = [];
+
+            if (typeof editCard === 'string' || (editCard instanceof HTMLDivElement && editCard.id)) {
+                const editCardString = (editCard instanceof HTMLDivElement) ? editCard.id : editCard.toString();
+
+                if (editCardString.includes('round1')) {
+                    roundNumber = '1';
+                } else if (editCardString.includes('round2')) {
+                    roundNumber = '2';
+                } else if (editCardString.includes('round3')) {
+                    roundNumber = '3';
+                } else if (editCardString.includes('round4')) {
+                    roundNumber = '4';
+                }
+            }
+
+            if (roundNumber !== null) {
+                editedFormData.round = roundNumber;
+                let maxInstanceId = 1;
+                if (Array.isArray(savedResult)) {
+                    console.log("Checking for instances");
+                    let updated = false;
+
+                    for (let i = 0; i < savedResult.length; i++) {
+                        const item = savedResult[i];
+
+                        console.log(parseInt(item.instanceId));
+                        console.log(editedFormData.instanceId);
+                        console.log("Checking all the previous Instances");
+
+                        if (item.round === roundNumber) 
+                        {
+                            if (parseInt(item.instanceId) >= maxInstanceId) {
+                                maxInstanceId = parseInt(item.instanceId) + 1;
+                            }
+                            if (parseInt(item.instanceId) === parseInt(editedFormData.instanceId)) {
+                                console.log("Previous Instance Updated");
+                                console.log("Previous Saved Result "+ savedResult[i]);
+
+                                savedResult[i] = editedFormData;
+                                updated = true;
+                            }
+
+                        }
+                        jsonList.push(savedResult[i]);
+                    }
+                }
+
+                if (!editedFormData.instanceId) {
+                    console.log("Creating a new Instance");
+                    editedFormData.instanceId = maxInstanceId;
+                    jsonList.push(editedFormData);
+                }
+
+                //jsonList.push(editedFormData);
+
+                const editedFormDataJSON = JSON.stringify(jsonList, null, 2).replace(/[\/\(\)\']/g, "\\$&");
+                console.log("The for to save is" + editedFormDataJSON);
+                showLoader();
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.studentProfileController.updateStudentAssessment}',
+                    editedFormDataJSON,
+                    studentId,
+                    eventId,
+                    panelistId,
+                    function(result, event) {
+                        if (event.status) {
+                            console.log("Appended Data Successfully");
+                            editedFormData = {};
+                            location.reload();
+                        } else {
+                            hideLoader();
+                            displayErrorMessage('Failed to Save Details');
+                            console.error('Error:', event.message);
+                        }
+                    }
+                );
+            } else {
+                console.error("Invalid editCard value:", editCard);
+            }
+        }
+
+        function setNewElement(roundId) {
+            let maxSuffix = -1;
+            let newElementId = "";
+
+            const defaultElement = document.getElementById(roundId);
+            
+            if (!defaultElement) {
+
+                const elements = document.querySelectorAll(`[id^="${roundId}alt"]`);
+                
+                if (elements.length === 0) {
+
+                    newElementId = roundId;
+                } else {
+
+                    elements.forEach((element) => {
+                        const suffix = parseInt(element.id.replace(`${roundId}alt`, ''));
+                        if (!isNaN(suffix) && suffix > maxSuffix) {
+                            maxSuffix = suffix;
+                        }
+                    });
+
+                    newElementId = `${roundId}alt${maxSuffix}`;
+                }
+            } else {
+
+                newElementId = roundId;
+            }
+
+            console.log("Selected ID:", newElementId);
+            addNewElement(newElementId);
+        }
+
+
+
+        function addNewElement(editCard) {
+            console.log("Existing Element Sent to addNewElement "+editCard)
+            const existingDiv = document.getElementById(editCard);
+
+            if (existingDiv) {
+                const altSuffix = 'Alt';
+                const duplicatedDiv = existingDiv.cloneNode(true);
+                duplicatedDiv.id = editCard + altSuffix;
+
+                const editableElements = duplicatedDiv.querySelectorAll('.editable');
+                editableElements.forEach(element => {
+                    element.textContent = '';
+                });
+
+                const editButton = duplicatedDiv.querySelector('#editButton');
+                const saveButton = duplicatedDiv.querySelector('#saveButton');
+                // const addElement = duplicatedDiv.querySelector("#addElementButton");
+
+                editButton.setAttribute('data-card-suffix', editCard + altSuffix);
+                saveButton.setAttribute('data-card-suffix', editCard + altSuffix);
+                // addElement.setAttribute('data-card-suffix', editCard + altSuffix);
+
+                editButton.setAttribute('onclick', `enableEdit('${duplicatedDiv.id}')`);
+                saveButton.setAttribute('onclick', `saveStudent('${duplicatedDiv.id}')`);
+                // addElement.setAttribute('onclick', `addNewElement('${duplicatedDiv.id}')`);
+
+                existingDiv.parentNode.insertBefore(duplicatedDiv, existingDiv.nextSibling);
+                duplicatedDiv.scrollIntoView({ behavior: 'smooth' });
+                duplicatedDiv.classList.remove("hidden");
+                enableEdit(duplicatedDiv);
+            } else {
+                console.error(`Div with ID '${editCard}' not found.`);
+            }
+        }
+        
+
+        let combinedPdfContent = null;
+        function downloadCombinedPdf(){
+
+            try{
+                const studentPdfContent = downloadStudentPdf('disableInstantDownload');
+                const profilePdfContent = downloadProfilePdf('disableInstantDownload');
+
+                const combinedHtmlContent = `
+                    ${profilePdfContent}
+                    ${studentPdfContent}
+                `;
+
+                return openWin(combinedHtmlContent); 
+
+            }
+            catch(error){
+                displayErrorMessage("Cannot Create PDF");
+                console.log(error);
+                return;
+            }
+
+        
+        }
+
+        function downloadStudentPdf(type) 
+        {
+
+            try{
+            const result = allResult;
+            console.log('Retrived Result is' + allResult);
+            //let dynamicHeight = window.innerHeight * 2;
+            let dynamicHeight = 1100;
+            let numTables = 2;
+            if(savedResult){dynamicHeight=dynamicHeight+(300*savedResult.length);}
+            // if (numTables > ) {
+
+            //     const additionalHeight = numTables * 300; 
+                
+
+            //     dynamicHeight += additionalHeight;
+            // }
+            function generateRoundHtml(roundData) {
+                let roundHtml = '';
+                
+                
+                if(roundData){roundData.forEach(data => {
+                roundHtml += `
+                        <div style="">
+                        <div style="display: flex; justify-content: space-between">
+                            <span style="font-size: 16px;">
+                                <b> Round ${data.round}: </b> ${data.round === '2' ? 'Technical Round' : data.round === '3' ? 'Managerial Round' : ''}&nbsp; | &nbsp;Attempt: <b>${data.instanceId} </b>
+                            </span>
+                            <span style="font-size: 16px;">
+                                Interviewed By: <b>${data.panelistName}</b>
+                                
+                            </span>
+                        </div>
+                        <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                            <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%;" border="1">
+                                <tr style="padding: 10px; page-break-inside: avoid;">
+                                    <th style="font-size: 14px;"></th>
+                                    <th style="font-size: 14px;">Rating</th>
+                                    <th style="font-size: 14px;">Comments</th>
+                                </tr>
+                                ${data.techRating !== undefined && data.techComment !== undefined
+                                    ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Professional/Technical Knowledge</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.techRating}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.techComment}</td>
+                                    </tr>`
+                                    : ''}
+
+                                ${data.commRating !== undefined && data.commComment !== undefined
+                                    ? `<tr style="padding: 10px; page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Communication Skills</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.commRating}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.commComment}</td>
+                                    </tr>`
+                                    : ''}
+
+                                ${data.attitudeRating !== undefined && data.attitudeComment !== undefined
+                                    ? `<tr style="padding: 10px; page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Attitude/Promptness in Response</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.attitudeRating}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.attitudeComment}</td>
+                                    </tr>`
+                                    : ''}
+
+                                ${data.readyToJoinRating !== undefined && data.readyToJoinComment !== undefined
+                                    ? `<tr style="padding: 10px;page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Readiness to Join</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.readyToJoinRating}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.readyToJoinComment}</td>
+                                    </tr>`
+                                    : ''}
+
+                                ${data.longTermRating !== undefined && data.longTermComment !== undefined
+                                    ? `<tr style="padding: 10px;page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Long Term Plans and goals</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.longTermRating}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.longTermComment}</td>
+                                    </tr>`
+                                    : ''}
+                                ${data.longTermRatingAlt !== undefined && data.longTermCommentAlt !== undefined
+                                    ? `<tr style="padding: 10px;page-break-inside: avoid;">
+                                        <th style="font-size: 14px; padding: 5px;">Long Term Plans and goals</th>
+                                        <td style="font-size: 14px; padding: 5px;">${data.longTermRatingAlt}</td>
+                                        <td style="font-size: 14px; padding: 5px;">${data.longTermCommentAlt}</td>
+                                    </tr>`
+                                    : ''}
+                            </table>
+                            <div>
+                                <span style="font-size: 16px;">Round ${data.round} Status: <b><span style="color: ${data.studentStatus === 'Approved' ? 'green' : data.studentStatus === 'On-Hold' ? 'orange' : 'red'}">${data.studentStatus}</span></b></span>
+                            </div>
+                        </div>
+                    </div>
+                `;});}
+                
+            
+                return roundHtml;
+            }
+
+            let roundHtmlContent = '';
+            const rounds = {};
+            // generateRoundHtml(savedResult);
+            roundHtmlContent += generateRoundHtml(savedResult);
+
+            var htmlContent = `
+            
+            <div style="text-align:center; display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;"><h4 style="font-size: 16px;">Interview Feedback form</h4><img style="display: block; width:25%; height:25%;" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/></div>
+            <div><span style="font-size: 16px; ">Candidate Name: <b>${studentDetails.Name}</b></span></div>
+            <div style="display:flex;justify-content: space-between; flex-direction:column; width:100%; margin-top: 30px;/">
+                ${roundHtmlContent}
+            <div style="display:flex;justify-content: space-between;">
+            <span style="font-size: 16px;"><b>Round 4: </b>Director's Round</span>
+            <span style="font-size: 16px; margin-right: 200px;">Interviewed By:</span>
+            </div>
+            <!-- Table for Round 4 -->
+            <div style="justify-content: center; margin-top:1vh;">
+            <div style="height: 10vh;border: 1px solid black;display: grid;grid-template-columns: 10vw 1fr;">
+                <div style="display: grid;place-items: center;">FeedBack</div>
+                <div style="border-left: 1px solid black;"></div>
+            </div>
+            <div style="margin-top:4vh;"><h3 style="font-size: 16px;">Final Status:</h3></div>
+            </div>
+            `;
+
+            console.log(htmlContent);
+            var opt = {
+            margin:       0.25,
+            filename:     'myfile.pdf',
+            image:        { type: 'jpeg', quality: 2.00 },
+            html2canvas:  { scale: 3, width: 800, height: dynamicHeight },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            // Add the HTML content to the PDF
+            //return html2pdf().set(opt).from(htmlContent);
+            }
+            catch(error){
+                displayErrorMessage("Failed to Generate Interview PDF");
+                console.error(error);
+                return
+            }
+            if(type === "disableInstantDownload"){
+                return htmlContent
+            }
+            else{
+                return openWin(htmlContent);
+            }
+            
+
+        }
+
+        
+        function openWin(pdf)
+        {
+            //var pdfToDownload = downloadStudentPdf(savedResult);
+
+            var pdfFileName = studentDetails.Name + " Interview Form";
+            var myWindow=window.open(pdfFileName,'','width=1280,height=720');
+            myWindow.document.write(pdf);
+            myWindow.document.close();
+            myWindow.focus();
+            myWindow.print();
+            myWindow.close();
+        }
+
+        function downloadProfilePdf(type)
+        {
+            try{
+                const result = allResult;
+                console.log("Retrived Result is " + allResult);
+                var htmlContent = '';
+                var experienceHTML = '';
+                var academicHTML = '';
+                
+                if (result.experience){
+                    console.log("EXPERIENCE FOUND"); 
+                    experienceHTML = GenerateExperienceHTML(result.experience);
+                }
+                academicHTML = GenerateAcademicDetailsHTML(result.studentDetails);
+                
+                    htmlContent += `
+                    <div id = 'header' style="page-break-after: always;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <img style="display: block; width:25%; height:5%;" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/>
+                        <img src="${result.studentDetails.student_image__c}" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #150958; margin-right: 10px;">
+                        </div>
+                        <div style="text-align:center;"><h4>Interview Record form</h4></div>
+
+                        <div style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
+                            <h3 style="margin: 0;"><b>Name: ${result.studentDetails.Name}</b></h3>
+                        </div>
+
+                        <div style="display:flex;justify-content: space-between;"><span><b>Date Of Birth:</b> ${result.studentDetails.DateOfBirth__c}</span><span><b>Gender:</b> ${result.studentDetails.Gender__c}</span><span><b>Marital Status:</b> ${result.studentDetails.MartialStatus__c.charAt(0).toUpperCase() + result.studentDetails.MartialStatus__c.slice(1)}</span></div>
+
+                        <!-- Table for Address -->
+                        <div style="justify-content: center;">  
+                        <table style="align-items:center; margin-bottom: 1vh; margin-top: 2vh; border-collapse: collapse;" border="1">
+                            <tr>
+                                <th>
+                                    Correspondence Address
+                                </th>
+                                <th>
+                                    Permanent Address
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ${result.correspondenceAddress.Address}
+                                    ${result.correspondenceAddress.City}
+                                    ${result.correspondenceAddress.State}
+                                    ${result.correspondenceAddress.Pincode} 
+                                </td>
+                                <td>
+                                    ${result.permanentAddress.Address}
+                                    ${result.permanentAddress.City}
+                                    ${result.permanentAddress.State}
+                                    ${result.permanentAddress.Pincode}
+                                </td>
+                                
+                            </tr>
+                        
+                        </table>
+                        </div>
+
+                        <div style="display:flex;justify-content: space-between;"><span><b>Mobile Number:</b> ${result.studentDetails.phone__c} </span><span><b>Alternate Contact Number:</b> ${result.studentDetails.alternate_phone__c} </span></div>
+                        <div style="margin-top: 1vh; margin-bottom: 1vh;"><b>Email ID: </b> ${result.studentDetails.email__c}</div>
+                        <div><b>Number of days required to join:</b> 1 Year (Immediate/Number of days required to join)</div>
+                        
+                        
+                        ${academicHTML}
+                        ${experienceHTML}
+
+                        <!-- Table for Aptitude Marks Details -->
+                        <div style="justify-content: center;"> 
+                            <h3><b>1. Aptitude Test</b></h3> 
+                            <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; width: 100%; border-collapse: collapse;" border="1">
+                                <tr>
+                                    <th>
+                                        Test Type
+                                    </th>
+                                    <th>
+                                        Total Questions
+                                    </th>
+                                    <th>
+                                        Marks Obtained
+                                    </th>
+                                    <th>
+                                        Result
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        C
+                                    </th>
+                                    <td>
+                                        ${result.testDetails.CEasy__c
+                                        + result.testDetails.CMeduim__c
+                                        + result.testDetails.CHard__c}
+                                    </td>
+                                    <td>
+                                        ${result.studentTest.student_cprogram_marks__c}
+                                    </td>
+                                    <td rowspan="2">
+                                        ${result.studentTest.student_cprogram_marks__c 
+                                        + result.studentTest.student_apti_marks__c}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Aptitude
+                                    </td>
+                                    <td>
+                                        ${result.testDetails.aptiEasy__c
+                                        + result.testDetails.aptiMeduim__c
+                                        + result.testDetails.aptiHard__c}
+                                    </td>
+                                    <td>
+                                        ${result.studentTest.student_apti_marks__c}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    `;
+            
+            }
+            catch(error){
+                displayErrorMessage("Failed to Generate Profile PDF");
+                console.error(error);
+                return
+            }
+            if(type === "disableInstantDownload"){
+                return htmlContent
+            }
+            else{
+                return openWin(htmlContent);
+            }
+        }
+
+        function GenerateExperienceHTML(experienceData)
+        {
+
+            var expereinceContent =
+            `
+            <div><b>Certification/Project/Intership, if any: </b></div>
+                            <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                                <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%; page-break-inside: avoid;" border="1">
+                                    <tr style="padding: 10px;">
+                                        <th style="font-size: 14px;">Start Duration</th>
+                                        <th style="font-size: 14px;">End Duration</th>
+                                        <th style="font-size: 14px;">Instituion/Organisation and Location</th>
+                                        <th style="font-size: 14px;">Area and Topic Covered</th>
+                                    </tr>
+            `;
+
+            if(experienceData){experienceData.forEach(data => {
+                expereinceContent += `
+                                    <tr style="padding: 5px;">
+                                            <td style="font-size: 14px; padding: 5px;">${data.StartDuration}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${data.EndDuration}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${data.Organization + ', ' + data.Location}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${data.Topic}</td>
+                                    </tr>
+                            `;});}
+
+                            expereinceContent += ` </table>
+                            </div>
+                            `
+                            
+                console.log("Experience Content " + expereinceContent);        
+                return expereinceContent;
+
+        }
+
+        function GenerateAcademicDetailsHTML(studentDetails)
+        {
+            console.log("Student Details" + studentDetails);
+            var academicDetails =
+            `
+            <div style="margin-top: 3vh;"><b>Academic Details(10th to highest Qualification) </b></div>
+                            <div style="display:flex; flex-direction: column; justify-content: center; width:100%; margin-bottom: 30px;">
+                                <table style="text-align:center; margin-bottom: 2vh; margin-top: 2vh; border-collapse: collapse; width:100%; " border="1">
+                                    <tr style="padding: 10px; page-break-inside: avoid;">
+                                        <th style="font-size: 14px;">Course</th>
+                                        <th style="font-size: 14px;">Specialisation</th>
+                                        <th style="font-size: 14px;">Institution</th>
+                                        <th style="font-size: 14px;">Year Of passing</th>
+                                        <th style="font-size: 14px;">Score Grade</th>
+                                    </tr>
+
+                                    ${studentDetails.hsc_marks__c !== undefined 
+                                        ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.hscCourse__c  !== undefined ? studentDetails.hscCourse__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_specialization__c !== undefined ? studentDetails.hsc_specialization__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_name__c !== undefined ? studentDetails.hsc_name__c : 'NA'} </td>
+                                            <td style="font-size: 14px; padding: 5px;"> ${studentDetails.hsc_pass_year__c !== undefined ? studentDetails.hsc_pass_year__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.hsc_marks__c !== undefined ? studentDetails.hsc_marks__c + ' ' + (marksType && marksType.SchoolMarksType === "Percentage" ? '%' : (marksType ? marksType.SchoolMarksType : 'NA')) : 'NA'}</td>
+                                        </tr>`
+                                        : ''}
+
+                                    ${studentDetails.ssc_marks__c !== undefined 
+                                        ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.SecondarySchoolCourse__c !== undefined ? studentDetails.SecondarySchoolCourse__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.SecondarySchoolSpecialization__c !== undefined ? studentDetails.SecondarySchoolSpecialization__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.ssc_name__c !== undefined ? studentDetails.ssc_name__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.ssc_pass_year__c !== undefined ? studentDetails.ssc_pass_year__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.ssc_marks__c !== undefined ? studentDetails.ssc_marks__c + ' ' + ( marksType && marksType.PuMarksType === "Percentage" ? '%' : marksType.PuMarksType) : 'NA'}</td>
+                                        </tr>`
+                                        : ''}
+
+                                    ${studentDetails.diploma_marks__c !== undefined 
+                                        ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.DiplomaCourse__c !== undefined ? studentDetails.DiplomaCourse__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.DiplomaSpecialization__c !== undefined ? studentDetails.DiplomaSpecialization__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.diploma_college_name__c !== undefined ? studentDetails.diploma_college_name__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.diploma_passing_year__c !== undefined ? studentDetails.diploma_passing_year__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.diploma_marks__c !== undefined ? studentDetails.diploma_marks__c + ' ' + (marksType && marksType.DiplomaMarksType === "Percentage" ? '%' : marksType.DiplomaMarksType) : 'NA'}</td>
+                                        </tr>`
+                                        : ''}
+
+                                    ${studentDetails.degree_cgpa__c  !== undefined
+                                        ? `<tr style="padding: 5px; page-break-inside: avoid;">
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.degree_pursuing__c !== undefined ? studentDetails.degree_pursuing__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.branch_type__c != 'invalid' ? studentDetails.branch_type__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.college_id__r.Name !== undefined ? studentDetails.college_id__r.Name : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.degree_pass_year__c !== undefined ? studentDetails.degree_pass_year__c : 'NA'}</td>
+                                            <td style="font-size: 14px; padding: 5px;">${studentDetails.degree_cgpa__c !== undefined ? studentDetails.degree_cgpa__c + ' ' + (marksType && marksType.DegreeMarksType === "Percentage" ? '%' : marksType.DegreeMarksType) : 'NA'}</td>
+                                        </tr>`
+                                        : ''}
+
+                                        </table>
+                                </div>
+            `;
+                return academicDetails;
+        }
+
+
+        function openLog(){
+            let url = '/apex/StudentTestLogs?eventId=' + eventId + '&studentId=' + studentId;
+            window.open(url, '_blank');
+        }
+        function openStudentAttempt(){
+            let url = '/apex/StudentExamAttemptedQuestions?eventId=' + eventId + '&studentId=' +studentId;
+            window.open(url, '_blank');
+        }       
+        function openCompiler(){
+            let url = 'apex/CodePage'
+            window.open(url, '_blank');
+        }
+
+        // document.getElementById('downloadPdfButton').addEventListener('click', function() {
+        //     if (generatedPdf) {
+        //         generatedPdf.save(studentDetails.Name + " Interview Form");
+        //     } else {
+        //         console.error('Error: Unable to Generate PDF');
+        //     }
+        //});
+        function allowPanelistToAddDetails(assignThisRoundNumber){
+            console.log("Only Allowing Editing of Round Number " + assignThisRoundNumber);
+            const roundTwoEditButton = document.getElementById("addRoundTwoElementButton");
+            const roundThreeEditButton = document.getElementById("addRoundThreeElementButton");
+            const roundFourEditButton = document.getElementById("addRoundFourElementButton");
+
+            if (assignThisRoundNumber === 2){ console.log("Only 2nd Round");roundTwoEditButton.classList.remove("hidden");}
+            if (assignThisRoundNumber === 3){ console.log("Only 3rd Round");roundThreeEditButton.classList.remove("hidden");}
+            if (assignThisRoundNumber === 4){ console.log("Only 4th Round");roundFourEditButton.classList.remove("hidden");}
+        }
+        function invokeRemoteActionWithParameters() {
+            
+            var params = getURLParameters();
+            studentId = params.studentId;
+            eventId = params.eventId;
+            panelistId = params.panelistId;
+            adminId = params.adminId;
+
+            if(panelistId==null&&adminId==null){
+                console.log(panelistId + ' ' + adminId)
+                // let url = '/apex/adminLogin';
+                // window.location.replace(url);
+            }
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.studentProfileController.retrieveStudentDetails}',
+                studentId,
+                eventId,
+                panelistId,
+                function(result, event) {
+                    if (event.status) {
+                        console.log(result);
+                        console.log("The Panelist is " + result.panelistName);
+                        assignedPanelistName = result.panelistName
+                        allResult = result;
+                        marksType = result.marksType;
+                        console.log('adding result to all result ' + allResult )
+                        savedResult = result.studentAssessmentList;
+                        studentDetails = result.studentDetails;
+                        assignedPanelistRoundNumber = result.RoundNo;
+                        // generatedInterviewPdf = downloadStudentPdf(result);
+                        // generatedProfilePdf = downloadProfilePdf(result);
+                        populateStudentProfile(result);
+                        hideLoader();
+                    } else {
+                        console.error('Error:', event.message);
+                    }
+                }
+            );
+            
+        }
+        function populateStudentProfile(result) {
+            try{
+            console.log("Populating Student Profile");
+            allowPanelistToAddDetails(assignedPanelistRoundNumber);
+            const studentAssessmentList = result.studentAssessmentList;
+
+            displayProfileImage(result.studentDetails.student_image__c, result.studentDetails.Gender__c);
+
+            let round2instance = 0;
+            let round3instance = 0;
+            let round4instance = 0;
+
+            if (Array.isArray(studentAssessmentList) && studentAssessmentList.length > 0) {
+
+                const assessmentsMap = new Map();
+
+                for (const assessment of studentAssessmentList) {
+                    const round = parseInt(assessment.round);
+                    const instanceId = assessment.instanceId;
+                    if (!assessmentsMap.has(round)) {
+                        assessmentsMap.set(round, new Map());
+                    }
+                    assessmentsMap.get(round).set(instanceId, assessment);
+                }
+
+                assessmentsMap.forEach((instanceMap, round) => {
+                    instanceMap.forEach((assessmentForThisRound, instanceId) => {
+
+                        let parentDiv = document.getElementById(`round${round}`);
+                        if( round == '1'){parentDiv.classList.add("hidden");}
+                        console.log("Searching: " + parentDiv + " By querying " + `round${round}`);
+                        if (!parentDiv) {
+                            console.error(`Div for round ${round} and instance ${instanceId} not found.`);
+                        }
+
+                        if (instanceId) {
+                            const cloneDiv = parentDiv.cloneNode(true);
+                            cloneDiv.classList.remove('hidden');
+                            cloneDiv.id = `round${round}Alt${instanceId - 1}`;
+                            parentDiv.parentNode.insertBefore(cloneDiv, parentDiv.nextSibling);
+
+                            cloneDiv.querySelector('#editButton').setAttribute('onclick', `enableEdit('round${round}Alt${instanceId - 1}','testEdit')`);
+                            // cloneDiv.querySelector('#addElementButton').setAttribute('onclick', `addNewElement('round${round}Alt${instanceId - 1}')`);
+                            cloneDiv.querySelector('#saveButton').setAttribute('onclick', `saveStudent('round${round}Alt${instanceId - 1}')`);
+                            
+                            parentDiv = cloneDiv;
+                        }
+                        //console.log("Current Panelist is " + panelistId + " The saved panelist " + assessmentForThisRound.panelistId );
+                        if (panelistId === assessmentForThisRound.panelistId){parentDiv.querySelector("#editButton").classList.remove("hidden");}
+                        if (round == '2'){
+                            round2instance++;
+                            parentDiv.querySelector('#instanceId').textContent = assessmentForThisRound.instanceId;
+                            parentDiv.querySelector('#techRating').textContent = assessmentForThisRound.techRating;
+                            parentDiv.querySelector('#techComment').textContent = assessmentForThisRound.techComment;
+                            parentDiv.querySelector('#commRating').textContent = assessmentForThisRound.commRating;
+                            parentDiv.querySelector('#commComment').textContent = assessmentForThisRound.commComment;
+                            parentDiv.querySelector('#attitudeRating').textContent = assessmentForThisRound.attitudeRating;
+                            parentDiv.querySelector('#attitudeComment').textContent = assessmentForThisRound.attitudeComment;
+                            parentDiv.querySelector('#studentStatus').textContent = assessmentForThisRound.studentStatus;
+                            parentDiv.querySelector('#panelistFormId').textContent = assessmentForThisRound.panelistName;
+                        }
+                        if (round == '3'){
+                            round3instance++
+                            parentDiv.querySelector('#instanceId').textContent = assessmentForThisRound.instanceId;
+                            parentDiv.querySelector('#commRating').textContent = assessmentForThisRound.commRating;
+                            parentDiv.querySelector('#commComment').textContent = assessmentForThisRound.commComment;
+                            parentDiv.querySelector('#attitudeRating').textContent = assessmentForThisRound.attitudeRating;
+                            parentDiv.querySelector('#attitudeComment').textContent = assessmentForThisRound.attitudeComment;
+                            /*parentDiv.querySelector('#readyToJoinRating').textContent = assessmentForThisRound.readyToJoinRating;
+                            parentDiv.querySelector('#readyToJoinComment').textContent = assessmentForThisRound.readyToJoinComment;
+                            parentDiv.querySelector('#longTermRating').textContent = assessmentForThisRound.longTermRating;
+                            parentDiv.querySelector('#longTermComment').textContent = assessmentForThisRound.longTermComment;*/
+                            parentDiv.querySelector('#longTermRatingAlt').textContent = assessmentForThisRound.longTermRating || assessmentForThisRound.longTermRatingAlt;
+                            parentDiv.querySelector('#longTermCommentAlt').textContent = assessmentForThisRound.longTermComment || assessmentForThisRound.longTermCommentAlt ;
+                            parentDiv.querySelector('#studentStatus').textContent = assessmentForThisRound.studentStatus;
+                            parentDiv.querySelector('#panelistFormId').textContent = assessmentForThisRound.panelistName;
+                        }
+                        if(round == '4'){
+                            round4instance++
+                            parentDiv.querySelector('#techRating').textContent = assessmentForThisRound.techRating;
+                            parentDiv.querySelector('#techComment').textContent = assessmentForThisRound.techComment;
+                            parentDiv.querySelector('#panelistFormId').textContent = assessmentForThisRound.panelistName;
+                            parentDiv.querySelector('#studentStatus').textContent = assessmentForThisRound.studentStatus;
+                        }
+
+
+                    });
+                    console.log(`Round 2 instance ${round2instance}, Round 3 instance ${round3instance}, Round 4 instance ${round4instance}`);
+                });
+                if (round2instance === 0) {
+                    document.getElementById('round2Err').classList.remove('hidden');
+                }
+                if (round3instance === 0) {
+                    document.getElementById('round3Err').classList.remove('hidden');
+                }
+                if (round4instance === 0) {
+                    document.getElementById('round4Err').classList.remove('hidden');
+                }
+            } else {
+                console.log(`Round 2 instance ${round2instance}, Round 3 instance ${round3instance}, Round 4 instance ${round4instance}`);
+                if (round2instance === 0) {
+                    document.getElementById('round2Err').classList.remove('hidden');
+                }
+                if (round3instance === 0) {
+                    document.getElementById('round3Err').classList.remove('hidden');
+                }
+                if (round4instance === 0) {
+                    document.getElementById('round4Err').classList.remove('hidden');
+                }
+                console.log('studentAssessmentList is empty, awaiting first insertion...');
+            }
+
+            function setElementTextContent(elementId, value, marksType, fallbackValue) {
+            const element = document.getElementById(elementId);
+
+            if (element) {
+                let textContent = (value !== undefined && value !== null) ? value.toString().replace(/&#39;/g, "'") : (fallbackValue !== undefined ? fallbackValue : 'NA');
+                if (marksType) {
+                    if(value !==undefined){
+                        let storeMarksType = marksType;
+                        console.log(storeMarksType);
+                        if (storeMarksType.includes('Percentage')){
+                            storeMarksType = "%";
+                        }
+                        textContent += ` ${storeMarksType}`;
+                    }
+                }
+                else{
+                    //nothing
+                }
+                element.textContent = textContent;
+        
+            }
+        }
+
+
+            //Marks
+            if(marksType){
+                setElementTextContent('schoolMarks', result.studentDetails.hsc_marks__c, marksType.SchoolMarksType, 'NA');
+                setElementTextContent('secMarks', result.studentDetails.ssc_marks__c, marksType.PuMarksType, 'NA');
+                setElementTextContent('dipMarks', result.studentDetails.diploma_marks__c, marksType.DiplomaMarksType, 'NA');
+                setElementTextContent('degreeMarks', result.studentDetails.degree_cgpa__c, marksType.DegreeMarksType, 'NA');
+            }
+            else{
+                setElementTextContent('schoolMarks', result.studentDetails.hsc_marks__c, 'NA');
+                setElementTextContent('secMarks', result.studentDetails.ssc_marks__c, 'NA');
+                setElementTextContent('dipMarks', result.studentDetails.diploma_marks__c,  'NA');
+                setElementTextContent('degreeMarks', result.studentDetails.degree_cgpa__c, 'NA');
+            }
+
+
+
+            setElementTextContent('profileName', result.studentDetails.Name);
+            setElementTextContent('profileUSN', result.studentDetails.usn__c);
+            setElementTextContent('profileEmail', result.studentDetails.email__c);
+            setElementTextContent('profilePhone', result.studentDetails.phone__c);
+            setElementTextContent('profileCollege', result.studentDetails.college_id__r && result.studentDetails.college_id__r.Name);
+            setElementTextContent('profileDegree', result.studentDetails.degree_pursuing__c);
+            setElementTextContent('profileBranch', result.studentDetails.branch_type__c === "invalid" ? undefined : result.studentDetails.branch_type__c);
+            setElementTextContent('schoolName', result.studentDetails.hsc_name__c, '');
+            
+            setElementTextContent('secCollege', result.studentDetails.ssc_name__c, undefined);
+            
+            setElementTextContent('dipCollege', result.studentDetails.diploma_college_name__c, undefined);
+            
+            if(result.studentDetails.college_id__c){setElementTextContent('degreeCollege', result.studentDetails.college_id__r.Name);}
+            
+        
+
+            // setElementTextContent('studentMarksScored', result.studentTest.student_marks_scored__c - result.studentTest.neg_student_marks_scored__c);
+            // setElementTextContent('studentAptitudeMarks', result.studentTest.student_apti_marks__c - result.studentTest.neg_student_apti_marks__c);
+            // setElementTextContent('studentCProgramMarks', result.studentTest.student_cprogram_marks__c - result.studentTest.neg_student_cprogram_marks__c);
+
+            if(result.testDetails && result.studentTest){
+                const cEasy = Number(result.testDetails.CEasy__c) || 'NA';
+                const cMedium = Number(result.testDetails.CMeduim__c) || 'NA';
+                const cHard = Number(result.testDetails.CHard__c) || 'NA';
+                const aptiEasy = Number(result.testDetails.aptiEasy__c) || 'NA';
+                const aptiMedium = Number(result.testDetails.aptiMeduim__c) || 'NA';
+                const aptiHard = Number(result.testDetails.aptiHard__c) || 'NA';
+
+                const testCMarks = cEasy + cMedium + cHard;
+                const testAptiMarks = aptiEasy + aptiMedium + aptiHard;
+                const testTotalMarks = testCMarks + testAptiMarks;
+
+
+                setElementTextContent('testTotalMarks', '/' + testTotalMarks );
+                setElementTextContent('testAptiMarks', '/' + testAptiMarks );
+                setElementTextContent('testCMarks', '/' + testCMarks );
+
+                setElementTextContent('studentAptitudeMarks', result.studentTest.student_apti_marks__c);
+                setElementTextContent('studentMarksScored', result.studentTest.student_marks_scored__c);
+                setElementTextContent('studentCProgramMarks', result.studentTest.student_cprogram_marks__c);
+
+                const roundOneStatus = result.studentTest.RoundOneStatus__c;
+                if(roundOneStatus){
+                    const parts = roundOneStatus.split(' - ');
+                    const value = parts.length > 1 ? parts[1] : roundOneStatus;
+                    setElementTextContent('roundOneStudentStatus', value);
+                }
+                else{
+                    setElementTextContent('roundOneStudentStatus', 'NA');
+                }
+
+
+                setElementTextContent('isReferred', result.studentTest.isApproved__c);
+            }
+            else{
+                displayWarningMessage('No Round 1 Details Found');
+                document.getElementById('round1-features').style.display='none';
+            }
+
+            
+
+
+
+
+            // if(result.studentTest.student_apti_marks__c==0 || result.studentTest.student_marks_scored__c ==0 || result.studentTest.student_cprogram_marks__c ==0 ){
+            //     if(result.studentTest.student_apti_marks__c==0){setElementTextContent('studentAptitudeMarks', ' 😂 ' + result.studentTest.student_apti_marks__c);}
+            //     if(result.studentTest.student_marks_scored__c==0){setElementTextContent('studentMarksScored', ' 😂 ' + result.studentTest.student_marks_scored__c);}
+            //     if(result.studentTest.student_cprogram_marks__c==0){setElementTextContent('studentCProgramMarks', ' 😂 ' + result.studentTest.student_cprogram_marks__c);}
+            
+            // }
+            // else if (result.studentTest.student_marks_scored__c == testTotalMarks ){
+            //     setElementTextContent('studentMarksScored', ' 🎉 ' + result.studentTest.student_marks_scored__c);
+            // }
+            // else{
+            //     setElementTextContent('studentAptitudeMarks', result.studentTest.student_apti_marks__c);
+            //     setElementTextContent('studentMarksScored', result.studentTest.student_marks_scored__c);
+            //     setElementTextContent('studentCProgramMarks', result.studentTest.student_cprogram_marks__c);
+            // }
+            
+
+
+
+            // setElementTextContent('posStudentMarksScored', result.studentTest.student_marks_scored__c);
+            // setElementTextContent('posStudentAptitudeMarks', result.studentTest.student_apti_marks__c);
+            // setElementTextContent('posStudentCProgramMarks', result.studentTest.student_cprogram_marks__c);
+            // setElementTextContent('negStudentMarksScored', result.studentTest.neg_student_marks_scored__c);
+            // setElementTextContent('negStudentAptitudeMarks', result.studentTest.neg_student_apti_marks__c);
+            // setElementTextContent('negStudentCProgramMarks', result.studentTest.neg_student_cprogram_marks__c);
+            
+
+            
+            //setElementTextContent('roundOneStudentStatus', result.studentTest.RoundOneStatus__c);
+        
+
+            let internshipCount = 0;
+            let certificationCount = 0;
+
+            if (result.experience && Array.isArray(result.experience)) {
+                const internshipBanner = document.getElementById("internshipBanner");
+                const certificationBanner = document.getElementById("certificationBanner");
+                const internshipDetails = document.querySelector("#internshipValue");
+                const certificationDetails = document.querySelector("#certificationValue");
+
+                internshipDetails.innerHTML = "";
+                certificationDetails.innerHTML = "";
+
+
+
+                result.experience.forEach((experience) => {
+                    const cardDetailRow = document.createElement("div");
+                    cardDetailRow.classList.add("card-detail-row");
+
+                    if (experience.ExperienceType.includes('internship')) {
+                        internshipCount++;
+                        populateCardDetails(
+                            cardDetailRow,
+                            internshipDetails,
+                            experience,
+                            internshipCount,
+                            'internship'
+                        );
+                    } else if (experience.ExperienceType.includes('certification')) {
+                        certificationCount++;
+                        populateCardDetails(
+                            cardDetailRow,
+                            certificationDetails,
+                            experience,
+                            certificationCount,
+                            'certification'
+                        );
+                    }
+                });
+
+            console.log('Intern Count ' + internshipCount + ' Cert Count ' + certificationCount);
+
+            // internshipBanner.style.display = result.experience.some(exp => exp.ExperienceType.includes('internship')) ? "block" : "none";
+            // certificationBanner.style.display = result.experience.some(exp => exp.ExperienceType.includes('certification')) ? "block" : "none";
+
+            console.log('Intern Count ' + internshipCount + ' Cert Count ' + certificationCount);
+
+            if (internshipCount === 0) {
+                const noInternshipDetailsDiv = createNoDetailsElement('No Internship Details Found &#128546');
+                const internContainer = document.getElementById('internshipContainer');
+                internContainer.innerHTML = "";
+                internContainer.appendChild(noInternshipDetailsDiv);
+            }
+
+            if (certificationCount === 0) {
+                const noCertificationDetailsDiv = createNoDetailsElement('No Certification Details Found &#128546');
+                const certContainer = document.getElementById('certificationContainer');
+                certContainer.innerHTML = "";
+                certContainer.appendChild(noCertificationDetailsDiv);
+            }
+
+            if (internshipCount === 0 && certificationCount === 0) {
+                const certContainer = document.getElementById('certificationBanner');
+                certContainer.style.display = "none";
+                const noExperienceDetailsDiv = createNoDetailsElement('No Experience Details Found &#128546');
+
+                const internContainer = document.getElementById('internshipContainer');
+                
+                // certContainer.innerHTML = "";
+                internContainer.innerHTML = "";
+
+                internContainer.appendChild(noExperienceDetailsDiv);
+            }
+
+        } else {
+
+            const noExperienceDetailsDiv = createNoDetailsElement('ERROR: Unable to Fetch Experience Details &#9940');
+            const certContainer = document.getElementById('certificationBanner');
+            certContainer.style.display = "none";
+            const internContainer = document.getElementById('internshipContainer');
+            
+            internContainer.innerHTML = "";
+
+            internContainer.appendChild(noExperienceDetailsDiv);
+            displayWarningMessage('Unable to Fetch Experience Details');
+        }
+
+        
+        function createNoDetailsElement(message) {
+            const noExpDetailsDiv = document.createElement('div');
+            noExpDetailsDiv.innerHTML = `
+                <span class="card-detail-value">
+                    ${message}
+                </span>
+            `;
+            return noExpDetailsDiv;
+        }
+
+        function populateCardDetails(row, container, exp, count, type) {
+            row.innerHTML = `
+                <span class="card-detail-value">${type.charAt(0).toUpperCase() + type.slice(1)} ${count}</span>
+                <span class="card-detail-heading bold" id="${type}Organization${count}">${exp.Organization}</span>
+                <span class="card-detail-value" id="${type}Domain${count}">Domain: <i><b>${exp.Topic}</b></i></span>
+                <span class="card-detail-value" id="${type}Location${count}">Location: <i>${exp.Location}</i></span>
+                <span class="card-detail-value" id="${type}Start${count}">From: <i>${exp.StartDuration}</i></span>
+                <span class="card-detail-value" id="${type}End${count}">To: <i>${exp.EndDuration}</i></span>
+            `;
+            container.appendChild(row);
+        }
+
+            setElementTextContent('studentName', result.studentDetails.Name);
+            setElementTextContent('studentDob', result.studentDetails.DateOfBirth__c);
+            setElementTextContent('studentGender', result.studentDetails.Gender__c);
+            setElementTextContent('studentPhone', result.studentDetails.phone__c);
+            setElementTextContent('studentMail', result.studentDetails.email__c);
+            setElementTextContent('studentMaritalStatus', result.studentDetails.MartialStatus__c.charAt(0).toUpperCase() + result.studentDetails.MartialStatus__c.slice(1));
+            setElementTextContent('studentCity', result.permanentAddress.City);
+            setElementTextContent('studentAltPhone', result.studentDetails.alternate_phone__c);
+
+            // Mapping values for permanent address
+            // setElementTextContent("permAddressMain", result.permanentAddress.Address);
+            setElementTextContent("permAddress", result.permanentAddress.Address);
+            setElementTextContent("permCity", result.permanentAddress.City);
+            setElementTextContent("permState", result.permanentAddress.State);
+            setElementTextContent("permPincode", result.permanentAddress.Pincode);
+
+            // Mapping values for corresponding address
+            setElementTextContent("corrAddress", result.correspondenceAddress.Address);
+            setElementTextContent("corrCity", result.correspondenceAddress.City);
+            setElementTextContent("corrState", result.correspondenceAddress.State);
+            setElementTextContent("corrPincode", result.correspondenceAddress.Pincode);
+
+
+        }
+        catch(error){
+            displayErrorMessage("Fatal Error " + error);
+            hideLoader();
+            console.error(error);
+        }
+    }
+
+    </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> -->
+    <script src="{!URLFOR($Resource.jsPdf)}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</apex:page>

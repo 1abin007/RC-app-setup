@@ -1,0 +1,3405 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" controller="studentRegistrationController">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,800;1,100;1,200;1,300;1,400;1,500;1,800&display=swap" rel="stylesheet"/>
+        <title>Novigo | Student Registration</title>
+        <style>
+            :root {
+                --blue-color: #150958;
+                --blue-color-hover: #200e89;
+                --blue-color-hover-alt: #312a5a;
+                --blue-color-select: #534798;
+                --text-color: black;
+                --background-color: white;
+                --red-color: #EF233C;
+                --yellow-color: #ffb01d;
+
+                --green-color: #008000;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+            input{
+                width: 15vw;
+                height: 3vh;
+                border: 1.5px solid var(--blue-color);
+                padding: 2px;
+                font-size: 1.25vw;
+            }
+            /* input#file-upload-button{
+                background-color: var(--blue-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border: 2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: .3s ease;
+            }
+            input#file-upload-button:hover{
+                background-color: var(--blue-color-hover);
+            } */
+            textarea{
+                width: 15vw;
+                height: 10vh;
+                border: 1.5px solid var(--blue-color);
+                padding: 2px;
+                font-size: 1.25vw;
+                resize: none;
+            }
+            textarea:focus{
+                outline: none;
+            }
+            .phone-text{
+                padding-right: 2px;
+                font-size: 1.2vw;
+            
+                border-right: 1px dashed var(--blue-color);
+            }
+            input:focus{
+                outline: none;
+            }
+            option{
+                color: solid var(--blue-color)!important;
+                width: 15vw;
+                border: 1.5px solid var(--blue-color);
+                background-color: none;
+
+            }
+
+            .phone-container{
+                border: 1.5px solid var(--blue-color);
+                display: flex;
+            }
+            .phone-container-error{
+                border: 1.5px solid var(--red-color);
+            }
+
+            .image-input-box{
+                width:100%;
+                height: 4vh;
+
+            }
+
+            .select-style{
+                width: 15.5vw !important;
+                height: 4vh !important;
+                border: 1.5px solid var(--blue-color);
+                /* padding-left:2px; */
+                padding-right: 2px; 
+                background-color: none;
+                font-size:1.25vw;
+
+            }
+            .input-error{
+                border: 1.5px solid var(--red-color);
+            }
+            .input-warning{
+                border: 1.5px solid var(--yellow-color);
+            }
+
+
+            .main {
+                height: 100vh;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .header {
+                height: 10vh;
+                width: 100%;
+                background: var(--blue-color);
+                display: flex;
+                align-items: center;
+                justify-content: space-between
+            }
+
+            .novigo-icon {
+                height: 6vh;
+                margin-left: 8px;
+            }
+            .novigo-icon-big{
+                opacity: 0.05;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: -1; 
+                filter: grayscale(50%);
+            }
+            .title {
+                /* margin-top: 4vh; */
+                margin-right:4vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                /* background-color: white; */
+                z-index: 1;
+            }
+            .content-container {
+                
+                /* justify-content: center; */
+            }
+
+            .title-text {
+                font-size: 2vw;
+                font-family: 'Poppins', sans-serif;
+                font-weight: 500;
+                color: var(--background-color);
+            }
+            .section-body{
+                margin-top:4vh;
+                background-color: var(--background-color);
+                border: 1px solid var(--blue-color);
+                border-radius: 8px;
+                box-shadow: 0px 1px 10px #150958;
+            }
+            .section-body-green-shadow{
+                box-shadow: 0px 1px 10px var(--green-color);
+            }
+            .section-body-red-shadow{
+                box-shadow: 0px 1px 10px var(--red-color);
+            }
+
+            .section-wrapper{
+                padding: 1.5vh;
+                margin-bottom: 2vh;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+
+            }
+            .section {
+                
+                padding: 1.5vh;
+                /* cursor: pointer; */
+                transition: border 0.2s, transform 0.2s;
+                width: 40vw;
+                max-height: 50vh;
+                overflow-y: scroll;
+
+            }
+
+            /* .section:hover {
+                border: 2px solid var(--blue-color);
+                transform: translateY(-2px);
+            } */
+
+            .section-text-container{
+                display:flex;
+                flex-direction: column;
+            }
+
+            .section-text {
+                font-weight: 500;
+                font-size: 1.5vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+                display: none;
+
+            }
+            .section-text-small{
+                font-weight: 300;
+                font-size: 0.8vw;
+                margin-left: 1vh;
+                margin-bottom: 0.5vh;
+                color: var(--red-color);
+            }
+
+            .section-items {
+                padding: 2vh;
+                display: flex;
+                
+                flex-direction: column;
+                gap: 1.5vh;
+            }
+
+            .section-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1;
+                margin: 2vh;
+            }
+            .marks-container{
+                margin: 0;
+                margin-left: 0.5vw;
+            }
+
+            .section-item-text {
+                margin-right: 1vw;
+                font-size: 1.2vw;
+            }
+            .section-buttons{
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+                margin-top: 1.5vh;
+            }
+            /* .prev-button, .next-button, .go-back-button {
+                width: 15rem;
+                height: 4rem;
+                border-radius: 1rem;
+                box-shadow: $shadow;
+                justify-self: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: .3s ease;
+                } */
+
+            .prev-button, .next-button, .go-back-button {
+                background-color: var(--blue-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border: 2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: .3s ease;
+                }
+
+            .prev-button:hover, .next-button:hover {
+                background-image: linear-gradient(45deg, var(--blue-color-hover), var(--blue-color-hover-alt));
+                box-shadow: 0px 0px 10px #150958;
+                }
+
+            .submit-button{
+                background-color: var(--green-color);
+                color: var(--background-color);
+                width: 50%;
+                height: 5vh;
+                padding: 2px;
+                outline: none;
+                border:2px transparent;
+                margin: 0.5vw;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            /* .prev-button:hover,.next-button:hover {
+                background-color: var(--blue-color-hover);
+            } */
+
+
+            .progress-bar {
+                width: 100%;
+                height: 35px;
+                background-color: white;
+                position: sticky;
+                border-radius: 7px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+                top: 0;
+                z-index: 1;
+            }
+
+            .progress {
+                height: 100%;
+                border-top: 1px solid var(--blue-color);
+                display: flex;
+                justify-content: flex-start;
+                /* border-radius: 7px;
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px; */
+                /* background-image: linear-gradient(45deg, var(--blue-color-hover), var(--blue-color-hover-alt)); */
+                background-color: var(--blue-color);
+                width: 25%;
+                clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+                transition: width 0.5s;
+                align-items: flex-end;
+            }
+            .progress-green {
+                background-image: linear-gradient(45deg, var(--green-color), #026d02);
+            }
+            .progress-red {
+                background-image: linear-gradient(45deg, var(--red-color), red);
+            }
+            .progress-text{
+                margin-left: 1vw;
+                color: white;
+                font-size: 22px;
+                font-weight: 400;
+            }
+            .custom-checkbox{
+                width: 20px;
+                height: 3vh;
+            }
+            #successfulSection, #failSection{
+                display: none;
+            }
+            
+            .success-section{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .error-image{
+                height:18px; 
+                width:18px; 
+                margin-left:0.5vw;
+                margin-right: 1vw;
+            }
+            .error-alert {
+                position: fixed;
+                z-index: 9999; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--red-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .success-alert {
+                position: fixed;
+                z-index: 1000; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color:  var(--green-color);
+                color: white;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .alert-animation {
+                animation-name: fade;
+                animation-duration: 0.5s; /* Adjust the duration as needed */
+            }
+
+
+
+            @keyframes fade {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .error-warning {
+                position: fixed;
+                z-index: 9999; 
+                top: 8%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: var(--yellow-color);
+                color: black;
+                margin-bottom: 15px;
+                align-items: center;
+                justify-content: center;
+                align-content: center;
+            }
+            .closebtn {
+            margin-left: 15px;
+            color: white;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            }
+
+            .closebtn:hover {
+            color: black;
+            }
+            .closebtn-black-color{
+                color: black;
+            }
+            .closebtn-black-color:hover{
+                color: white;
+            }
+            ::selection{
+                color: white;
+                background: var(--blue-color-hover);
+            }
+
+            .hide {display: none;}
+            .loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9998;
+            }
+
+            /* .loader-inner {
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #3498db;
+                border-radius: 50%;
+                width: 100px;
+                height: 100px;
+                animation: spin 0.5s linear infinite;
+            } */
+            .loader-logo{
+                position: absolute;
+                top: 50;
+                left: 50;
+            }
+
+            .loader-logo .logo-section-one {
+                animation: moveOne 1.2s infinite alternate;
+            }
+
+            .loader-logo .logo-section-two {
+                animation: moveTwo 1.2s infinite alternate;
+            }
+
+            @keyframes moveOne {
+                0%, 100% {
+                    fill:  var(--red-color);
+                    transform: translate(0px, 0px);
+                    opacity: 1;
+                    
+                }
+                50% {
+                    fill: white;
+                    transform: translate(-15px, -25px);
+                    /* transform: translate(0, 0); */
+                    opacity: 0;
+                }
+            }
+
+            @keyframes moveTwo {
+                0%, 100% {
+                    fill:  var(--red-color);
+                    transform: translate(0, 0);
+                    opacity: 1;
+                }
+                50% {
+                    fill: white;
+                    transform: translate(10px, 10px);
+                    opacity: 0;
+                }
+            }
+            .hidden {
+                display: none;
+            }
+
+            ::-webkit-scrollbar {
+                    width: 12px;
+                }
+
+            ::-webkit-scrollbar-track {
+                    background-color: rgb(244, 244, 244);
+                    /* -webkit-box-shadow: inset 0 0 6px rgba(0, 25, 88, 0.3);  */
+                    border-radius: 10px;
+                }
+
+            ::-webkit-scrollbar-thumb {
+                    border-radius: 10px;
+                    background-color: var(--blue-color);
+                    transition: 0.3s;
+                }
+            ::-webkit-scrollbar-thumb:hover {
+                    background-color: var(--blue-color-hover);
+                }
+
+
+
+                body {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                input[type=checkbox]{
+                    height: 0;
+                    width: 0;
+                    visibility: hidden;
+                }
+
+                label {
+                    cursor: pointer;
+                    text-indent: -9999px;
+                    width: 4vw;
+                    height: 4vh;
+                    background: white;
+                    display: block;
+                    border-radius: 100px;
+                    position: relative;
+                    border: 2px solid var(--blue-color);
+                }
+
+                label:after {
+                    content: '';
+                    position: absolute;
+                    top: 5px;
+                    left: 8px;
+                    width: 1vw;
+                    height: 2vh;
+                    background: var(--blue-color);
+                    border-radius: 90px;
+                    transition: 0.3s;
+                }
+
+                input:checked + label {
+                    background: var(--blue-color);
+                }
+
+                input:checked + label:after {
+                    left: calc(100% - 5px);
+                    transform: translateX(-100%);
+                    background: white;
+                }
+
+                label:active:after {
+                    background: white;
+                    width: 40px;
+                }
+
+                .preview-section {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr; /* Two columns for .previewTitle and .previewValue */
+                    align-items: center; /* Center items vertically */
+                    gap: 2vh; /* Gap between columns */
+                    padding: 1;
+                    margin: 2vh;
+                }
+
+                .previewMainTitle{
+                    color: var(--blue-color);
+                    font-size: 1.5vw;
+                    font-weight: bold;
+                    margin-top: 1vh;
+                }
+
+                .previewPhoto{
+                    border: 2px solid var(--blue-color);
+                    
+                }
+                .previewTitle {
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    margin-left: 2vw;
+                }
+
+                .previewValue {
+                    color: var(--blue-color);
+                    font-size: 1.25vw;
+                    font-weight: 500;
+                    margin-left: 2vw;
+                }
+
+                .details-summary{
+                    display: flex;
+                    flex-direction: column;
+                    overflow-y: scroll;
+                    max-height: 60vh;
+                }
+                .reg-text{
+                    margin-top: 1vh;
+                    font-size: 13px;
+                    color: var(--blue-color);
+                    text-align: center;
+                }
+                .branch-select{
+                    display:none;
+                }
+                .section-text-visible{
+                    font-weight: 500;
+                    font-size: 1.5vw;
+                    margin-left: 1vh;
+                    margin-bottom: 0.5vh;
+                }
+                .toggle-bar {
+                    width:10vw;
+                    border: 2px solid var(--blue-color);
+                    border-radius: 5px;
+                    background: whitesmoke;
+                    display: flex;
+                }
+
+                .toggle-item {
+                    cursor: pointer;
+                    padding: 1vh 1vw;
+                    text-align: center;
+                    border-radius: 5px;
+                    width: 100%;
+                    transition: background-image 0.3s,
+                                box-shadow 0.3s,
+                                color 0.3s;
+                }
+
+                .toggle-item.active {
+                    background-image: linear-gradient(45deg, var(--blue-color), var(--blue-color-hover-alt));
+                    box-shadow: 0px 1px 10px var(--blue-color);
+                    color: white;
+                }
+                /* body {
+                    background-image: url('{!URLFOR($Resource.novigo_logo_blue)}');
+                    background-repeat: repeat; 
+                    background-size: 20%; 
+                    filter: grayscale(50%); 
+                    transform: rotate(45deg);
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    margin: 0;
+                } */
+
+                /* .section-preview{
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px; 
+                }
+                .section-left-preview {
+                    grid-column: 1;
+                    text-align: left; 
+
+                }
+
+                .section-right-preview {
+                    grid-column: 2;
+                    text-align: right;
+                } */
+    </style>
+    
+    </head>
+    <body>
+        <div class="loader hidden">
+            <div class="loader-logo loader-logo-animation">
+                <svg width="200"  height="200" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M30.8919 50.5334C33.472 46.3136 35.8983 42.4107 38.2198 38.4516C38.447 38.062 38.1813 37.2563 37.8911 36.7808C30.6681 24.8707 23.4241 12.9705 16.1242 1.10328C15.7781 0.541945 14.9355 0.0697652 14.2502 0.0565574C9.65982 -0.0325952 5.0659 0.0103303 0 0.0103303C10.3486 16.9361 20.5293 33.5845 30.8919 50.5334Z" fill="white"/>
+                    <path class="logo-section-one" d="M21.9257 0.0785001C28.4739 10.7867 34.8054 21.135 41.3047 31.7607C43.8779 27.5738 46.3182 23.6643 48.6536 19.7053C48.8844 19.3123 48.6641 18.5133 48.3844 18.0444C44.9897 12.4146 41.567 6.80127 38.0743 1.22428C37.7422 0.692662 36.8996 0.137935 36.2843 0.124727C31.6869 0.0322727 27.0825 0.0751975 21.9257 0.0751975V0.0785001Z" fill="#EF233C"/>
+                    <path class="logo-section-two" d="M60.6489 0.124756H45.0002C47.6293 4.4404 50.1395 8.56784 52.7965 12.9264C55.4326 8.62727 57.9394 4.54276 60.6489 0.124756Z" fill="#EF233C"/>
+                </svg>
+            </div>
+            <div class="loader-inner"></div>
+        </div>
+        <div class="error-warning" id="warningCustom">
+            <img id="warnImg" src="{!URLFOR($Resource.iconAlertBlack)}" class="error-image"/>
+            <span id="warnText" class="closebtn closebtn-black-color"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="error-alert" id="errorCustom">
+            <img id="alertImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="alertText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="success-alert" id="successCustom">
+            <img id="successImg" src="{!URLFOR($Resource.iconAlertWhite)}" class="error-image"/>
+            <span id="successText" class="closebtn"  onclick="this.parentElement.style.display='none';">&times;</span>
+        </div>
+        <div class="main">
+            <div class="header">
+                <div>
+                    <img class="novigo-icon" src="{!URLFOR($Resource.novigo_logo)}" alt="Novigo Icon"/>
+                </div>
+                <div class="title">
+                    <svg style="margin-right: 1vw;" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="white" d="M11 9c0 1.66-1.34 3-3 3s-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3m3 11H2v-2c0-2.21 2.69-4 6-4s6 1.79 6 4m8-6v2h-9v-2m9-4v2h-9V8m9-4v2h-9V4Z"/></svg>
+                    <span class="title-text">Enter Your Details.</span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress">
+                    <span id="progressText" class="progress-text">1. Test Text</span>
+                </div>
+            </div>
+            <div class="content-container">
+                <div class="section-body">
+                    <!-- <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div> -->
+
+                    <div class = "section-wrapper" id= "basicDetails">
+                        <div class="section-text-container">
+                            <span class="section-text">1. Basic Details</span>
+                            <!-- <span class="section-text-small">All the fields are mandatory</span> -->
+                        </div>
+                        <div class="section">
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <span class="section-text-visible">Add Basic Info</span>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Student Name:</span>
+                                        <input id="nameInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Phone Number:</span>
+                                        <div class="phone-container" id='phoneContainer'>
+                                            <span class="phone-text">+91</span>
+                                            <input id="phoneInput" type="text" style="width:12.8vw; border:none;" pattern="[0-9]"></input>
+                                        </div>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Alternate Phone Number:</span>
+                                        <div class="phone-container" id='altPhoneContainer'>
+                                            <span class="phone-text">+91</span>
+                                            <input id="altPhoneInput" type="text" style="width:12.8vw; border:none;" pattern="[0-9]"></input>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="section-item" style="visibility: hidden;">
+                                        <span class="section-item-text">blankSpace</span>
+                                    </div> -->
+                                    <div class="section-item">
+                                        <span class="section-item-text">Student E-mail:</span>
+                                        <input id="emailInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Re-enter E-mail</span>
+                                        <input id="reenterEmailInput"></input>
+                                    </div>
+                                    <!-- <div class="section-item" style="visibility: hidden;">
+                                        <span class="section-item-text">x</span>
+                                    </div> -->
+                                    <div class="section-item">
+                                        <span class="section-item-text">College Name:</span>
+                                        <select class="select-style" id="collegeDropdown" onchange="handleCollegeSelection()">
+                                            <option id="invalidCollegeSelection" value="invalid" disabled="disabled" selected="selected">Select Your College</option>
+                                        </select>
+                                    </div>
+                                    <div class="section-item" id="usnSection">
+                                        <span class="section-item-text">USN:</span>
+                                        <input id="usnInput"></input>
+                                    </div>
+                                    <!-- <div class="section-item" style="visibility: hidden;">
+                                        <span class="section-item-text">x</span>
+                                    </div> -->
+                                    <div class="section-item">
+                                        <span class="section-item-text">Date of Birth</span>
+                                        <input id="dobInput" type="date"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Gender</span>
+                                        <select class="select-style" id="genderDropdown">
+                                            <option id="invalidGenderSelection" value="invalid" disabled="disabled" selected="selected">Select Your Gender</option>
+                                            <option id="male" value="Male">Male</option>
+                                            <option id="female" value="Female">Female</option>
+                                            <!-- <option id="nonBinary" value="Non-Binary">Non-Binary</option> -->
+                                        </select>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Martial Status</span>
+                                        <select class="select-style" id="martialDropdown">
+                                            <option id="invalidMartialSelection" value="invalid" disabled="disabled" selected="selected">Select Martial Status</option>
+                                            <option id="Married" value="married">Married</option>
+                                            <option id="Unmarried" value="unmarried">Unmarried</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- <div class="section-item" style="visibility: hidden;">
+                                        <span class="section-item-text">x</span>
+                                    </div> -->
+                                    <span class="section-text-visible">Permanent Address</span>
+                                    <div class="section-item" id="addressSection"> 
+                                        <span class="section-item-text">Address</span>
+                                        <textarea id="address1Input"></textarea>
+                                    </div>
+                                    <!-- <div class="section-item">
+                                        <span class="section-item-text">Address Line #2:</span>
+                                        <input id="address2Input"></input>
+                                    </div> -->
+                                    <div class="section-item">
+                                        <span class="section-item-text">City:</span>
+                                        <input id="cityInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">State:</span>
+                                        <input id="stateInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Pincode:</span>
+                                        <input id="pincodeInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text" >Same Correspondence Address?</span>
+                                        <input type="checkbox" id="sameAddress"/><label for="sameAddress">Toggle</label>
+                                    </div>
+                                    <div id="corrAddresssWrapper">
+                                        <span class="section-text-visible">Correspondence Address</span>
+                                        <div class="section-item" id="corrAddressSection"> 
+                                            <span class="section-item-text">Address</span>
+                                            <textarea id="corrAddressInput" class="optionalValidation"></textarea>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">City:</span>
+                                            <input id="corrAddressCityInput" class="optionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">State:</span>
+                                            <input id="corrAddressStateInput" class="optionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Pincode:</span>
+                                            <input id="corrAddressPincodeInput" class="optionalValidation"></input>
+                                        </div>  
+                                    </div>
+                                    
+
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                        <a id="createAcc" class="reg-text" href="/apex/studentLoginPageAlt">Already have an Account? Login Here </a>
+                    </div>
+                    <div class="section-wrapper" id= "schoolDetails">
+                        <div class="section-text-container">
+                            <p class="section-text">2. SSLC/X Academic Details</p>
+                        </div>
+                        
+                        <div class="section" style="overflow-y: hidden;">
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <span class="section-text-visible">Add High School Details</span>
+                                    <div class="section-item">
+                                        <span class="section-item-text">SSLC/X Institution Name</span>
+                                        <input id="schoolNameInput"></input>
+                                    </div>
+                                    <div class="section-item ">
+                                        <span class="section-item-text">SSLC/X Marks</span>
+                                        <!-- <input id="schoolMarksInput"></input> -->
+                                        <div style="display:flex; align-items:center; justify-content: center; max-width: 20vw;">
+                                            <input id="schoolMarksInput" style = "width:4vw; margin-right:1vw;"></input>
+                                            <select class="select-style" id="schoolMarksType" style="width:10vw !important;">
+                                                <option id="cgpa" value="CGPA" selected="selected">CGPA</option>
+                                                <option id="percentage" value="Percentage">Percentage (%)</option>
+                                                <option id="total" value="Total">Total</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div style="display:flex; align-items:center; justify-content: center;">
+                                            <input id="schoolMarksInput" style = "width:2vw;"></input>
+                                            <div class="section-item toggle-bar marks-container" id="toggleBar">
+                                                <div class="toggle-item" data-type="cgpa">
+                                                    <span class="section-item-text">CGPA</span>
+                                                </div>
+                                                <div class="toggle-item" data-type="percent">
+                                                    <span class="section-item-text">%</span>
+                                                </div>
+                                                <div class="toggle-item" data-type="total">
+                                                    <span class="section-item-text">Total</span>
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">SSLC/X Passing Year</span>
+                                        <input id="schoolPassingYearInput"></input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="section-wrapper" id= "puDetails">
+                        <div class="section-text-container">
+                            <span class="section-text">3. PU Academic Details</span>
+                        </div>
+                        
+                        <div class="section">
+                        
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <span class="section-text-visible">Add Secondary School Details</span>
+                                    <div class="section-item">
+                                        <span class="section-item-text">PU Institution Name</span>
+                                        <input id="secondarySchoolNameInput"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">PU Course</span>
+                                        <input id="secondarySchoolCourse"></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">PU Marks</span>
+                                        <!-- <input id="puMarksInput"></input> -->
+                                        <div style="display:flex; align-items:center; justify-content: center; max-width: 20vw;">
+                                            <input id="puMarksInput" style = "width:4vw; margin-right:1vw;"></input>
+                                            <select class="select-style" id="puMarksType" style="width:10vw !important;">
+                                                <!-- <option id="invalidDegreeSelection" value="invalid" disabled="disabled" >Select Your Degree</option> -->
+                                                <option id="cgpa" value="CGPA" selected="selected">CGPA</option>
+                                                <option id="percentage" value="Percentage">Percentage (%)</option>
+                                                <option id="total" value="Total">Total</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">PU Passing Year</span>
+                                        <input id="puPassingYearInput"></input>
+                                    </div>
+                                    <div class="section-item" style="display:flex; justify-content: flex-start; align-items:center;">
+                                        <span class="section-item-text" style="font-weight:bold; color:#EF233C">Include Diploma Details?</span>
+                                        <!-- <div style="display:flex; justify-content: flex-start;">
+                                            <input type="checkbox" id="includeDiploma" class="custom-checkbox" />
+                                        </div> -->
+                                        <div style="display:flex; justify-content: flex-start; margin-left:3.1vw;">
+                                            <input type="checkbox" id="includeDiploma" /><label for="includeDiploma">Toggle</label>
+                                        </div>
+                                    </div>
+                        
+                                    <div id="diplomaDetails" style="display: none; margin-top: 1vh;">
+                                        <div class="section-text-container">
+                                            <span class="section-sub-text" style="display:none;">3a. Diploma Academic Details</span>
+                                        </div>
+                                        <span class="section-text-visible">Add Diploma Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Diploma College Name</span>
+                                            <input id="diplomaCollegeNameInput"></input>
+                                        </div>  
+                                        <div class="section-item">
+                                            <span class="section-item-text">Diploma Marks</span>
+                                            <!-- <input id="diplomaMarksInput"></input> -->
+                                            <div style="display:flex; align-items:center; justify-content: center; max-width: 20vw;">
+                                                <input id="diplomaMarksInput" style = "width:4vw; margin-right:1vw;"></input>
+                                                <select class="select-style" id="diplomaMarksType" style="width:10vw !important;">
+                                                    <!-- <option id="invalidDegreeSelection" value="invalid" disabled="disabled" >Select Your Degree</option> -->
+                                                    <option id="cgpa" value="CGPA" selected="selected">CGPA</option>
+                                                    <option id="percentage" value="Percentage">Percentage (%)</option>
+                                                    <option id="total" value="Total">Total</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Diploma Passing Year</span>
+                                            <input id="diplomaPassingYearInput"></input>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-wrapper" id= "degDetails">
+                        <div class="section-text-container">
+                            <span class="section-text">4. Degree Academic Details</span>
+                        </div>
+                        
+                        <div class="section" style="overflow-y: hidden;">
+                        
+                            <div class="section-items">
+                                <div class="section-left" id="degreeInputsContainer">
+                                    <!-- <div class="section-item">
+                                        <span class="section-item-text">Degree College Name</span>
+                                        <input id="degreeCollegeNameInput"></input>
+                                    </div> -->
+                                    <span class="section-text-visible">Add Pursuing/Current Degree Details</span>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Degree Type:</span>
+                                        <select class="select-style" id="degreeDropdown">
+                                            <option id="invalidDegreeSelection" value="invalid" disabled="disabled" selected="selected">Select Your Degree</option>
+                                            <option id="bsc" value="Bachelor of Science (B.Sc.)">(B.Sc.) Bachelor of Science</option>
+                                            <option id="bca" value="Bachelor of Computer Applications (BCA)">(BCA) Bachelor of Computer Applications</option>
+                                            <option id="be" value="Bachelor of Engineering (B.E.)">(B.E.) Bachelor of Engineering</option>
+                                            <option id="btech" value="Bachelor of Technology (B.Tech.)">(B.Tech.) Bachelor of Technology </option>
+                                            <option id="mba" value="Master of Business Administration (MBA)">(MBA) Master of Business Administration </option>
+                                            <option id="mca" value="Master of Computer Applications (MCA)">(MCA) Master of Computer Applications </option>
+                                            <option id="msc" value="Master of Science (M.Sc.)">(M.Sc.) Master of Science </option>
+                                            <option id="mtech" value="Master of Technology (M.Tech.)">(M.Tech.) Master of Technology</option>
+                                        </select>
+                                    </div>
+                                        <div class="section-item hidden" id="branchDropdownContainer">
+                                        <span class="section-item-text">Branch:</span>
+                                        <select class="select-style" id="branchDropdown">
+                                            <option id="invalid" value="invalid" disabled="disabled" selected="selected">Select Your Branch</option>
+                                            <option id="cse" value="Computer Science and Engineering (CSE)">(CSE) Computer Science and Engineering</option>
+                                            <option id="ise" value="Information Science and Engineering (ISE)">(ISE) Information Science and Engineering</option>
+                                            <option id="ece" value="Electronics and Communication Engineering (ECE)">(ECE) Electronics and Communication Engineering</option>
+                                            <option id="aiml" value="Artificial Intelligence and Machine Learning (AI/ML)">(AI/ML) Artificial Intelligence and Machine Learning</option>
+                                        </select>
+                                        <input id="branchInput" ></input>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Degree Marks</span>
+                                        <!-- <input id="degreeMarksInput"></input> -->
+                                        <div style="display:flex; align-items:center; justify-content: center; max-width: 20vw;">
+                                            <input id="degreeMarksInput" style = "width:4vw; margin-right:1vw;"></input>
+                                            <select class="select-style" id="degreeMarksType" style="width:10vw !important;">
+                                                <!-- <option id="invalidDegreeSelection" value="invalid" disabled="disabled" >Select Your Degree</option> -->
+                                                <option id="cgpa" value="CGPA" selected="selected">CGPA</option>
+                                                <option id="percentage" value="Percentage">Percentage (%)</option>
+                                                <option id="total" value="Total">Total</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text">Degree Passing Year</span>
+                                        <input id="degreePassingYearInput"></input>
+                                    </div>
+                                    <!-- <div>
+                                        <div style="display:flex; flex-direction: column;">
+                                            <span class="section-text-visible">Upload Your Passport Size Photo</span>
+                                            <span style="margin-left:2vh; font-size:1vw;">Size Limit 10MB</span>
+                                        </div>
+                                        <div class="section-item">
+                                            <input id="userProfilePhotoInput" type="file" accept="image/*" class="image-input-box"></input>
+                                        </div>
+                                    </div> -->
+                                    
+                                </div>
+                            </div>
+                        
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="section-wrapper" id="internDetails">
+                        <div class="section-text-container">
+                            <p class="section-text">5. Internship Details</p>
+                        </div>
+                    
+                        <div class="section" style="overflow-y: scroll;">
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <div class="section-1">
+                                        <span class="section-text-visible">Add Internship Details (If any.)</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternNameOrgInput1" class="internOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternLocInput1" class="internOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternTopicStarDuration1" class="internOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternStartDuration1" type="date" class="internOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternEndDuration1" type="date" class="internOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item addAnotherInternDetails">
+                                            <span class="section-item-text">Add Another Internship Details</span>
+                                            <input type="checkbox" id="addNewInternDetailsCheckbox1" value="addNewInternDetails" />
+                                            <label for="addNewInternDetailsCheckbox1" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="section-2" style="display: none;">
+                                        <span class="section-text-visible">Add 2<sup>nd</sup> Internship Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternNameOrgInput2" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternLocInput2" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternTopicStarDuration2" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternStartDuration2" type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternEndDuration2"  type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item addAnotherInternDetails">
+                                            <span class="section-item-text">Add Another Internship Details</span>
+                                            <input type="checkbox" id="addNewInternDetailsCheckbox2" value="addNewInternDetails" />
+                                            <label for="addNewInternDetailsCheckbox2" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="section-3" style="display: none;">
+                                        <span class="section-text-visible">Add 3<sup>rd</sup> Internship Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternNameOrgInput3" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternLocInput3" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternTopicStarDuration3" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternStartDuration3"  type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternEndDuration3"  type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Add Another Internship Details</span>
+                                            <input type="checkbox" id="addNewInternDetailsCheckbox3" value="addNewInternDetails" />
+                                            <label for="addNewInternDetailsCheckbox3" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="section-4" style="display: none;">
+                                        <span class="section-text-visible">Add 4<sup>th</sup> Internship Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternNameOrgInput4" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternLocInput4" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternTopicStarDuration4" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternStartDuration4" type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternEndDuration4" type="date" class="internMandatoryValidation"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>
+                    <div class="section-wrapper" id="certiDetails">
+                        <div class="section-text-container">
+                            <p class="section-text">5. Certification Details</p>
+                        </div>
+                    
+                        <div class="section" style="overflow-y: scroll;">
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <div class="certi-section-1">
+                                        <span class="section-text-visible">Add Certification Details (If any.)</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Title</span>
+                                            <input id="certiNameOrgInput1" class="certiOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location/Title</span>
+                                            <input id="certiLocInput1" class="certiOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="certiTopicStarDuration1" class="certiOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="certiStartDuration1" type="date" class="certiOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="certiEndDuration1" type="date" class="certiOptionalValidation"></input>
+                                        </div>
+                                        <div class="section-item addAnothercertiDetails">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewcertiDetailsCheckbox1" value="addNewcertiDetails" />
+                                            <label for="addNewcertiDetailsCheckbox1" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="certi-section-2" style="display: none;">
+                                        <span class="section-text-visible">Add 2<sup>nd</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Title</span>
+                                            <input id="certiNameOrgInput2" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="certiLocInput2" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="certiTopicStarDuration2" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="certiStartDuration2" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="certiEndDuration2" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item addAnothercertiDetails">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewcertiDetailsCheckbox2" value="addNewcertiDetails" />
+                                            <label for="addNewcertiDetailsCheckbox2" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="certi-section-3" style="display: none;">
+                                        <span class="section-text-visible">Add 3<sup>rd</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Title</span>
+                                            <input id="certiNameOrgInput3" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="certiLocInput3" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="certiTopicStarDuration3" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="certiStartDuration3" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="certiEndDuration3" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewcertiDetailsCheckbox3" value="addNewcertiDetails" />
+                                            <label for="addNewcertiDetailsCheckbox3" class="toggle-label">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div class="certi-section-4" style="display: none;">
+                                        <span class="section-text-visible">Add 4<sup>th</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Title</span>
+                                            <input id="certiNameOrgInput4" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="certiLocInput4" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="certiTopicStarDuration4" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="certiStartDuration4" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="certiEndDuration4" type="date" class="certiMandatoryValidation"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="section-wrapper" id="certiDetails">
+                        <div class="section-text-container">
+                            <p class="section-text">6. Certification Details</p>
+                        </div>
+                    
+                        <div class="section" style="overflow-y: scroll;">
+                            <div class="section-items">
+                                <div class="section-left">
+                                    <div class="section-item toggle-bar" id="toggleBar">
+                                        <div class="toggle-item" data-type="internship">
+                                            <span class="section-item-text">Internship</span>
+                                        </div>
+                                        <div class="toggle-item" data-type="project">
+                                            <span class="section-item-text">Project</span>
+                                        </div>
+                                        <div class="toggle-item" data-type="certificate">
+                                            <span class="section-item-text">Certification</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="section-text-visible">Add Certification Details (If any.)</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternCertiNameOrgInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternCertiLocInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternCertiTopicStarDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternCertiStartDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternCertiEndDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewDetailsCheckbox" value="addNewDetails" /><label for="addNewDetailsCheckbox">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="section-text-visible">Add 2<sup>nd</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternCertiNameOrgInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternCertiLocInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternCertiTopicStarDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternCertiStartDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternCertiEndDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewDetailsCheckbox" value="addNewDetails" /><label for="addNewDetailsCheckbox">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="section-text-visible">Add 3<sup>rd</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternCertiNameOrgInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternCertiLocInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternCertiTopicStarDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternCertiStartDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternCertiEndDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Add Another Certification Details</span>
+                                            <input type="checkbox" id="addNewDetailsCheckbox" value="addNewDetails" /><label for="addNewDetailsCheckbox">Toggle</label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="section-text-visible">Add 4<sup>th</sup> Certification Details</span>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Institution/Organization</span>
+                                            <input id="InternCertiNameOrgInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Location</span>
+                                            <input id="InternCertiLocInput"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Area/Topic Covered</span>
+                                            <input id="InternCertiTopicStarDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">Start Duration</span>
+                                            <input id="InternCertiStartDuration"></input>
+                                        </div>
+                                        <div class="section-item">
+                                            <span class="section-item-text">End Duration</span>
+                                            <input id="InternCertiEndDuration"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button">Next</button>
+                        </div>
+                    </div>                      -->
+                    
+
+                    <div class="section-wrapper" id="previewDetails" style="display:none; width: 80vw; height: 70vh;">
+                        <div class="section-text-container">
+                            <span class="section-text">6. Preview Your Details</span>
+                        </div>
+                        <div id="detailsSummary" class="details-summary"></div>
+                    
+                        <div class="preview-section-main" style="overflow-y: hidden">
+                        </div>
+                        <div>
+                            <!-- <input type="checkbox" id="includeDiploma" class="custom-checkbox" />
+                            <input type="checkbox" id="userConfirmationCheckbox" class="custom-checkbox"/> -->
+                            <!-- <span>I Confirm that all the details I have entered are correct as per my knowledge</span> -->
+                        </div>
+                        <div class="section-buttons">
+                            <button type="button" class="prev-button">Previous</button>
+                            <button type="button" class="next-button" id="submitButton" onclick="validateAndCreateStudent()">Submit</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section-wrapper" id="successfulSection">
+                        <div class="section" style="overflow-y:hidden;">
+                            <div class="section-items">
+                                <div class="success-section">
+                                    <div class="section-item">
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 2048 2048"><path fill="green" d="M1024 0q141 0 272 36t244 104t207 160t161 207t103 245t37 272q0 141-36 272t-104 244t-160 207t-207 161t-245 103t-272 37q-141 0-272-36t-244-104t-207-160t-161-207t-103-245t-37-272q0-141 36-272t104-244t160-207t207-161T752 37t272-37zm603 685l-136-136l-659 659l-275-275l-136 136l411 411l795-795z"/></svg> -->
+                                        <iframe style="outline:none; border:none;" src="https://lottie.host/?file=23e143eb-ddcf-4f90-9e78-3a2c47e57e6a/ueqFzJupr2.json"></iframe>
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text" style="color:#008000; margin-right:0; font-weight:400; font-size:1.5vw;">Details Successfully Stored</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-buttons">
+                            <button type="button" class="submit-button" onclick="routeToStudentLogin()">Finish</button>
+                        </div>
+                    </div>
+                    <div class="section-wrapper" id="failSection">
+                        <div class="section" style="overflow-y:hidden;">
+                            <div class="section-items">
+                                <div class="success-section">
+                                    <div class="section-item">
+                                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 2048 2048"><path fill="green" d="M1024 0q141 0 272 36t244 104t207 160t161 207t103 245t37 272q0 141-36 272t-104 244t-160 207t-207 161t-245 103t-272 37q-141 0-272-36t-244-104t-207-160t-161-207t-103-245t-37-272q0-141 36-272t104-244t160-207t207-161T752 37t272-37zm603 685l-136-136l-659 659l-275-275l-136 136l411 411l795-795z"/></svg> -->
+                                        <iframe style="border:none; outline:none" src="https://lottie.host/?file=6c7fe4bc-b7f3-4b6c-88ba-70c4f6e504b4/vsOF6MZHZd.json"></iframe>
+                                        <!-- <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> 
+                                        <lottie-player src="https://lottie.host/1521adaf-50d7-4b7e-b108-3d1c14fa48c9/GH1hTRgtm2.json" background="transparent" speed="1" style="width: 300px; height: 300px;" autoplay="autoplay"></lottie-player> -->
+                                    </div>
+                                    <div class="section-item">
+                                        <span class="section-item-text" style="color: red; margin-right:0; font-weight:400; font-size:1.5vw;">Unable to Store Data</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-buttons">
+                            <button id="goBackButton" type="next-button" class="go-back-button">Go Back</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div>
+            <img class="novigo-icon-big" src="{!URLFOR($Resource.novigo_logo_blue)}" alt="Novigo Icon"/>
+        </div>
+    </body>
+    <script>
+    
+        let sections = [];
+        sections = document.querySelectorAll(".section-wrapper");
+        let currentSectionIndex = 0;
+        const collegeListFromDataBase = [];
+        const CollegeIDAndName = {};
+        let usnEmailCheckSuccessful = false;
+        let emailValidation = false;
+        let sameAddressTrue = false;
+        
+        const sectionIds = Array.from(sections).map((section) => section.id);
+        const sectionValidationStatus = new Array(sections.length).fill(false);
+        var currentSection = sections[currentSectionIndex];
+        var currentSectionId = sectionIds[currentSectionIndex];
+        //console.log("Current Section ID: "+currentSectionId);
+
+
+        //MARKS TYPE INPUT CHECK js code for selection of exp type, INTERN/PROJECT/CERTI
+        // const toggleItems = document.querySelectorAll('.toggle-item');
+
+        // toggleItems.forEach((item) => {
+        //     item.addEventListener('click', () => {
+
+        //         toggleItems.forEach((item) => {
+        //             item.classList.remove('active');
+        //         });
+
+        //         item.classList.add('active');
+
+        //     });
+        // });
+        // toggleItems[0].click();
+
+        // const schoolMarksInput = document.getElementById("schoolMarksInput");
+        // const schoolMarksType = document.getElementById("schoolMarksType");
+
+        // schoolMarksType.addEventListener("change", function () {
+        //     //console.log("Changing Marks Input Type");
+        //     const selectedOption = schoolMarksType.options[schoolMarksType.selectedIndex].value;
+            
+
+        //     schoolMarksInput.classList.remove("input-error");
+
+        //     if (selectedOption === "CGPA") {
+        //         if (!schoolMarksInput.value.match(/^(?:[0-9]{1,3}(?:\.[0-9]{1,5})?)?$/)) {
+        //             schoolMarksInput.classList.add("input-warning");
+        //         }
+        //     } else if (selectedOption === "Percentage") {
+        //         // Validate for Percentage format
+        //         if (!schoolMarksInput.value.match(/^(?:100|\d{1,3})$/)) {
+        //             schoolMarksInput.classList.add("input-warning");
+        //         }
+        //     } else if (selectedOption === "Total") {
+        //         // Validate for Total format
+        //         if (!schoolMarksInput.value.match(/^(?:625|\d{1,3})$/)) {
+        //             schoolMarksInput.classList.add("input-warning");
+        //         }
+        //     }
+        // });
+
+        /**
+         * THIS FUNCTION NEEDS TO BE IMPROVED, IT IS VERY BASIC AND POINTLESS AS MARKS TYPE IS NOT SAVED IN BACKEND.
+         * This function sets up an event listener for marks <input> elements and performs input validation
+         * based on the selected option from a <select> (MarksType [CGPA/%/Total]) element. It enforces restrictions on the input using santizedValue and Slice();
+         */
+        // updated function, has some problems so using the previous one 
+        // function handleMarksInput(inputElement, selectElement) {
+        //     inputElement.addEventListener("input", function () {
+        //         inputElement.classList.remove("input-warning");
+        //         const selectedOption = selectElement.value;
+        //         const inputValue = inputElement.value;
+
+        //         if (selectedOption === "CGPA") {
+        //             const sanitizedValue = inputValue.replace(/[^0-9.]/g, "");
+        //             const decimalIncluded = sanitizedValue.includes(".");
+        //             const maxLength = decimalIncluded ? 4 : 2;
+        //             if (
+        //                 (decimalIncluded && sanitizedValue.length <= maxLength && sanitizedValue.startsWith("1") && 
+        //                 (sanitizedValue.charAt(1) === "." || sanitizedValue.slice(1) === "0")) ||
+        //                 (!decimalIncluded && sanitizedValue.length === 1 && (sanitizedValue === "0" || sanitizedValue === "1"))
+        //             ) {
+        //                 inputElement.value = sanitizedValue;
+        //             } else if()
+        //             else {
+        //                 //console.log("Wrong Marks Value Entered.");
+        //                 inputElement.classList.add("input-warning");
+        //                 displayWarningMessage("Please Enter Proper CGPA value (max 10.0)");
+        //                 inputElement.value = sanitizedValue.slice(0, maxLength);
+        //             }
+
+
+        //         } else if (selectedOption === "Percentage") {
+        //             const sanitizedValue = inputValue.replace(/[^0-9.]/g, "");
+        //             const percentageValue = parseInt(sanitizedValue);
+        //             if ((percentageValue >= 0 && percentageValue <= 100) || sanitizedValue === "") {
+        //                 if (sanitizedValue.length <= 3) {
+        //                     inputElement.value = sanitizedValue.slice(0,3);
+        //                 } else {
+        //                     inputElement.classList.add("input-warning");
+        //                     displayWarningMessage("Please Enter Proper Percentage value out of 100%");
+        //                     inputElement.value = sanitizedValue.slice(0, -1);
+        //                 }
+        //             } else {
+        //                 inputElement.classList.add("input-warning");
+        //                 displayWarningMessage("Please Enter Proper Percentage value out of 100%");
+        //                 sanitizedValue.slice(0, -1);
+        //             }
+        //         } else if (selectedOption === "Total") {
+        //             const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
+        //             const totalValue = parseInt(sanitizedValue);
+        //             if ((totalValue >= 0 && totalValue <= 625) || sanitizedValue === "") {
+        //                 if (sanitizedValue.length <= 3) {
+        //                     inputElement.value = sanitizedValue;
+        //                 } else {
+        //                     inputElement.classList.add("input-warning");
+        //                     displayWarningMessage("Please Enter Proper Total value from 0-625");
+        //                     inputElement.value = sanitizedValue.slice(0, 3);
+        //                 }
+        //             } else {
+        //                 inputElement.classList.add("input-warning");
+        //                 displayWarningMessage("Please Enter Proper Total value from 0-625");
+        //                 sanitizedValue.slice(0, -1);
+        //             }
+        //         }
+        //     });
+        // }
+
+        function handleMarksInput(inputElement, selectElement) {
+            inputElement.addEventListener("input", function () {
+                inputElement.classList.remove("input-warning");
+                const selectedOption = selectElement.value;
+                const inputValue = inputElement.value;
+
+                if (selectedOption === "CGPA") {
+                    const sanitizedValue = inputValue.replace(/[^0-9.]/g, "");
+                    if (sanitizedValue.length <= 4) {
+                        inputElement.value = sanitizedValue;
+                    } else {
+                        inputElement.classList.add("input-warning");
+                        displayWarningMessage("Please Enter Proper CGPA value out of 10.0");
+                        inputElement.value = sanitizedValue.slice(0, 4);
+                    }
+                } else if (selectedOption === "Percentage") {
+                    const sanitizedValue = inputValue.replace(/[^0-9.]/g, "");
+                    if (sanitizedValue.length <= 5) {
+                        inputElement.value = sanitizedValue;
+                    } else {
+                        inputElement.classList.add("input-warning");
+                        displayWarningMessage("Please Enter Proper Percentage value out of 100%");
+                        inputElement.value = sanitizedValue.slice(0, 5);
+                    }
+                } else if (selectedOption === "Total") {
+                    const sanitizedValue = inputValue.replace(/[^0-9]/g, "");
+                    if (sanitizedValue.length <= 3) {
+                        inputElement.value = sanitizedValue;
+                    } else {
+                        inputElement.classList.add("input-warning");
+                        displayWarningMessage("Please Enter Proper Total value from 0-625");
+                        inputElement.value = sanitizedValue.slice(0, 3);
+                    }
+                }
+            });
+        }
+
+
+        let checkpoint = null;
+        let userProfilePhotoVar = null;
+        const outputFormat = 'jpg';
+        
+        function convertImageToBase64(fileInput) {
+            
+            
+            const file = fileInput.files[0];
+            const maxSizeInBytes = 10000 * 1024; // 15MB
+
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    displayErrorMessage("Please upload an image file.");
+                    fileInput.value = '';
+                    return;
+                }
+                if (file.size > maxSizeInBytes) {
+                    displayErrorMessage("Please upload an image smaller than 10MB.");
+                    fileInput.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64String = event.target.result;
+                    userProfilePhotoVar = base64String;
+                    //console.log("Base64 Image:", base64String);
+
+                    displayWarningMessage('Compressing Image: May Take Some Time.');
+                    resizeAndCompressFile(base64String, fileInput);
+                
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            
+        }
+
+        function resizeAndCompressFile(base64Data, fileInput) {
+            showLoader();
+            const targetImageSize = 80 * 1024;
+            const maxQualityModifier = 20;
+            const maxResizeModifier = 10;
+
+            let varQualityModifier = 100;
+            let varResizeModifier = 1;
+
+            try {
+                const img = new Image();
+                img.onload = function() {
+                    let compressedImageData = '';
+
+                    
+                    while (varQualityModifier > maxQualityModifier || varResizeModifier < maxResizeModifier) {
+                        
+                        const resizeCanvas = document.createElement('canvas');
+                        resizeCanvas.width = Math.round(img.width / varResizeModifier);
+                        resizeCanvas.height = Math.round(img.height / varResizeModifier);
+
+                        const ctx = resizeCanvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, resizeCanvas.width, resizeCanvas.height);
+
+                        const mimeType = (outputFormat === 'png') ? 'image/png' : 'image/jpeg';
+                        compressedImageData = resizeCanvas.toDataURL(mimeType, varQualityModifier / 100);
+
+                        if (compressedImageData.length <= targetImageSize) {
+                            break;
+                        }
+
+                        if (varQualityModifier > maxQualityModifier) {
+                            varQualityModifier -= 10;
+                        }
+                        if (varResizeModifier < maxResizeModifier) {
+                            if(varResizeModifier==1){varResizeModifier += 1;}
+                            else{varResizeModifier += 2;}
+                            
+                        }
+                    }
+                    
+
+                    if (compressedImageData.length > targetImageSize) {
+                        displayErrorMessage("Image Size too large. Please reduce the image size");
+                        fileInput.value = '';
+                        //console.log(" Resize Modifer at " + varResizeModifier );
+                        //console.log(" Quality Modifer at " + varQualityModifier );
+                    } else {
+                        
+                        //console.log("Compressed Image Data:", compressedImageData);
+
+                        //console.log(" Resize Modifer at " + varResizeModifier );
+                        //console.log(" Quality Modifer at " + varQualityModifier );
+
+                        userProfilePhotoVar = compressedImageData;
+                        const warningCustom = document.getElementById("warningCustom");
+                        warningCustom.style.display = "none";
+                        displaySuccessMessage('Image Uploaded Successfully');
+                    }
+                    hideLoader();
+                };
+                img.src = base64Data;
+            } catch (error) {
+                displayErrorMessage("FATAL Failure");
+                console.error(error);
+            }
+            
+        }
+
+        // const userProfilePhotoInput = document.getElementById('userProfilePhotoInput');
+
+        // userProfilePhotoInput.addEventListener('input', function() {
+        //     //console.log("Change In User Profile Photo");
+        //     convertImageToBase64(this);
+        // });
+
+
+
+        //WE TRIED SO HARD AND GOT SO FAR, IN THE END IT DOESN'T EVEN MATTER!
+        //TRYING MULTI-THREADING/WORKER!
+        // let userProfilePhotoVar = null;
+        // const outputFormat = 'jpg';
+
+        // const workerCode = `
+        //     self.addEventListener('message', function(e) {
+        //         const { base64String } = e.data;
+        //         resizeAndCompressFile(base64String);
+        //     });
+
+        //     function resizeAndCompressFile(base64Data) {
+        //         const targetImageSize = 80 * 1024;
+        //         const maxQualityModifier = 20;
+        //         const maxResizeModifier = 10;
+
+        //         let varQualityModifier = 100;
+        //         let varResizeModifier = 1;
+
+        //         try {
+        //             const img = new Image();
+        //             img.onload = function() {
+        //                 let compressedImageData = '';
+
+                        
+        //                 while (varQualityModifier > maxQualityModifier || varResizeModifier < maxResizeModifier) {
+                            
+        //                     const resizeCanvas = document.createElement('canvas');
+        //                     resizeCanvas.width = Math.round(img.width / varResizeModifier);
+        //                     resizeCanvas.height = Math.round(img.height / varResizeModifier);
+
+        //                     const ctx = resizeCanvas.getContext('2d');
+        //                     ctx.drawImage(img, 0, 0, resizeCanvas.width, resizeCanvas.height);
+
+        //                     const mimeType = (outputFormat === 'png') ? 'image/png' : 'image/jpeg';
+        //                     compressedImageData = resizeCanvas.toDataURL(mimeType, varQualityModifier / 100);
+
+        //                     if (compressedImageData.length <= targetImageSize) {
+        //                         break;
+        //                     }
+
+        //                     if (varQualityModifier > maxQualityModifier) {
+        //                         varQualityModifier -= 10;
+        //                     }
+        //                     if (varResizeModifier < maxResizeModifier) {
+        //                         if(varResizeModifier==1){varResizeModifier += 1;}
+        //                         else{varResizeModifier += 2;}
+                                
+        //                     }
+        //                 }
+                        
+
+        //                 if (compressedImageData.length > targetImageSize) {
+        //                     displayErrorMessage("Image Size too large. Please reduce the image size");
+        //                     //console.log(" Resize Modifer at " + varResizeModifier );
+        //                     //console.log(" Quality Modifer at " + varQualityModifier );
+        //                 } else {
+                            
+        //                     //console.log("Compressed Image Data:", compressedImageData);
+
+        //                     //console.log(" Resize Modifer at " + varResizeModifier );
+        //                     //console.log(" Quality Modifer at " + varQualityModifier );
+
+        //                     userProfilePhotoVar = compressedImageData;
+        //                 }
+        //             };
+        //             img.src = base64Data;
+        //         } catch (error) {
+        //             //console.log(error);
+        //             // displayErrorMessage(error);
+        //         }
+                
+        //     }
+
+        //     const userProfilePhotoInput = document.getElementById('userProfilePhotoInput');
+
+        //     userProfilePhotoInput.addEventListener('input', function() {
+        //         //console.log("Change In User Profile Photo");
+        //         convertImageToBase64(this);
+        //     });
+        // `;
+
+        // const blob = new Blob([workerCode], { type: 'application/javascript' });
+        // const workerURL = URL.createObjectURL(blob);
+        // const resizeWorker = new Worker(workerURL);
+
+        // const userProfilePhotoInput = document.getElementById('userProfilePhotoInput');
+
+        // userProfilePhotoInput.addEventListener('input', function() {
+        //     //console.log("Change In User Profile Photo");
+        //     convertImageToBase64(this);
+        // });
+
+        // function convertImageToBase64(fileInput) {
+        //     const file = fileInput.files[0];
+        //     const maxSizeInBytes = 10000 * 1024; // 10MB
+
+        //     if (file) {
+        //         if (!file.type.startsWith('image/')) {
+        //             displayErrorMessage("Please upload an image file.");
+        //             fileInput.value = '';
+        //             return;
+        //         }
+        //         if (file.size > maxSizeInBytes) {
+        //             displayErrorMessage("Please upload an image smaller than 10MB.");
+        //             fileInput.value = '';
+        //             return;
+        //         }
+
+        //         const reader = new FileReader();
+        //         reader.onload = function(event) {
+        //             const base64String = event.target.result;
+        //             //console.log("Base64 Image:", base64String);
+        //             showLoader();
+        //             // Sending data to the worker
+        //             resizeWorker.postMessage({ base64String }, [file]);
+        //         };
+        //         reader.readAsDataURL(file);
+        //     }
+        // }
+
+        // resizeWorker.onmessage = function(e) {
+        //     const { compressedImageData, varResizeModifier, varQualityModifier } = e.data;
+        //     if (compressedImageData.length > 0) {
+        //         //console.log("Compressed Image Data:", compressedImageData);
+        //         //console.log("Resize Modifier at " + varResizeModifier);
+        //         //console.log("Quality Modifier at " + varQualityModifier);
+        //         userProfilePhotoVar = compressedImageData;
+        //     } else {
+        //         displayErrorMessage("Image Size too large. Please reduce the image size");
+        //         //console.log("Resize Modifier at " + varResizeModifier);
+        //         //console.log("Quality Modifier at " + varQualityModifier);
+        //     }
+        //     hideLoader();
+        // };
+
+
+        // Get input elements and select options for different types of marks input and marks type
+        const schoolMarksInput = document.getElementById("schoolMarksInput");
+        const schoolMarksType = document.getElementById("schoolMarksType");
+        const puMarksInput = document.getElementById("puMarksInput");
+        const puMarksType = document.getElementById("puMarksType");
+        const diplomaMarksInput = document.getElementById("diplomaMarksInput");
+        const diplomaMarksType = document.getElementById("diplomaMarksType");
+        const degreeMarksInput = document.getElementById("degreeMarksInput");
+        const degreeMarksType = document.getElementById("degreeMarksType");
+        //Call the function that validates the marks based on its type
+        handleMarksInput(schoolMarksInput, schoolMarksType);
+        handleMarksInput(puMarksInput, puMarksType);
+        handleMarksInput(diplomaMarksInput, diplomaMarksType);
+        handleMarksInput(degreeMarksInput, degreeMarksType);
+        
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const internSections = document.querySelectorAll('.section-2, .section-3');
+
+
+        const addressSection = document.getElementById("addressSection");
+        const usnSection = document.getElementById("usnSection");
+        const corrAddressSection = document.getElementById("corrAddressSection");
+
+        if (addressSection) {
+            addressSection.addEventListener("click", () => {
+                addressSection.scrollIntoView({ behavior: "smooth" });
+            });
+        }
+        if (usnSection) {
+            usnSection.addEventListener("click", () => {
+                usnSection.scrollIntoView({ behavior: "smooth" });
+            });
+        }
+        if (corrAddressSection) {
+            corrAddressSection.addEventListener("click", () => {
+                corrAddressSection.scrollIntoView({ behavior: "smooth" });
+            });
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+
+            //console.log("Test Phase | ver 1.25");
+            const successfulSection = document.getElementById("successfulSection");
+            const degDetailsSection = document.getElementById("degDetails");
+            const prevDetailsSection = document.getElementById("previewDetails");
+            const failSection = document.getElementById("failSection");
+            const nextButtons = document.querySelectorAll(".next-button");
+            const prevButtons = document.querySelectorAll(".prev-button");
+            const goBackButton = document.getElementById("goBackButton");
+            const branchTypeId = document.getElementById('branchDropdown').id;
+
+            function addInputValidation(inputField, maxLength, allowDecimal, validationFunction, checkId) {
+                const warningCustom = document.getElementById('warningCustom');
+                const phoneContainer = document.getElementById('phoneContainer');
+                
+                
+                if (!inputField) return;
+
+                inputField.addEventListener('input', () => {
+                    inputField.classList.remove("input-warning");
+                    let value = inputField.value;
+                    let hasWarning = false;
+
+                    if (maxLength && value.length > maxLength) {
+                        value = value.slice(0, maxLength);
+                    }
+
+                    if (validationFunction) {
+                        if (!validationFunction(value)) {
+                            //console.log("Denying Input");
+                            value = value.slice(0, -1);
+                            inputField.value = value;
+                            hasWarning = true;
+                        }
+                    }
+
+                    if (hasWarning) {
+                        displayWarningMessage("Please Enter in Correct Format");
+                        inputField.classList.add("input-warning");
+                    } else {
+                        warningCustom.style.display = "none";
+                        inputField.classList.remove("input-warning");
+                    }
+
+                    inputField.value = value;
+
+                    if (inputField.id === 'phoneInput') {
+                        // PhoneInput specific validation
+                        if (maxLength && value.length > maxLength) {
+                            value = value.slice(0, maxLength);
+                        }
+
+                        if (!/^\d*\.?\d*$/.test(value)) {
+                            value = value.replace(/[^\d.]/g, '');
+                            hasWarning = true;
+                        }
+
+                        if (!allowDecimal && value.includes('.')) {
+                            value = value.split('.')[0];
+                            hasWarning = true;
+                        }
+
+                        if (hasWarning) {
+                            displayWarningMessage("Please Enter in Correct Format");
+                            phoneContainer.classList.add("input-warning");
+                        } else {
+                            warningCustom.style.display = "none";
+                            phoneContainer.classList.remove("input-warning");
+                        }
+                    }
+
+                    inputField.value = value;
+                });
+            }
+
+            function isNumber(value) {
+                //console.log("isNumber");
+                return /^\d*\.?\d*$/.test(value);
+            }
+
+            function isText(value) {
+                //console.log("isText");
+                return /^[a-zA-Z'\s]*$/.test(value);
+            }
+
+            function isFreeText(value) {
+                //console.log("isFreeText");
+                return /^[a-zA-Z !\"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]*$/.test(value);
+            }
+
+            function isUsn(value) {
+                //console.log("isUsn");
+                return /^[a-zA-Z0-9]+$/.test(value);
+            }
+            const allFields = [
+                { id: 'phoneInput', maxLength: 10, allowDecimal: false, validationFunction: isNumber },
+                { id: 'altPhoneInput', maxLength: 10, allowDecimal: false, validationFunction: isNumber },
+                { id: 'pincodeInput', maxLength: 6, allowDecimal: false, validationFunction: isNumber },
+                { id: 'corrAddressPincodeInput', maxLength: 6, allowDecimal: false, validationFunction: isNumber },
+                // { id: 'schoolMarksInput', maxLength: 3, allowDecimal: true, validationFunction: isNumber, checkId: 'schoolMarksType'},
+                // { id: 'puMarksInput', maxLength: 3, allowDecimal: true, validationFunction: isNumber, checkId: 'puMarksInput'},
+                // { id: 'degreeMarksInput', maxLength: 3, allowDecimal: true, validationFunction: isNumber, checkId: 'degreeMarksInput'},
+                // { id: 'diplomaMarksInput', maxLength: 3, allowDecimal: true, validationFunction: isNumber, checkId: 'diplomaMarksInput' },
+                { id: 'schoolPassingYearInput', maxLength: 4, allowDecimal: false, validationFunction: isNumber },
+                { id: 'puPassingYearInput', maxLength: 4, allowDecimal: false, validationFunction: isNumber },
+                { id: 'degreePassingYearInput', maxLength: 4, allowDecimal: false, validationFunction: isNumber },
+                { id: 'diplomaPassingYearInput', maxLength: 4, allowDecimal: false, validationFunction: isNumber },
+                { id: 'usnInput', maxLength: 10, allowDecimal: false, validationFunction: isUsn },
+                { id: 'cityInput', maxLength: 30, allowDecimal: false, validationFunction: isText },
+                { id: 'stateInput', maxLength: 30, allowDecimal: false, validationFunction: isText },
+                { id: 'nameInput', maxLength: 50, allowDecimal: false, validationFunction: isText },
+                { id: 'schoolNameInput', maxLength: 50, allowDecimal: true, validationFunction: isFreeText },
+                { id: 'secondarySchoolNameInput', maxLength: 50, allowDecimal: true, validationFunction: isFreeText },
+                { id: 'diplomaCollegeNameInput', maxLength: 50, allowDecimal: true, validationFunction: isFreeText },
+            ];
+
+            allFields.forEach((field) => {
+                const inputField = document.getElementById(field.id);
+                addInputValidation(inputField, field.maxLength, field.allowDecimal, field.validationFunction, field.checkId);
+            });
+
+
+            getCollegeNames();
+
+            const includeDiplomaCheckbox = document.getElementById("includeDiploma");
+            const diplomaDetailsSection = document.getElementById("diplomaDetails");
+
+            includeDiplomaCheckbox.addEventListener("change", () => {
+                diplomaDetailsSection.style.display = includeDiplomaCheckbox.checked ? "block" : "none";
+            });
+
+            let clipWidth = 85;
+            const progressBar = document.querySelector(".progress");
+            const progressBarContainer = document.querySelector(".progress-bar");
+
+            function updateProgressBar(index) {
+                const sectionCount = sections.length - 1;
+                const initialWidth = 25;
+                clipWidth = 85 + (index * 2.0);
+                progressBarContainer.style.height = "35px";
+                progressBar.style.clipPath = `polygon(0 0, 100% 0, ${clipWidth}% 100%, 0% 100%)`;
+                let progressPercentage = ((index / sectionCount) * 100);
+                if (index > 0) {
+                    progressPercentage = ((index / sectionCount) * 100) - 7;
+                }
+                progressBar.style.width = `${initialWidth + progressPercentage}%`;
+            }
+
+            const sectionTexts = document.querySelectorAll(".section-text");
+            progressText.textContent = sectionTexts[0].textContent;
+
+            function updateProgressText(index) {
+                const sectionTexts = document.querySelectorAll(".section-text");
+                progressText.textContent = sectionTexts[index].textContent;
+            }
+
+    
+            sections.forEach((section, index) => {
+                section.style.display = "none";
+                if (index === 0) {
+                    section.style.display = "flex";
+                }
+    
+                goBackButton.addEventListener("click", () => {
+                    failSection.style.display = "none";
+                    const sectionShadow = document.querySelector(".section-body");
+                    const progressBar = document.querySelector(".progress");
+                    const progressText = document.querySelector(".progress-text");
+                    progressText.style.display = "flex";
+                    sectionShadow.classList.remove("section-body-red-shadow");
+                    progressBar.classList.remove("progress-red");
+                    prevDetailsSection.style.display = "flex";
+                    progressBar.style.width = `80%`;
+                    progressBar.style.clipPath = "polygon(0 0, 100% 0, 95% 100%, 0% 100%)";
+                    progressBarContainer.style.height = '35px'
+                    updateProgressText(currentSectionIndex)
+                });
+    
+                prevButtons[index].addEventListener("click", () => {
+                    sections[currentSectionIndex].style.display = "none";
+                    currentSectionIndex = index;
+    
+                    if (currentSectionIndex >= 0) {
+                        if (currentSectionIndex == 0) { usnEmailCheckSuccessful = false; }
+                        sections[currentSectionIndex].style.display = "flex";
+                        
+                        updateProgressBar(currentSectionIndex);
+                        updateProgressText(currentSectionIndex);
+                    }
+                });
+                var sameAddressCheckbox = document.getElementById('sameAddress');
+                var validateOptionalFields = true; 
+                let inputFieldsToValidate = [];
+                
+
+                sameAddressCheckbox.addEventListener('change', function () {
+                    if (sameAddressCheckbox.checked) {
+                        corrAddresssWrapper.style.display = 'none';
+                        validateOptionalFields = false; 
+                        sameAddressTrue = true;
+                    } else {
+                        corrAddresssWrapper.style.display = 'block';
+                        validateOptionalFields = true;
+                        sameAddressTrue = false;
+                    }
+                });
+
+                    
+
+                let checkBoxCount = 0;
+                const checkboxes = document.querySelectorAll('input[type="checkbox"][value="addNewInternDetails"]');
+                //console.log("All the Checkboxes" + checkboxes);
+                const checkboxesArray = Array.from(checkboxes);
+
+                checkboxesArray.forEach((checkbox, index) => {
+                    checkbox.addEventListener('change', () => {
+                        const sectionId = `section-${index + 2}`;
+                        const currSecId = `section-${index + 1}`;
+                        const currSection = document.querySelector(`.${currSecId}`);
+                        const section = document.querySelector(`.${sectionId}`);
+                        const sectionText = `.${sectionId}`;
+
+                        if (section) {
+                            if (checkbox.checked) {
+                                checkBoxCount = index;
+                                //console.log("Check Box Count" + checkBoxCount);
+                                section.style.display = 'block';
+                                if (sectionText === ".section-2") {
+                                    const section1 = document.querySelector(".section-1");
+                                    const currSectionInputs = Array.from(currSection.querySelectorAll('input'));
+                                    const sectionInputs = Array.from(section.querySelectorAll('input'));
+
+                                    inputFieldsToValidate.push(...currSectionInputs);
+                                    inputFieldsToValidate.push(...sectionInputs);
+                                } else {
+                                    const sectionInputs = Array.from(section.querySelectorAll('input'));
+                                    inputFieldsToValidate.push(...sectionInputs);
+                                }
+                            } else {
+                                for (let i = checkBoxCount; i >= index; i--) {
+                                    const chk = checkboxesArray[i];
+                                    chk.checked = false;
+                                    const sectionIdToHide = `section-${i + 2}`;
+                                    const sectionToHide = document.querySelector(`.${sectionIdToHide}`);
+                                    if (sectionText === ".section-2") {
+                                        const section1 = document.querySelector(".section-1");
+                                        const section1Inputs = Array.from(section1.querySelectorAll('input'));
+                                        const sectionToHideInputs = Array.from(sectionToHide.querySelectorAll('input'));
+
+                                        inputFieldsToValidate = inputFieldsToValidate.filter(input => {
+                                            return (
+                                                !section1Inputs.includes(input) && !sectionToHideInputs.includes(input)
+                                            );
+                                        });
+                                    } else {
+                                        const sectionToHideInputs = Array.from(sectionToHide.querySelectorAll('input'));
+
+                                        inputFieldsToValidate = inputFieldsToValidate.filter(input => {
+                                            return !sectionToHideInputs.includes(input);
+                                        });
+                                    }
+                                    sectionToHide.style.display = 'none';
+                                }
+                            }
+                        }
+                    });
+                });
+
+                let certInputFieldsToValidate = [];
+
+                let certiCheckBoxCount = 0;
+                const certiCheckboxes = document.querySelectorAll('input[type="checkbox"][value="addNewcertiDetails"]');
+                const certiCheckboxesArray = Array.from(certiCheckboxes);
+
+                certiCheckboxesArray.forEach((certiCheckbox, index) => {
+                    certiCheckbox.addEventListener('change', () => {
+                        const sectionId = `certi-section-${index + 2}`;
+                        const currSecId = `certi-section-${index + 1}`;
+                        const currSection = document.querySelector(`.${currSecId}`);
+                        const section = document.querySelector(`.${sectionId}`);
+                        const sectionText = `.${sectionId}`;
+
+                        if (section) {
+                            if (certiCheckbox.checked) {
+                                certiCheckBoxCount = index;
+                                //console.log("Certification Check Box Count: " + certiCheckBoxCount);
+                                section.style.display = 'block';
+                                if (sectionText === ".certi-section-2") {
+                                    const section1 = document.querySelector(".certi-section-1");
+                                    const currSectionInputs = Array.from(currSection.querySelectorAll('input'));
+                                    const sectionInputs = Array.from(section.querySelectorAll('input'));
+
+                                    certInputFieldsToValidate.push(...currSectionInputs);
+                                    certInputFieldsToValidate.push(...sectionInputs);
+                                } else {
+                                    const sectionInputs = Array.from(section.querySelectorAll('input'));
+                                    certInputFieldsToValidate.push(...sectionInputs);
+                                }
+                            } else {
+                                for (let i = certiCheckBoxCount; i >= index; i--) {
+                                    const chk = certiCheckboxesArray[i];
+                                    chk.checked = false;
+                                    const sectionIdToHide = `certi-section-${i + 2}`;
+                                    const sectionToHide = document.querySelector(`.${sectionIdToHide}`);
+                                    if (sectionText === ".certi-section-2") {
+                                        const section1 = document.querySelector(".certi-section-1");
+                                        const section1Inputs = Array.from(section1.querySelectorAll('input'));
+                                        const sectionToHideInputs = Array.from(sectionToHide.querySelectorAll('input'));
+
+                                        certInputFieldsToValidate = certInputFieldsToValidate.filter(input => {
+                                            return (
+                                                !section1Inputs.includes(input) && !sectionToHideInputs.includes(input)
+                                            );
+                                        });
+                                    } else {
+                                        const sectionToHideInputs = Array.from(sectionToHide.querySelectorAll('input'));
+
+                                        certInputFieldsToValidate = certInputFieldsToValidate.filter(input => {
+                                            return !sectionToHideInputs.includes(input);
+                                        });
+                                    }
+                                    sectionToHide.style.display = 'none';
+                                }
+                            }
+                        }
+                    });
+                });
+
+
+                nextButtons[index].addEventListener("click", () => {
+                    //SsetUpSection();
+                    displayDetailsSummary();
+                    const isValidUsnMail = false;
+                    currentSection = sections[currentSectionIndex];
+                    currentSectionId = sectionIds[currentSectionIndex];
+                    //console.log("CUrrent Section ID: "+currentSectionId);
+                    const emailInput = document.getElementById('emailInput');
+                    const email = emailInput.value;
+                    const reenterEmailInput = document.getElementById('reenterEmailInput');
+                    const reenterEmail = reenterEmailInput.value;
+                    const errorAlert = document.getElementById('errorAlert');
+                    const emailValid = document.getElementById('emailValid');
+                    const emailMatch = document.getElementById('emailMatch');
+                    
+                    const inputFields = currentSection.querySelectorAll(`#${currentSectionId} input`);
+                    const altPhoneContainer = document.getElementById('altPhoneContainer');
+                    const altPhoneInput = document.getElementById('altPhoneInput');
+                    const phoneInput = document.getElementById('phoneInput');
+                    const phoneContainer = document.getElementById('phoneContainer');
+                    const degreeDropdown = document.getElementById('degreeDropdown');
+                    const branchDropdown = document.getElementById('branchDropdown');
+                    const textAreaField = document.getElementById("address1Input");
+    
+                    const collegeDropdown = document.getElementById("collegeDropdown");
+                    const genderDropdown = document.getElementById("genderDropdown");
+                    const martialDropdown = document.getElementById("martialDropdown");
+
+                    const selectedCollege = collegeDropdown.options[collegeDropdown.selectedIndex].value;
+                    const selectedGender = genderDropdown.options[genderDropdown.selectedIndex].value;
+                    const selectedMartial = martialDropdown.options[martialDropdown.selectedIndex].value;
+
+                    collegeDropdown.addEventListener('input', () => { collegeDropdown.classList.remove("input-error") });
+                    genderDropdown.addEventListener('input', () => { genderDropdown.classList.remove("input-error") });
+                    martialDropdown.addEventListener('input', () => { martialDropdown.classList.remove("input-error") });
+                    
+
+                    degreeDropdown.addEventListener('input', () => { degreeDropdown.classList.remove("input-error") });
+                    branchDropdown.addEventListener('input', () => { branchDropdown.classList.remove("input-error") });
+                    
+                    textAreaField.addEventListener('input', () => { textAreaField.classList.remove("input-error"); });
+                    phoneInput.addEventListener('input', () => { phoneContainer.classList.remove("phone-container-error") });
+                    altPhoneInput.addEventListener('input', () => { altPhoneContainer.classList.remove("phone-container-error") });
+                    inputFields.forEach(inputField => {
+                        inputField.addEventListener('input', () => {
+                            inputField.classList.remove("input-error");
+    
+                        });
+                    });
+                    //console.log(currentSectionId);
+                    let hasEmptyFields = false;
+                    
+                    if (currentSectionId === 'basicDetails') {
+                        const phoneNum = document.getElementById('phoneInput');
+                        const altPhone = document.getElementById('altPhoneInput');
+                        inputFields.forEach(inputField => {
+                            if (!inputField.value.trim() && (validateOptionalFields || !inputField.classList.contains("optionalValidation"))) {
+                                inputField.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                        });
+                        const textAreaField = document.getElementById("address1Input");
+                        if (!textAreaField.value.trim()) {
+                                textAreaField.classList.add("input-error");
+                                hasEmptyFields = true;
+                        }
+                        else{
+                            textAreaField.classList.remove("input-error");
+                                hasEmptyFields = false;
+                        }
+
+                        if(phoneNum.value === altPhone.value){
+                            displayErrorMessage("Phone No. and Alternate Phone No. Cannot be the same.");
+                            return;
+                        }
+                    }
+                    if(currentSectionId==='schoolDetails'){
+                        //const schoolMarksCheck = parseInt(document.getElementById('schoolMarksInput').value);
+                        
+                        // if (schoolMarksCheck > 625) {
+                        //     displayErrorMessage("Please Enter Correct Marks");
+                        //     return;
+                        // }
+                        //console.log(schoolMarksType.value);
+                    }
+                    if (includeDiplomaCheckbox.checked && currentSectionId === 'puDetails') {
+                        //console.log("Diploma Checkbox checked");
+                        const diplomaCollege = document.getElementById('diplomaCollegeNameInput').value;
+                        const diplomaYear = document.getElementById('diplomaPassingYearInput').value;
+                        const diplomaMarks = document.getElementById('diplomaMarksInput').value;
+    
+                        const puMarksCheck = parseInt(document.getElementById('puMarksInput').value);
+                        const dipMarksCheck = parseInt(document.getElementById('diplomaMarksInput').value);
+
+
+
+                        if (!diplomaCollege.trim() || !diplomaYear.trim() || !diplomaMarks.trim()) {
+                            displayErrorMessage('Diploma fields are required.');
+                            return;
+                        }
+
+                        if (puMarksCheck > 625) {
+                            displayErrorMessage("Please Enter Correct Marks");
+                            return;
+                        }
+
+                        if(dipMarksCheck > 625){
+                            displayErrorMessage("Please Enter Correct Marks");
+                            return;
+                        }
+    
+                    } else if (!includeDiplomaCheckbox.checked && currentSectionId === 'puDetails') {
+                        //console.log("Diploma Checkbox Unchecked");
+                        // For other sections (non-diploma sections), loop through and validate the input fields
+                        const nonDiplomaFields = [
+                            document.getElementById('secondarySchoolNameInput'),
+                            document.getElementById('puMarksInput'),
+                            document.getElementById('puPassingYearInput')
+                        ];
+
+                        const puMarksCheck = parseInt(document.getElementById('puMarksInput').value);
+
+                        if (puMarksCheck > 625) {
+                            displayErrorMessage("Please Enter Correct Marks");
+                            return;
+                        }
+
+                        document.getElementById('diplomaCollegeNameInput').value = '';
+                        document.getElementById('diplomaMarksInput').value = '';
+                        document.getElementById('diplomaPassingYearInput').value = '';
+
+                        nonDiplomaFields.forEach(inputField => {
+                            if (!inputField.value.trim()) {
+                                inputField.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                        });
+                    } else if (currentSectionId != 'puDetails' && currentSectionId != 'basicDetails' && currentSectionId != 'internDetails' && currentSectionId != 'certiDetails' && currentSectionId != 'degDetails') {
+                        //console.log("Normal Validation");
+                        inputFields.forEach(inputField => {
+                            if (!inputField.value.trim()) {
+                                inputField.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                        });
+                    }
+
+
+
+                    if (currentSectionId === 'degDetails'){
+                        const degreeTypeIdValue = document.getElementById('degreeDropdown').options[document.getElementById('degreeDropdown').selectedIndex].id
+                        inputFields.forEach(inputField => {
+                            //console.log(`Logging ${inputField.id} with selectedBranchInputType as ${selectedBranchInputType}`);
+                            if (!inputField.value.trim() ) {
+
+                                if(degreeTypeIdValue != 'msc' && inputField.id === 'branchInput'){
+                                    //do nothing
+                                }
+                                else{
+                                    inputField.classList.add("input-error");
+                                    hasEmptyFields = true;
+                                }
+                            }
+                        });
+
+                        degreeInputsContainer.addEventListener("input", (event) => {
+
+                            const target = event.target;
+
+                            if (target.matches("#degreeMarksInput, #degreePassingYearInput, #degreeDropdown, #branchDropdown")) {
+
+                                if (target.id === "degreeMarksInput") {
+                                    target.classList.remove("input-error");
+                                }
+                                if (target.id === "degreePassingYearInput") {
+                                    target.classList.remove("input-error");
+                                }
+                                if (target.id === "degreeDropdown") {
+                                    target.classList.remove("input-error");
+                                }
+                                if (target.id === "branchDropdown") {
+                                    target.classList.remove("input-error");
+                                }
+                            }
+                        });
+                        // Validation logic for degree-related inputs
+                        const degreeMarksContainer = parseInt(document.getElementById('degreeMarksInput'));
+                        const degreePassingYearContainer = document.getElementById('degreePassingYearInput');
+
+                        const degreeMarks = document.getElementById('degreeMarksInput').value;
+                        const degreePassingYear = document.getElementById('degreePassingYearInput').value;
+                        const degreeType = document.getElementById('degreeDropdown').value;
+                        const branchType = document.getElementById('branchDropdown').value;
+                        const branchTypeId = document.getElementById('branchDropdown').options[document.getElementById('branchDropdown').selectedIndex].id
+                        const degreeTypeId = document.getElementById('degreeDropdown').options[document.getElementById('degreeDropdown').selectedIndex].id
+
+                        if (!degreeMarks.trim() || !degreePassingYear.trim() || degreeType === "invalid" || branchType === "invalid") {
+                            if (!degreeMarks.trim()) {
+                                //console.log('Degree Marks Error');
+                                degreeMarksContainer.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                            if (!degreePassingYear.trim()) {
+                                //console.log('Degree Year Error');
+                                degreePassingYearContainer.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                            if (degreeType === "invalid") {
+                                //console.log('Degree Type Error');
+                                degreeTypeContainer.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+                            if (branchTypeId === "invalid" && (degreeTypeId === "be" || degreeTypeId ==="btech")) {
+                                //console.log('Degree Type Error');
+                                branchTypeContainer.classList.add("input-error");
+                                hasEmptyFields = true;
+                            }
+
+                        }
+
+                        const degMarksCheck = parseInt(document.getElementById('degreeMarksInput').value);
+
+                        if (degMarksCheck > 625) {
+                            displayErrorMessage("Please Enter Correct Marks");
+                            return;
+                        }
+                        
+                        if (hasEmptyFields) {
+                            displayErrorMessage("Please Enter All the Fields");
+                            return;
+                        }
+                    }
+                    if(currentSectionId === 'internDetails'){
+                        //console.log('Intern Details Next Button Clicked');
+                        //console.log("Input Fields to Validate " + inputFieldsToValidate);
+                        if(inputFieldsToValidate){
+                            inputFields.forEach(inputField => {
+                                if (inputFieldsToValidate.includes(inputField) && !inputField.value.trim()) {
+                                    inputField.classList.add("input-error");
+                                    hasEmptyFields = true;
+                                }
+                            });
+                        }
+                        
+                    }
+                    if(currentSectionId === 'certiDetails'){
+                        //console.log('Intern Details Next Button Clicked');
+                        //console.log("Input Fields to Validate " + certInputFieldsToValidate);
+                        if(certInputFieldsToValidate){
+                            inputFields.forEach(inputField => {
+                                if (certInputFieldsToValidate.includes(inputField) && !inputField.value.trim()) {
+                                    inputField.classList.add("input-error");
+                                    hasEmptyFields = true;
+                                }
+                            });
+                        }
+                        
+                    }
+
+    
+                    if (selectedCollege === "invalid") {
+                        collegeDropdown.classList.add("input-error");
+                        hasEmptyFields = true;
+                    }
+                    if (selectedGender === "invalid") {
+                        genderDropdown.classList.add("input-error");
+                        hasEmptyFields = true;
+                    }
+                    if (selectedMartial === "invalid") {
+                        martialDropdown.classList.add("input-error");
+                        hasEmptyFields = true;
+                    }
+
+                    // if(document.getElementById("address1Input").value.trim()){
+                    //     address1Input.classList.add("input-error");
+                    //     hasEmptyFields = true;
+                    // }
+    
+                    if (!phoneInput.value.trim()) {
+                        phoneContainer.classList.add("phone-container-error");
+                        hasEmptyFields = true;
+                    }
+                    if (!altPhoneInput.value.trim()) {
+                        altPhoneContainer.classList.add("phone-container-error");
+                        hasEmptyFields = true;
+                    }
+    
+                    if (hasEmptyFields) {
+                        displayErrorMessage("Please Enter All the Fields");
+                        return;
+                    }
+    
+                    if (phoneInput.value.length < 10) {
+                        phoneContainer.classList.add("phone-container-error");
+                        displayErrorMessage("Please Enter a 10 Digit Phone Number");
+                        return;
+                    }
+                    if (altPhoneInput.value.length < 10) {
+                        altPhoneContainer.classList.add("phone-container-error");
+                        displayErrorMessage("Please Enter a 10 Digit Phone Number");
+                        return;
+                    }
+    
+                    if (!validateEmailFormat(email) && hasEmptyFields == false) {
+                        emailInput.classList.add('input-error');
+                        displayErrorMessage("Wrong Email Format");
+                        return;
+                    }
+    
+                    if (email !== reenterEmail && hasEmptyFields == false) {
+                        reenterEmailInput.classList.add('input-error');
+                        displayErrorMessage("Email Does Not Match");
+                        return;
+                    }
+                    if (currentSectionIndex === 0) {
+                        const usn = document.getElementById('usnInput').value;
+                        const email = document.getElementById('emailInput').value;
+    
+                        if (usn.trim() !== '' && email.trim() !== '') {
+                            if (!sectionValidationStatus[currentSectionIndex]) {
+                                showLoader();
+                                Visualforce.remoting.Manager.invokeAction(
+                                    '{!$RemoteAction.studentRegistrationController.checkIfUsnAndEmailExist}',
+                                    usn,
+                                    email,
+                                    (result, event) => {
+                                        if (event.status) {
+                                            hideLoader();
+                                            if (result === true) {
+                                                displayErrorMessage("USN/Mail Already Exists");
+                                                return;
+                                            } else {
+                                                usnEmailCheckSuccessful = true;
+                                                sections[currentSectionIndex].style.display = "none";
+                                                const nextSectionIndex = sectionIds.indexOf(sectionIds[currentSectionIndex]) + 1;
+                                                if (nextSectionIndex < sections.length) {
+                                                    currentSectionIndex = nextSectionIndex;
+                                                    sections[currentSectionIndex].style.display = "block";
+                                                    updateProgressBar(currentSectionIndex);
+                                                    updateProgressText(currentSectionIndex)
+                                                }
+                                            }
+                                        } else {
+                                            displayErrorMessage("!!Apex Error!! unable to check USN and email existence.");
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }
+    
+                    if (usnEmailCheckSuccessful == true) {
+                        sections[currentSectionIndex].style.display = "none";
+                        const nextSectionIndex = sectionIds.indexOf(currentSectionId) + 1;
+    
+                        if (nextSectionIndex < sections.length) {
+                            currentSectionIndex = nextSectionIndex;
+                            sections[currentSectionIndex].style.display = "block";
+                            updateProgressBar(currentSectionIndex);
+                            updateProgressText(currentSectionIndex);
+                        }
+                    }
+    
+                });
+                section.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                });
+            });
+    
+            function getCollegeNames() {
+                if (collegeListFromDataBase.length === 0) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.studentRegistrationController.getAllCollegeNames}',
+                        GetCollegeNamesCallBack
+                    );
+                }
+            }
+    
+          /*  function handleCollegeNameResult(result, event) {
+                for (let i = 0; i < result.length; i++) {
+                    collegeListFromDataBase.push(result[i].Name);
+                    const collegeName = result[i].Name;
+                    CollegeIDAndName[collegeName] = result[i].Id;
+                }
+                PopulateDropDown();
+            }*/
+        function decodeHtmlEntities(str) 
+        {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(str, 'text/html');
+            return doc.documentElement.textContent;
+        }
+
+        function GetCollegeNamesCallBack(result,event){
+
+             //clean ecapse characters
+             escapeMap = {
+                "&#39;" : '\'',
+             };
+             
+             escapeMap.PopulateDropdownForCollegeSelection
+             console.log(escapeMap);
+            
+            for(var i = 0; i < result.length; i++)
+            {
+               result[i].Name = decodeHtmlEntities(result[i].Name);
+
+               for(let[key,value] in Object.entries(escapeMap))
+               {
+                   result[i].Name = result[i].Name.replace(key,value);
+               }
+            }
+
+            for(var i = 0; i < result.length; i++)
+            {
+                collegeListFromDataBase.push(result[i].Name);
+                var collegeName = result[i].Name;
+                CollegeIDAndName[collegeName] = result[i].Id;
+            }  
+            
+            PopulateDropDown();           
+        }
+        
+        
+            function PopulateDropDown() {
+                const collegeDropdown = document.getElementById("collegeDropdown");
+                for (let i = 0; i < collegeListFromDataBase.length; i++) {
+                    const option = document.createElement("option");
+                    option.value = CollegeIDAndName[collegeListFromDataBase[i]];
+                    option.text = collegeListFromDataBase[i];
+                    collegeDropdown.appendChild(option);
+                }
+            }
+    
+            function handleCollegeSelection() {
+                const collegeDropdown = document.getElementById("collegeDropdown");
+                const selectedCollege = collegeDropdown.options[collegeDropdown.selectedIndex].text;
+                //console.log("Selected College:", selectedCollege);
+            }
+    
+            document.getElementById("collegeDropdown").addEventListener("change", handleCollegeSelection);
+    
+            function validateEmailFormat(email) {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailPattern.test(email);
+            }
+    
+    
+        });
+            const degreeTypeContainer = document.getElementById('degreeDropdown');
+            const branchTypeContainer = document.getElementById('branchDropdown');
+            let selectedBranchInputType = null;
+    
+            degreeTypeContainer.addEventListener("change", function(){
+
+                //console.log("Degree Changed");
+                const selectedId = degreeTypeContainer.options[degreeTypeContainer.selectedIndex].id;
+                const branchSelectClass = document.querySelector("branch-selector");
+                const branchSelect = document.getElementById('branchDropdown');
+                const branchInput = document.getElementById('branchInput');
+                const branchContainer = document.getElementById('branchDropdownContainer');
+                branchContainer.classList.remove('hidden');
+                //console.log("Selected ID: " + selectedId);
+    
+                if (selectedId === "be" || selectedId === "btech") {
+                    //console.log("Display Branch Select Option");
+                    branchContainer.classList.remove("hidden");
+                    branchSelect.classList.remove("hidden");
+                    branchInput.classList.add("hidden");
+                    selectedBranchInputType = "branchDropdown";
+                } else if (selectedId === "msc"){
+                    branchTypeContainer.selectedIndex = 0;
+                    //console.log("Remove Branch Select Option");
+                    branchContainer.classList.remove("hidden");
+                    branchSelect.classList.add("hidden");
+                    branchInput.classList.remove("hidden");
+                    selectedBranchInputType = "branchInput";
+                }
+                else{
+                    branchTypeContainer.selectedIndex = 0;
+                    //console.log("Remove Branch Select Option");
+                    branchSelect.classList.add("hidden");
+                    branchInput.classList.add("hidden");
+                    branchContainer.classList.add("hidden");
+                    selectedBranchInputType = "none";
+                }
+            });
+        const userConfirmationCheckbox = document.getElementById('userConfirmationCheckbox');
+        const submitButton = document.getElementById('submitButton');
+    
+        userConfirmationCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                submitButton.removeAttribute('disabled');
+            } else {
+                submitButton.setAttribute('disabled', 'disabled');
+            }
+        });
+    
+        function validateAndCreateStudent() {
+            let hasEmptyFields = false;
+            const name = document.getElementById('nameInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const altPhone = document.getElementById('altPhoneInput').value;
+            const email = document.getElementById('emailInput').value;
+
+            const finalPhoto = null;
+            const address1 = document.getElementById('address1Input').value;
+            const city = document.getElementById('cityInput').value;
+            const state = document.getElementById('stateInput').value;
+            const pincode = document.getElementById('pincodeInput').value;
+
+            const permanentAddress = {
+                "Address": address1,
+                "City": city,
+                "State": state,
+                "Pincode": pincode
+            };
+
+            const permanentAddressJson = JSON.stringify(permanentAddress);
+
+            //console.log( "Permanent Address: " + permanentAddressJson);
+
+            let corrAddress = "Unable to fetch Corresponding Address";
+            if(sameAddressTrue == true){
+                corrAddress = {
+                    "Address": address1,
+                    "City": city,
+                    "State": state,
+                    "Pincode": pincode
+                };
+            }
+            else{
+                    corrAddress = {
+                    "Address": document.getElementById('corrAddressInput').value,
+                    "City": document.getElementById('corrAddressCityInput').value,
+                    "State": document.getElementById('corrAddressStateInput').value,
+                    "Pincode": document.getElementById('corrAddressPincodeInput').value
+                };
+            }
+
+
+            const corrAddressJson = JSON.stringify(corrAddress);
+
+            //console.log("Correspondence Address: "+ corrAddressJson);
+
+            
+            const finalMarksType = {
+                "SchoolMarksType": schoolMarksType.value,
+                "PuMarksType": puMarksType.value,
+                "DiplomaMarksType": diplomaMarksType.value,
+                "DegreeMarksType": degreeMarksType.value
+
+            };
+            const finalMarksTypeJson = JSON.stringify(finalMarksType);
+            //console.log("FInal Marks Type " + finalMarksTypeJson);
+
+
+            // const address2 = document.getElementById('address2Input').value;
+            //const permanentAddress = address1 + ", " + city + ", " +  
+            const usn = document.getElementById('usnInput').value;
+            const collegeId = document.getElementById('collegeDropdown').value;
+
+            const gender = document.getElementById('genderDropdown').value;
+            const martialStatus = document.getElementById('martialDropdown').value;
+            const dob = document.getElementById('dobInput').value;
+
+            const schoolName = document.getElementById('schoolNameInput').value;
+            const schoolMarks = parseInt(document.getElementById('schoolMarksInput').value);
+            const schoolPassYear = document.getElementById('schoolPassingYearInput').value;
+            const secondarySchoolName = document.getElementById('secondarySchoolNameInput').value;
+            const secondarySchoolCourse = document.getElementById('secondarySchoolCourse').value;
+
+            //const puMarks = document.getElementById('puMarksInput').value;
+            const puMarks = parseInt(document.getElementById('puMarksInput').value);
+            
+            const puPassingYear = document.getElementById('puPassingYearInput').value;
+            const includeDiploma = document.getElementById('includeDiploma').value;
+            // Define these variables outside of the event listener
+            const degreeMarksContainer = parseInt(document.getElementById('degreeMarksInput'));
+            const degreePassingYearContainer = document.getElementById('degreePassingYearInput');
+            const degreeTypeContainer = document.getElementById('degreeDropdown');
+            const branchTypeContainer = document.getElementById('branchDropdown');
+
+            const degreeMarks = document.getElementById('degreeMarksInput').value;
+            const degreePassingYear = document.getElementById('degreePassingYearInput').value;
+            const degreeType = document.getElementById('degreeDropdown').value;
+            let branchType = "NA";
+            if(selectedBranchInputType==='branchDropdown'){
+                branchType = document.getElementById('branchDropdown').value;
+            }
+            else if (selectedBranchInputType==='branchInput'){
+                branchType = document.getElementById('branchInput').value;
+            }
+
+            // Add an event listener to a common parent element that contains degree-related inputs
+            const degreeInputsContainer = document.getElementById('degreeInputsContainer');
+
+            const diplomaCollegeName = document.getElementById('diplomaCollegeNameInput').value;
+            //const diplomaMarks = document.getElementById('diplomaMarksInput').value;
+            const diplomaMarks = parseInt(document.getElementById('diplomaMarksInput').value);
+            const diplomaPassingYear = document.getElementById('diplomaPassingYearInput').value;
+
+            var data = [];
+
+            for (var i = 1; i <= 4; i++) {
+                if (document.getElementById("InternNameOrgInput" + i).value !== "") {
+                    var internship = {
+                        "ExperienceType": "internship" + i,
+                        "Organization": document.getElementById("InternNameOrgInput" + i).value,
+                        "Location": document.getElementById("InternLocInput" + i).value,
+                        "Topic": document.getElementById("InternTopicStarDuration" + i).value,
+                        "StartDuration": document.getElementById("InternStartDuration" + i).value,
+                        "EndDuration": document.getElementById("InternEndDuration" + i).value
+                    };
+                    data.push(internship);
+                }
+            }
+
+            for (var i = 1; i <= 4; i++) {
+                if (document.getElementById("certiNameOrgInput" + i).value !== "") {
+                    var certification = {
+                        "ExperienceType": "certification" + i,
+                        "Organization": document.getElementById("certiNameOrgInput" + i).value,
+                        "Location": document.getElementById("certiLocInput" + i).value,
+                        "Topic": document.getElementById("certiTopicStarDuration" + i).value,
+                        "StartDuration": document.getElementById("certiStartDuration" + i).value,
+                        "EndDuration": document.getElementById("certiEndDuration" + i).value
+                    };
+                    data.push(certification);
+                }
+            }
+
+
+            var studentExpJson = JSON.stringify(data);
+            //console.log(studentExpJson);
+
+
+            
+
+            showLoader();
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.studentRegistrationController.createStudentBasicAccount}',
+                name,
+                phone,
+                email,
+                address1,
+                // address2,
+                usn,
+                city,
+                state,
+                pincode,
+                collegeId,
+                schoolName,
+                schoolMarks,
+                schoolPassYear,
+                secondarySchoolName,
+                puMarks,
+                puPassingYear,
+                degreeType,
+                branchType,
+                degreeMarks,
+                degreePassingYear,
+                altPhone,
+                gender,
+                dob,
+                martialStatus,
+                permanentAddressJson,
+                corrAddressJson,
+                studentExpJson,
+                secondarySchoolCourse,
+                diplomaCollegeName,
+                diplomaMarks,
+                diplomaPassingYear,
+                finalPhoto,
+                finalMarksTypeJson,
+                handleResult
+            );
+        }
+
+        function handleResult(result, event) {
+            hideLoader();
+            const successfulSection = document.getElementById("successfulSection");
+            const failSection = document.getElementById("failSection");
+            const degDetailsSection = document.getElementById("degDetails");
+            const prevDetailsSection = document.getElementById("previewDetails");
+            const progressBarContainer = document.querySelector(".progress-bar");
+            const progressText = document.querySelector(".progress-text");
+            if (event.status) {
+                prevDetailsSection.style.display = "none";
+                successfulSection.style.display = "block";
+                const sectionShadow = document.querySelector(".section-body");
+                const progressBar = document.querySelector(".progress");
+                progressText.style.display= "none";
+                progressBarContainer.style.height = "10px";
+                progressBar.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0% 100%)";
+                progressBar.style.width = '100%';
+                sectionShadow.classList.add("section-body-green-shadow");
+                progressBar.classList.add("progress-green");
+            } else {
+                prevDetailsSection.style.display = "none";
+                failSection.style.display = "block";
+                const sectionShadow = document.querySelector(".section-body");
+                const progressBar = document.querySelector(".progress");
+                const progressBarContainer = document.querySelector(".progress-bar");
+                progressText.style.display= "none";
+                progressBarContainer.style.height = "10px";
+                progressBar.style.clipPath = "polygon(0 0, 100% 0, 100% 100%, 0% 100%)";
+                progressBar.style.width = '100%';
+                sectionShadow.classList.add("section-body-red-shadow");
+                progressBar.classList.add("progress-red");
+                displayErrorMessage(event.message);
+
+            }
+        }
+
+
+        function displaySuccessMessage(warningText) {
+            const warningCustom = document.getElementById("successCustom");
+            const warnText = document.getElementById("successText");
+            const warnImg = document.getElementById("successImg");
+
+            warningCustom.textContent = "";
+            warningCustom.appendChild(warnImg);
+
+
+            const warningTextNode = document.createTextNode("Success: " + warningText);
+            warningCustom.appendChild(warningTextNode);
+
+            warningCustom.appendChild(warnText); 
+
+            warningCustom.style.display = 'flex';
+
+            setTimeout(() => {
+                warningCustom.style.display = "none";
+                warningCustom.classList.remove("alert-animation");
+            }, 5000);
+        }
+
+        function displayErrorMessage(errorText) {
+            const errorCustom = document.getElementById("errorCustom");
+            const alertText = errorCustom.querySelector("#alertText");
+            const alertImg = errorCustom.querySelector("#alertImg");
+            errorCustom.textContent = "";
+            errorCustom.appendChild(alertImg);
+            errorCustom.appendChild(document.createTextNode("Error: " + errorText));
+            errorCustom.appendChild(alertText);
+
+            errorCustom.style.display = 'flex';
+            errorCustom.classList.add("alert-animation");
+            setTimeout(() => {
+                errorCustom.style.display = "none";
+                errorCustom.classList.remove("alert-animation");
+            }, 5000);
+        }
+
+        function displayWarningMessage(warningText) {
+            let timeOutTime = 5000;
+            if(warningText.includes('Compressing')){
+                //console.log("Varied Time");
+                timeOutTime = 2000;
+            }
+            const warningCustom = document.getElementById("warningCustom");
+            const warnText = document.getElementById("warnText"); // Get the warnText element
+            const warnImg = document.getElementById("warnImg"); // Get the warnImg element
+
+            warningCustom.textContent = ""; // Clear any existing content
+            warningCustom.appendChild(warnImg);
+
+            // Create a text node and set its content
+            const warningTextNode = document.createTextNode("Warning: " + warningText);
+            warningCustom.appendChild(warningTextNode);
+
+            warningCustom.appendChild(warnText); // Append the warnText element
+
+            warningCustom.style.display = 'flex';
+            // warningCustom.classList.add("alert-animation");
+            setTimeout(() => {
+                warningCustom.style.display = "none";
+                warningCustom.classList.remove("alert-animation");
+            }, timeOutTime);
+        }
+
+        function routeToStudentLogin() {
+            var targetPageUrl = '/apex/studentLoginPageAlt';
+            showLoader();
+            window.location.href = targetPageUrl;
+            hideLoader();
+            
+        }
+        function showLoader() {
+            document.querySelector(".loader").classList.remove("hidden");
+        }
+
+        function hideLoader() {
+            document.querySelector(".loader").classList.add("hidden");
+        }
+        function displayDetailsSummary() {
+            // Collect values from input fields
+            const name = document.getElementById('nameInput').value;
+            const phone = document.getElementById('phoneInput').value;
+            const email = document.getElementById('emailInput').value;
+            const address1 = document.getElementById('address1Input').value;
+            // const address2 = document.getElementById('address2Input').value;
+            const city = document.getElementById('cityInput').value;
+            const state = document.getElementById('stateInput').value;
+            const pincode = document.getElementById('pincodeInput').value;
+            const usn = document.getElementById('usnInput').value;
+            const collegeName = document.getElementById('collegeDropdown').options[document.getElementById('collegeDropdown').selectedIndex].text;
+            const schoolName = document.getElementById('schoolNameInput').value;
+            const schoolMarks = document.getElementById('schoolMarksInput').value;
+            const schoolPassYear = document.getElementById('schoolPassingYearInput').value;
+            const secondarySchoolName = document.getElementById('secondarySchoolNameInput').value;
+            const puMarks = document.getElementById('puMarksInput').value;
+            const puPassingYear = document.getElementById('puPassingYearInput').value;
+            const degreeType = document.getElementById('degreeDropdown').options[document.getElementById('degreeDropdown').selectedIndex].text;
+            const degreeMarks = document.getElementById('degreeMarksInput').value;
+            const degreePassingYear = document.getElementById('degreePassingYearInput').value;
+
+            // Optional fields
+            const diplomaCollegeName = document.getElementById('diplomaCollegeNameInput').value;
+            const diplomaMarks = document.getElementById('diplomaMarksInput').value;
+            const diplomaPassingYear = document.getElementById('diplomaPassingYearInput').value;
+            const branchDropdown = document.getElementById('branchDropdown');
+            const selectedBranchOption = branchDropdown.options[branchDropdown.selectedIndex];
+            let branchType = "NA";
+            if(selectedBranchInputType==='branchDropdown'){
+                branchType = document.getElementById('branchDropdown').value;
+            }
+            else if (selectedBranchInputType==='branchInput'){
+                branchType = document.getElementById('branchInput').value;
+            }
+
+
+            const altPhone = document.getElementById('altPhoneInput').value;
+            const finalPhoto = null;
+
+            // const address1 = document.getElementById('address1Input').value;
+            // const city = document.getElementById('cityInput').value;
+            // const state = document.getElementById('stateInput').value;
+            // const pincode = document.getElementById('pincodeInput').value;
+
+            const permanentAddress = {
+                "Address": address1,
+                "City": city,
+                "State": state,
+                "Pincode": pincode
+            };
+            const permanentAddressJson = JSON.stringify(permanentAddress);
+            //console.log("Permanent Address: " + permanentAddressJson);
+
+            let corrAddress = "Unable to fetch Corresponding Address";
+            if (sameAddressTrue == true) {
+                corrAddress = {
+                    "Address": address1,
+                    "City": city,
+                    "State": state,
+                    "Pincode": pincode
+                };
+            } else {
+                corrAddress = {
+                    "Address": document.getElementById('corrAddressInput').value,
+                    "City": document.getElementById('corrAddressCityInput').value,
+                    "State": document.getElementById('corrAddressStateInput').value,
+                    "Pincode": document.getElementById('corrAddressPincodeInput').value
+                };
+            }
+            const corrAddressJson = JSON.stringify(corrAddress);
+            //console.log("Correspondence Address: " + corrAddressJson);
+
+            const finalMarksType = {
+                "SchoolMarksType": schoolMarksType.value,
+                "PuMarksType": puMarksType.value,
+                "DiplomaMarksType": diplomaMarksType.value,
+                "DegreeMarksType": degreeMarksType.value
+            };
+            const finalMarksTypeJson = JSON.stringify(finalMarksType);
+            //console.log("Final Marks Type " + finalMarksTypeJson);
+
+            const collegeId = document.getElementById('collegeDropdown').value;
+
+            const gender = document.getElementById('genderDropdown').value;
+            const martialStatus = document.getElementById('martialDropdown').value;
+            const dob = document.getElementById('dobInput').value;
+
+            const secondarySchoolCourse = document.getElementById('secondarySchoolCourse').value;
+
+
+
+            // const diplomaMarks = parseInt(document.getElementById('diplomaMarksInput').value);
+
+            var data = [];
+            for (var i = 1; i <= 4; i++) {
+                if (document.getElementById("InternNameOrgInput" + i).value !== "") {
+                    var internship = {
+                        "ExperienceType": "internship" + i,
+                        "Organization": document.getElementById("InternNameOrgInput" + i).value,
+                        "Location": document.getElementById("InternLocInput" + i).value,
+                        "Topic": document.getElementById("InternTopicStarDuration" + i).value,
+                        "StartDuration": document.getElementById("InternStartDuration" + i).value,
+                        "EndDuration": document.getElementById("InternEndDuration" + i).value
+                    };
+                    data.push(internship);
+                }
+            }
+            for (var i = 1; i <= 4; i++) {
+                if (document.getElementById("certiNameOrgInput" + i).value !== "") {
+                    var certification = {
+                        "ExperienceType": "certification" + i,
+                        "Organization": document.getElementById("certiNameOrgInput" + i).value,
+                        "Location": document.getElementById("certiLocInput" + i).value,
+                        "Topic": document.getElementById("certiTopicStarDuration" + i).value,
+                        "StartDuration": document.getElementById("certiStartDuration" + i).value,
+                        "EndDuration": document.getElementById("certiEndDuration" + i).value
+                    };
+                    data.push(certification);
+                }
+            }
+
+            const internshipDetails = data.filter(item => item.ExperienceType.startsWith('internship')).map((item, index) => `
+                <div class="preview-section">
+                    <p class="previewTitle">Internship ${index + 1}</p>
+                    <div class="preview-section">
+                        <p class="previewValue">${item.Organization}</p>
+                        <p class="previewValue">${item.Location}</p>
+                        <p class="previewValue">${item.Topic}</p>
+                        <p class="previewValue">${item.StartDuration}</p>
+                        <p class="previewValue">${item.EndDuration}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Displaying Certification Details
+            const certificationDetails = data.filter(item => item.ExperienceType.startsWith('certification')).map((item, index) => `
+                <div class="preview-section">
+                    <p class="previewTitle">Certification ${index + 1}</p>
+                    <div class="preview-section">
+                        <p class="previewValue">${item.Organization}</p>
+                        <p class="previewValue">${item.Location}</p>
+                        <p class="previewValue">${item.Topic}</p>
+                        <p class="previewValue">${item.StartDuration}</p>
+                        <p class="previewValue">${item.EndDuration}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const imageSizeLimit = 200;
+            const imageElement = `<img src="${finalPhoto}" class="previewPhoto" style="max-width: 100%; max-height: 200px;" alt="Student Photo">`;
+            
+            
+            // Create the summary text
+            const summary = `
+            <p class="previewMainTitle"> Basic Details</p>
+                <div class="preview-section">
+                    <p class="previewTitle">Name:</p>
+                    <p class="previewValue">${name}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Phone:</p>
+                    <p class="previewValue">${phone}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Alternate Phone:</p>
+                    <p class="previewValue">${altPhone}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Email:</p>
+                    <p class="previewValue">${email}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">USN:</p>
+                    <p class="previewValue">${usn}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">College:</p>
+                    <p class="previewValue">${collegeName}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Gender:</p>
+                    <p class="previewValue">${gender}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Marital Status:</p>
+                    <p class="previewValue">${martialStatus}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Date of Birth:</p>
+                    <p class="previewValue">${dob}</p>
+                </div>
+                <div class="preview-section">
+                <p class="previewTitle">Permanent Address:</p>
+                <p class="previewValue">
+                    <b> Address: </b> ${permanentAddress.Address}<br>
+                    <b> City: </b> ${permanentAddress.City}<br>
+                    <b> State: </b> ${permanentAddress.State}<br>
+                    <b> Pincode: </b> ${permanentAddress.Pincode}
+                </p>
+            </div>
+            <div class="preview-section">
+                <p class="previewTitle">Correspondence Address:</p>
+                <p class="previewValue">
+                    <b> Address: </b> ${corrAddress.Address}<br>
+                    <b> City: </b> ${corrAddress.City}<br>
+                    <b> State: </b> ${corrAddress.State}<br>
+                    <b> Pincode:</b> ${corrAddress.Pincode}
+                </p>
+            </div>
+
+                <p class="previewMainTitle">School Details</p>
+                <div class="preview-section">
+                    <p class="previewTitle">SSLC/X Institution:</p>
+                    <p class="previewValue">${schoolName}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">SSLC/X Marks:</p>
+                    <p class="previewValue">${schoolMarks}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">SSLC/X Passing Year:</p>
+                    <p class="previewValue">${schoolPassYear}</p>
+                </div>
+                <p class="previewMainTitle"> Secondary School Details</p>
+                <div class="preview-section">
+                    <p class="previewTitle">PU Institution Name:</p>
+                    <p class="previewValue">${secondarySchoolName}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">PU Marks:</p>
+                    <p class="previewValue">${puMarks}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">PU Passing Year:</p>
+                    <p class="previewValue">${puPassingYear}</p>
+                </div>
+                ${diplomaCollegeName ? `
+                    <p class="previewMainTitle"> Diploma Details</p>
+                    <div class="preview-section">
+                        <p class="previewTitle">Diploma College:</p>
+                        <p class="previewValue">${diplomaCollegeName}</p>
+                    </div>
+                ` : ''}
+                ${diplomaMarks ? `
+                    <div class="preview-section">
+                        <p class="previewTitle">Diploma Marks:</p>
+                        <p class="previewValue">${diplomaMarks}</p>
+                    </div>
+                ` : ''}
+                ${diplomaPassingYear ? `
+                    <div class="preview-section">
+                        <p class="previewTitle">Diploma Passing Year:</p>
+                        <p class="previewValue">${diplomaPassingYear}</p>
+                    </div>
+                ` : ''}
+                <p class="previewMainTitle"> Degree Details</p>
+                <div class="preview-section">
+                    <p class="previewTitle">Degree Type:</p>
+                    <p class="previewValue">${degreeType}</p>
+                </div>
+                ${branchType !== '' ? `
+                    <div class="preview-section">
+                        <p class="previewTitle">Branch Type:</p>
+                        <p class="previewValue">${branchType}</p>
+                    </div>
+                ` : ''}
+                <div class="preview-section">
+                    <p class="previewTitle">Degree CGPA:</p>
+                    <p class="previewValue">${degreeMarks}</p>
+                </div>
+                <div class="preview-section">
+                    <p class="previewTitle">Degree Passing Year:</p>
+                    <p class="previewValue">${degreePassingYear}</p>
+                </div>
+                <p class="previewMainTitle">Internship and Certification Details</p>
+                ${internshipDetails}
+                ${certificationDetails}
+            `;
+
+            // Display the summary in the detailsSummary div
+            const detailsSummary = document.getElementById('detailsSummary');
+            detailsSummary.innerHTML = summary;
+        }
+
+            
+    
+    
+    </script>
+</apex:page>

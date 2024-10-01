@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>student_test_id__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>student_test_id</label>
+    <referenceTo>RC_student_test__c</referenceTo>
+    <relationshipLabel>RC_panelist_junction_student_tests</relationshipLabel>
+    <relationshipName>RC_panelist_junction_student_tests</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
