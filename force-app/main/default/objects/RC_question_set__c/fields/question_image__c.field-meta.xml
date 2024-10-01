@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>question_image__c</fullName>
     <description>stores image in base 64 format in case a question has an image linked to it</description>
+    <externalId>false</externalId>
     <label>question_image</label>
     <length>131071</length>
     <trackHistory>false</trackHistory>

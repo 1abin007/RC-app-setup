@@ -3,6 +3,7 @@
     <fullName>isLoggedIn__c</fullName>
     <defaultValue>false</defaultValue>
     <description>To check if the candidate is logged in or not</description>
+    <externalId>false</externalId>
     <label>isLoggedIn</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

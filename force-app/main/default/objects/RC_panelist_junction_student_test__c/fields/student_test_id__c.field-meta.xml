@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>student_test_id__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
     <label>student_test_id</label>
     <referenceTo>RC_student_test__c</referenceTo>
     <relationshipLabel>RC_panelist_junction_student_tests</relationshipLabel>

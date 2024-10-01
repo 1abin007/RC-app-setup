@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>round_four_cleared__c</fullName>
     <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
     <label>round_four_cleared</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

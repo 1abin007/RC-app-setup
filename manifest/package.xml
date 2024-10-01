@@ -82,6 +82,7 @@
 		<members>RC_Event_Question_Test_Set__c.question_correct_answer__c</members>
 		<members>RC_Event_Question_Test_Set__c.question_description__c</members>
 		<members>RC_Event_Question_Test_Set__c.question_difficulty__c</members>
+		<members>RC_Event_Question_Test_Set__c.question_image__c</members>
 		<members>RC_Event_Question_Test_Set__c.question_number__c</members>
 		<members>RC_Event_Question_Test_Set__c.question_title__c</members>
 		<members>RC_Event_Question_Test_Set__c.student_attempt__c</members>
@@ -133,6 +134,7 @@
 		<members>RC_question_set__c.question_correct_answer__c</members>
 		<members>RC_question_set__c.question_description__c</members>
 		<members>RC_question_set__c.question_difficulty__c</members>
+		<members>RC_question_set__c.question_image__c</members>
 		<members>RC_question_set__c.question_title__c</members>
 		<members>RC_student__c.AlternateContactNumber__c</members>
 		<members>RC_student__c.DateOfBirth__c</members>
@@ -189,6 +191,7 @@
 		<members>RC_student_question__c.question_title__c</members>
 		<members>RC_student_question__c.student_attempt__c</members>
 		<members>RC_student_question__c.student_test_id__c</members>
+		<members>RC_student_test__c.RoundFourStatus__c</members>
 		<members>RC_student_test__c.RoundOneStatus__c</members>
 		<members>RC_student_test__c.RoundThreeStatus__c</members>
 		<members>RC_student_test__c.RoundTwoStatus__c</members>
@@ -203,6 +206,7 @@
 		<members>RC_student_test__c.neg_student_apti_marks__c</members>
 		<members>RC_student_test__c.neg_student_cprogram_marks__c</members>
 		<members>RC_student_test__c.neg_student_marks_scored__c</members>
+		<members>RC_student_test__c.round_four_cleared__c</members>
 		<members>RC_student_test__c.round_one_cleared__c</members>
 		<members>RC_student_test__c.round_three_cleared__c</members>
 		<members>RC_student_test__c.round_two_cleared__c</members>
@@ -223,6 +227,7 @@
 		<members>RC_admin__c</members>
 		<members>RC_college__c</members>
 		<members>RC_college_event_junction__c</members>
+		<members>RC_director__c</members>
 		<members>RC_event__c</members>
 		<members>RC_panelist__c</members>
 		<members>RC_panelist_junction_student_test__c</members>
@@ -262,6 +267,7 @@
 		<members>RC_admin__c-admin Layout</members>
 		<members>RC_college__c-RC_college Layout</members>
 		<members>RC_college_event_junction__c-RC_college_event_junction Layout</members>
+		<members>RC_director__c-RC_director Layout</members>
 		<members>RC_event__c-RC_event Layout</members>
 		<members>RC_panelist__c-RC_panelist Layout</members>
 		<members>RC_panelist_junction_student_test__c-RC_panelist_junction_student Layout</members>
@@ -283,6 +289,8 @@
 		<members>SiteSamples</members>
 		<members>TestUI</members>
 		<members>UpArrow</members>
+		<members>aptiQuestion01</members>
+		<members>aptiQuestion02</members>
 		<members>apti_logo</members>
 		<members>c_logo</members>
 		<members>checked_icon</members>
@@ -314,5 +322,5 @@
 		<members>xlsxLib</members>
 		<name>StaticResource</name>
 	</types>
-	<version>61.0</version>
+	<version>60.0</version>
 </Package>

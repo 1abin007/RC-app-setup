@@ -3,6 +3,7 @@
     <fullName>isTestLive__c</fullName>
     <defaultValue>false</defaultValue>
     <description>has the test begun?</description>
+    <externalId>false</externalId>
     <label>isTestLive</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

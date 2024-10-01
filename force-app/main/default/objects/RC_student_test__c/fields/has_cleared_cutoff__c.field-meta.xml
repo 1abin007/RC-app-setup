@@ -3,6 +3,7 @@
     <fullName>has_cleared_cutoff__c</fullName>
     <defaultValue>false</defaultValue>
     <description>The student has cleared the cutoff for test round.</description>
+    <externalId>false</externalId>
     <label>hasClearedCutoff</label>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
