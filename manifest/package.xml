@@ -255,6 +255,10 @@
 		<name>CustomTab</name>
 	</types>
 	<types>
+		<members>Recruitment_App_UtilityBar</members>
+		<name>FlexiPage</name>
+	</types>
+	<types>
 		<members>on_cutoff_change_update_cleared_cutoff</members>
 		<members>on_event_cutoff_update</members>
 		<members>update_student_clearedcutoff_onsubmit</members>
@@ -277,6 +281,22 @@
 		<members>RC_student_question__c-RC_student_question Layout</members>
 		<members>RC_student_test__c-RC_student_test Layout</members>
 		<name>Layout</name>
+	</types>
+	<types>
+		<members>RC_Event_Question_Test_Set__c.All</members>
+		<members>RC_admin__c.All</members>
+		<members>RC_college__c.All</members>
+		<members>RC_college_event_junction__c.All</members>
+		<members>RC_director__c.All</members>
+		<members>RC_event__c.All</members>
+		<members>RC_panelist__c.All</members>
+		<members>RC_panelist_junction_student_test__c.All</members>
+		<members>RC_panelists_event_junction__c.All</members>
+		<members>RC_question_set__c.All</members>
+		<members>RC_student__c.All</members>
+		<members>RC_student_question__c.All</members>
+		<members>RC_student_test__c.All</members>
+		<name>ListView</name>
 	</types>
 	<types>
 		<members>Admin</members>
